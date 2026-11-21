@@ -11,7 +11,9 @@ type Service = {
 
 -- Order matters: a service may only call services listed before it during Init().
 local SERVICE_ORDER: { string } = {
+	"TelemetryService",
 	"PlayerDataService",
+	"RewardService",
 }
 
 local function loadServices(): { Service }
