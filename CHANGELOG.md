@@ -14,3 +14,5 @@
 - Пустые папки `src/server`, `src/client`, `src/shared` и заголовок `src/localization/UI.csv` (en, ru).
 - Плагин Rojo 7.7.1 установлен; `rojo serve` + Connect в Studio показывает синхронизированное дерево (проверено владельцем).
 - `wally install`: Jest-Lua 3.10.0 и JestGlobals 3.10.0 → `DevPackages/` (`ReplicatedStorage.DevPackages`), `wally.lock` в репозитории. На Apple Silicon Wally 0.3.2 требует Rosetta 2.
+- Создан приватный тестовый experience «Mini Champions [TEST]» (D3): Universe `10778182955`, Place `137418142134310`. ID записаны в `docs/ARCHITECTURE.md` (14.1) и `docs/DATA_SCHEMA.md`.
+- **Этап 0 завершён.**

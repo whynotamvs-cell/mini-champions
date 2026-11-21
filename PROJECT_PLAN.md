@@ -152,9 +152,9 @@
 - [x] Аудит концепции (v1.0)
 - [x] Обновлённый план, CLAUDE.md, ARCHITECTURE, ECONOMY, DATA_SCHEMA, TEST_PLAN
 - [x] Согласование технических решений (раздел 7)
-- [ ] Аудит локального окружения: Studio, Git, установка Rokit и инструментов
+- [x] Аудит локального окружения: Studio, Git, установка Rokit и инструментов
 - [x] Каркас репозитория: `rokit.toml`, `default.project.json`, `selene.toml`, `stylua.toml`, `.vscode/`
-- [ ] Отдельный тестовый опыт (experience) в Creator Hub для DataStore-тестов
+- [x] Отдельный тестовый опыт (experience) в Creator Hub для DataStore-тестов — «Mini Champions [TEST]», Universe `10778182955`, Place `137418142134310`
 - [x] Пустой place запускается через `rojo serve` (проверено владельцем в Studio 21.11.2026, плагин Rojo 7.7.1)
 
 **Готово, когда:** разработчик клонирует репозиторий, выполняет `rokit install` и `rojo serve`, и Studio показывает синхронизированное дерево.

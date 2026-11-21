@@ -388,4 +388,13 @@ Finished ──валидация провалена──► Rejected  (без 
 | Тестовый experience | Отдельный experience в Creator Hub, приватный | Реальный, изолированный |
 | Боевой experience | Публичный | Реальный |
 
+### 14.1. Идентификаторы
+
+| Окружение | Название | Universe ID | Place ID |
+|---|---|---|---|
+| Тестовый | Mini Champions [TEST] | `10778182955` | `137418142134310` |
+| Боевой | — | ещё не создан | ещё не создан |
+
+ID не являются секретами и хранятся в репозитории. На этапе 1 переносятся в `src/shared/Config/Game.luau`: реальный DataStore в Studio разрешён, только если `game.PlaceId` совпадает с тестовым Place ID **и** `Config.Studio.UseRealDataStore = true`; во всех остальных случаях — `ProfileStore.Mock` (DATA_SCHEMA.md, раздел 3).
+
 Публикация в боевой — только вручную владельцем по `docs/RELEASE_CHECKLIST.md`.
