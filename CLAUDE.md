@@ -37,6 +37,9 @@ selene src                       # линт
 stylua --check src               # проверка форматирования
 stylua src                       # форматирование
 rojo build -o build/MiniChampions.rbxl     # сборка place-файла
+lune run tests/lune/run.luau     # юнит-тесты tests/specs + проверка локализации (без Studio)
+./tools/typecheck.sh             # строгая проверка типов (luau-lsp analyze)
+python3 tools/gen_world.py       # перегенерировать серую геометрию world/*.model.json
 ```
 
 ## Жёсткие правила
@@ -68,7 +71,7 @@ rojo build -o build/MiniChampions.rbxl     # сборка place-файла
 
 1. Перед крупным изменением — короткий план и список затрагиваемых файлов.
 2. Маленькие коммиты, одно логическое изменение на коммит. Ветка на каждую задачу.
-3. После изменений: `selene src`, `stylua --check src`, тесты (если затронута логика), `rojo build`.
+3. После изменений: `selene src tests/specs`, `stylua --check src tests`, `./tools/typecheck.sh`, `lune run tests/lune/run.luau`, `rojo build`.
 4. Отчёт после задачи: что сделано, изменённые файлы, команды и их результат, известные проблемы, **что нужно проверить вручную в Studio**.
 5. Никогда не писать «протестировано в Studio», если не запускал. Писать «проверено линтером / тестами», «требует ручной проверки».
 6. Не удалять и не перезаписывать существующие файлы без проверки и объяснения.
