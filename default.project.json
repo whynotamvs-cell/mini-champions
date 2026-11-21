@@ -20,6 +20,9 @@
     "ServerStorage": {
       "Tests": {
         "$path": "tests/specs"
+      },
+      "ClubUpgrades": {
+        "$path": "world/ClubUpgrades.model.json"
       }
     },
     "StarterPlayer": {
@@ -35,6 +38,11 @@
     "Players": {
       "$properties": {
         "CharacterAutoLoads": true
+      }
+    },
+    "Workspace": {
+      "DeskWorld": {
+        "$path": "world/DeskWorld.model.json"
       }
     }
   }

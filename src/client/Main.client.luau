@@ -8,6 +8,7 @@ type Controller = {
 
 local CONTROLLER_ORDER: { string } = {
 	"DataController",
+	"DashController",
 }
 
 local function loadControllers(): { Controller }

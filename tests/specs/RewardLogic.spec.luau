@@ -133,37 +133,28 @@ describe("First session economy (ECONOMY.md 5, TEST_PLAN F-02)", function()
 	it("first finish = 100 Stars; after first purchase and tutorial = 65 Stars, level 2", function()
 		local data = fresh()
 		RewardLogic.apply(data, dashGrant("run1"))
-		RewardLogic.apply(
-			data,
-			{
-				source = "DashFirstMedal",
-				grantId = "medal:dash:bronze",
-				lines = { { sku = "dash_first_bronze", stars = 30 } },
-				xp = 0,
-			}
-		)
-		RewardLogic.apply(
-			data,
-			{
-				source = "Tutorial",
-				grantId = "tutorial:first_finish",
-				lines = { { sku = "tutorial_first_finish", stars = 50 } },
-				xp = 30,
-			}
-		)
+		RewardLogic.apply(data, {
+			source = "DashFirstMedal",
+			grantId = "medal:dash:bronze",
+			lines = { { sku = "dash_first_bronze", stars = 30 } },
+			xp = 0,
+		})
+		RewardLogic.apply(data, {
+			source = "Tutorial",
+			grantId = "tutorial:first_finish",
+			lines = { { sku = "tutorial_first_finish", stars = 50 } },
+			xp = 30,
+		})
 		expect(data.Stars).toBe(100)
 
 		expect(CurrencyLogic.debit(data, 100)).toBe(true)
 		data.XP += 15 -- UpgradePurchaseXP
-		RewardLogic.apply(
-			data,
-			{
-				source = "Tutorial",
-				grantId = "tutorial:complete",
-				lines = { { sku = "tutorial_complete", stars = 40 } },
-				xp = 20,
-			}
-		)
+		RewardLogic.apply(data, {
+			source = "Tutorial",
+			grantId = "tutorial:complete",
+			lines = { { sku = "tutorial_complete", stars = 40 } },
+			xp = 20,
+		})
 		expect(data.XP).toBe(85)
 		expect(data.Stars).toBe(65)
 	end)
