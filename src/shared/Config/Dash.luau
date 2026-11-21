@@ -27,8 +27,10 @@ local Dash = table.freeze({
 	MaxHorizontalSpeed = 60,
 	MinStepAllowanceStuds = 6,
 
-	-- Root part below this world height during a run = fell off the track (desk top is at y = 1).
-	FallResetY = 7,
+	-- Root part below this world height during a run = fell off the track. The desk top is at
+	-- y = 4, so a character standing on it has its root at ~7.0 (R15); the lowest track surface
+	-- (StartPad, top y = 13) keeps the root at ~16. 11 sits safely between them.
+	FallResetY = 11,
 
 	-- Seconds on the finish pad before the player is sent back to the hub.
 	ReturnDelaySec = 4,
