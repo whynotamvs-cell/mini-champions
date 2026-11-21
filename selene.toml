@@ -1,0 +1,4 @@
+std = "roblox"
+
+# Vendored third-party code (ProfileStore) is not linted; it is updated deliberately in its own commit.
+exclude = ["src/server/Vendor/**"]

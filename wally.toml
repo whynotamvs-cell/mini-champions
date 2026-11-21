@@ -1,0 +1,14 @@
+[package]
+name = "minichampions/mini-champions"
+version = "0.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+private = true
+
+# Runtime dependencies are not managed by Wally (decision D10).
+# ProfileStore is vendored in src/server/Vendor/.
+[dependencies]
+
+[dev-dependencies]
+Jest = "jsdotlua/jest@3.10.0"
+JestGlobals = "jsdotlua/jest-globals@3.10.0"

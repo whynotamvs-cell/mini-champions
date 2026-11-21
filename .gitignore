@@ -1,0 +1,25 @@
+# Rojo / Luau LSP
+sourcemap.json
+build/
+*.rbxl.lock
+*.rbxlx.lock
+
+# Wally packages (wally.lock is committed)
+Packages/
+DevPackages/
+ServerPackages/
+
+# Local place files opened directly in Studio
+*.rbxl
+*.rbxlx
+!assets/**/*.rbxl
+!assets/**/*.rbxlx
+
+# Secrets and local environment (never commit API keys, cookies, tokens)
+.env
+.env.*
+*.cookie
+
+# OS / editor
+.DS_Store
+Thumbs.db
