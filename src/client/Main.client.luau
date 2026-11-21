@@ -6,7 +6,9 @@ type Controller = {
 	Start: (self: any) -> (),
 }
 
-local CONTROLLER_ORDER: { string } = {}
+local CONTROLLER_ORDER: { string } = {
+	"DataController",
+}
 
 local function loadControllers(): { Controller }
 	local folder = script.Parent:FindFirstChild("Controllers")

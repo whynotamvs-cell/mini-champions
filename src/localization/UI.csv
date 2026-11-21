@@ -1,1 +1,4 @@
 Key,Source,Context,Example,en,ru
+Error.LoadFailed,"Could not load your progress. Please try again.",Kick message when the profile cannot be loaded,,"Could not load your progress. Please try again.","Не удалось загрузить прогресс. Попробуй ещё раз."
+Error.SessionElsewhere,"Your game is open on another server.",Kick message when another server took the session,,"Your game is open on another server.","Игра открыта на другом сервере."
+Error.UpdateRequired,"The game was updated. Please rejoin.",Kick message when data is newer than this server's code,,"The game was updated. Please rejoin.","Игра обновилась. Перезайди, пожалуйста."

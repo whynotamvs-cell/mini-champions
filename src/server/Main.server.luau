@@ -10,7 +10,9 @@ type Service = {
 }
 
 -- Order matters: a service may only call services listed before it during Init().
-local SERVICE_ORDER: { string } = {}
+local SERVICE_ORDER: { string } = {
+	"PlayerDataService",
+}
 
 local function loadServices(): { Service }
 	local folder = script.Parent:FindFirstChild("Services")
