@@ -44,6 +44,12 @@
       "DeskWorld": {
         "$path": "world/DeskWorld.model.json"
       }
+    },
+    "TextChatService": {
+      "$properties": {
+        "CreateDefaultTextChannels": false,
+        "CreateDefaultCommands": false
+      }
     }
   }
 }
