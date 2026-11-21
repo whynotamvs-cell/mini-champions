@@ -84,6 +84,19 @@ function RewardLogic.total(grant: Grant): number
 	return total
 end
 
+-- Adds XP and pays LevelUpStars for every level gained (ECONOMY.md 2.4). Used by every XP source.
+-- Returns level before, level after, Stars paid for levels.
+function RewardLogic.addXP(data: any, xp: number): (number, number, number)
+	local levelBefore = Formulas.levelFromXP(data.XP)
+	data.XP += xp
+	local levelAfter = Formulas.levelFromXP(data.XP)
+	local levelUpStars = 0
+	if levelAfter > levelBefore then
+		levelUpStars = CurrencyLogic.credit(data, (levelAfter - levelBefore) * Economy.LevelUpStars)
+	end
+	return levelBefore, levelAfter, levelUpStars
+end
+
 -- `guard` runs first and may check/set a permanent one-time flag (e.g. Medals.Gold);
 -- returning false aborts the grant with reason "already_granted".
 -- Returns (true, Result) or (false, reason). On false, `data` must be discarded by the caller.
@@ -99,14 +112,8 @@ function RewardLogic.apply(data: any, grant: Grant, guard: ((data: any) -> boole
 		return false, "already_granted"
 	end
 
-	local levelBefore = Formulas.levelFromXP(data.XP)
 	local starsAdded = CurrencyLogic.credit(data, RewardLogic.total(grant))
-	data.XP += grant.xp
-	local levelAfter = Formulas.levelFromXP(data.XP)
-	local levelUpStars = 0
-	if levelAfter > levelBefore then
-		levelUpStars = CurrencyLogic.credit(data, (levelAfter - levelBefore) * Economy.LevelUpStars)
-	end
+	local levelBefore, levelAfter, levelUpStars = RewardLogic.addXP(data, grant.xp)
 
 	table.insert(data.RecentGrants, grant.grantId)
 	while #data.RecentGrants > Economy.Limits.RecentGrantsMax do
