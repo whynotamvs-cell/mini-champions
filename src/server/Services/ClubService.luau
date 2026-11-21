@@ -59,8 +59,11 @@ local function placeUpgrade(player: Player, index: number)
 end
 
 local function clearPlot(player: Player)
-	for _, instance in rendered[player] or {} do
-		instance:Destroy()
+	local list = rendered[player]
+	if list then
+		for _, instance in list do
+			instance:Destroy()
+		end
 	end
 	rendered[player] = nil
 end
@@ -70,7 +73,7 @@ local function assignPlot(player: Player, upgradesOwned: number)
 		return -- plots are collected in Start(); Start() assigns players that loaded earlier
 	end
 	for index = 1, #plots do
-		if owners[index] == nil then
+		if not owners[index] then
 			owners[index] = player
 			plotOf[player] = index
 			plots[index]:SetAttribute("OwnerUserId", player.UserId)
@@ -139,6 +142,13 @@ function ClubService:Init()
 	if upgradeModels == nil then
 		warn("[ClubService] ServerStorage.ClubUpgrades is missing")
 	end
+	-- Tell clients how many upgrades (in order) can be built, so the menu never offers one
+	-- that has no model yet. ServerStorage itself is not visible to clients.
+	local available = 0
+	while upgradeTemplate(available + 1) do
+		available += 1
+	end
+	ReplicatedStorage:SetAttribute("AvailableUpgrades", available)
 
 	Net.onServerInvoke("PurchaseUpgrade", {
 		rate = { count = 2, per = 1 },

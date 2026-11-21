@@ -16,6 +16,9 @@ local SERVICE_ORDER: { string } = {
 	"RewardService",
 	"ClubService",
 	"MinigameService",
+	"TutorialService",
+	"ChatPolicyService",
+	"CollisionService",
 }
 
 local function loadServices(): { Service }

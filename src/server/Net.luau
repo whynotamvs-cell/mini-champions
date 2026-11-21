@@ -32,7 +32,8 @@ local violationReporter: ((player: Player, remoteName: string, reason: string) -
 function Net.init()
 	local folder = Instance.new("Folder")
 	folder.Name = Remotes.FolderName
-	for name, kind in Remotes.Definitions do
+	local definitions: { [string]: Remotes.RemoteKind } = Remotes.Definitions :: any
+	for name, kind in definitions do
 		local remote: Instance = if kind == "Function"
 			then Instance.new("RemoteFunction")
 			else Instance.new("RemoteEvent")

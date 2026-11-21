@@ -15,7 +15,9 @@ export type FirstMedal = { medal: Medal, grant: Grant }
 
 local DashRewards = {}
 
-local MEDAL_RANK: { [Medal]: number } = { Bronze = 1, Silver = 2, Gold = 3 }
+-- Keyed by string: luau-lsp 1.70 rejects singleton-union keys in indexers.
+local MEDAL_RANK: { [string]: number } = { Bronze = 1, Silver = 2, Gold = 3 }
+local TIERS: { Medal } = { "Bronze" :: Medal, "Silver" :: Medal, "Gold" :: Medal }
 
 -- The per-run grant: finish + medal bonus (repeats every run).
 function DashRewards.runGrant(runId: string, medal: Medal): Grant
@@ -36,21 +38,22 @@ end
 -- awards first Silver and first Bronze (ECONOMY.md 2.1).
 function DashRewards.firstMedalGrants(medal: Medal): { FirstMedal }
 	local d = Economy.Dash
-	local amounts: { [Medal]: number } =
+	local amounts: { [string]: number } =
 		{ Bronze = d.FirstBronzeStars, Silver = d.FirstSilverStars, Gold = d.FirstGoldStars }
 	local result: { FirstMedal } = {}
-	for _, tier in { "Bronze", "Silver", "Gold" } :: { Medal } do
+	for _, tier in TIERS do
 		if MEDAL_RANK[tier] <= MEDAL_RANK[medal] then
 			local lower = string.lower(tier)
-			table.insert(result, {
-				medal = tier,
+			local entry: FirstMedal = {
+				medal = tier :: Medal,
 				grant = {
 					source = "DashFirstMedal",
 					grantId = `medal:dash:{lower}`,
 					lines = { { sku = `dash_first_{lower}`, stars = amounts[tier] } },
 					xp = 0,
 				},
-			})
+			}
+			table.insert(result, entry)
 		end
 	end
 	return result

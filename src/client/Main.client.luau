@@ -7,8 +7,13 @@ type Controller = {
 }
 
 local CONTROLLER_ORDER: { string } = {
+	"ChatController",
 	"DataController",
+	"LocalizationController",
+	"UIController",
 	"DashController",
+	"ClubMenuController",
+	"HudController",
 }
 
 local function loadControllers(): { Controller }

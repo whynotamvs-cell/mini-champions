@@ -40,11 +40,11 @@ end
 
 function Formulas.medalForTime(timeMs: number): Medal
 	if timeMs <= Economy.DashTiming.GoldMaxMs then
-		return "Gold"
+		return "Gold" :: Medal
 	elseif timeMs <= Economy.DashTiming.SilverMaxMs then
-		return "Silver"
+		return "Silver" :: Medal
 	end
-	return "Bronze"
+	return "Bronze" :: Medal
 end
 
 -- Price of upgrade `index` (1-based), or nil when the index does not exist.

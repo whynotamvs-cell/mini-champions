@@ -25,7 +25,7 @@ local function emit(label: string, call: () -> ())
 		print(`[Telemetry] {label}`)
 		return
 	end
-	local ok, err = pcall(call)
+	local ok, err = pcall(call :: any)
 	if not ok then
 		warn(`[Telemetry] {label} failed: {err}`)
 	end

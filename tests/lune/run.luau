@@ -12,6 +12,7 @@ local luau = require("@lune/luau")
 local process = require("@lune/process")
 
 local JestShim = require("./JestShim")
+local LocalizationCheck = require("./LocalizationCheck")
 
 local filter = process.args[1]
 
@@ -187,5 +188,19 @@ for _, file in specFiles do
 end
 
 local passed, failed = JestShim.run()
-print(`\n{#specFiles} spec files, {passed} passed, {failed} failed, {loadErrors} load errors`)
-process.exit(if failed == 0 and loadErrors == 0 then 0 else 1)
+
+local locProblems = if filter == nil then LocalizationCheck.run() else {}
+if filter == nil then
+	print("\nLocalization check")
+	if #locProblems == 0 then
+		print("  ✓ UI.csv: all keys present, en and ru filled, params match")
+	end
+	for _, problem in locProblems do
+		print(`  ✗ {problem}`)
+	end
+end
+
+print(
+	`\n{#specFiles} spec files, {passed} passed, {failed} failed, {loadErrors} load errors, {#locProblems} localization problems`
+)
+process.exit(if failed == 0 and loadErrors == 0 and #locProblems == 0 then 0 else 1)

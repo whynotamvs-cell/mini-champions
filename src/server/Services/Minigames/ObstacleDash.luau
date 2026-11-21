@@ -148,7 +148,7 @@ local function reward(player: Player, run: DashRun.Run)
 		return
 	end
 	local timeMs = run.timeMs :: number
-	local medal = DashRewards.medalForTime(timeMs)
+	local medal: Medal = DashRewards.medalForTime(timeMs)
 
 	local before = PlayerDataService:Get(player)
 	local firstFinish = before ~= nil and before.Minigames.DeskDash.Finishes == 0
