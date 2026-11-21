@@ -155,7 +155,7 @@
 - [ ] Аудит локального окружения: Studio, Git, установка Rokit и инструментов
 - [x] Каркас репозитория: `rokit.toml`, `default.project.json`, `selene.toml`, `stylua.toml`, `.vscode/`
 - [ ] Отдельный тестовый опыт (experience) в Creator Hub для DataStore-тестов
-- [ ] Пустой place запускается через `rojo serve`
+- [x] Пустой place запускается через `rojo serve` (проверено владельцем в Studio 21.11.2026, плагин Rojo 7.7.1)
 
 **Готово, когда:** разработчик клонирует репозиторий, выполняет `rokit install` и `rojo serve`, и Studio показывает синхронизированное дерево.
 

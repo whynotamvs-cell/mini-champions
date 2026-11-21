@@ -12,3 +12,5 @@
 - Инструменты закреплены в `rokit.toml`: Rojo 7.7.1, Selene 0.32.0, StyLua 2.6.0, Wally 0.3.2.
 - Каркас репозитория: `default.project.json`, `selene.toml`, `stylua.toml`, `wally.toml` (dev: Jest-Lua 3.10.0), `.vscode/`, `.gitignore`, `README.md`.
 - Пустые папки `src/server`, `src/client`, `src/shared` и заголовок `src/localization/UI.csv` (en, ru).
+- Плагин Rojo 7.7.1 установлен; `rojo serve` + Connect в Studio показывает синхронизированное дерево (проверено владельцем).
+- `wally install`: Jest-Lua 3.10.0 и JestGlobals 3.10.0 → `DevPackages/` (`ReplicatedStorage.DevPackages`), `wally.lock` в репозитории. На Apple Silicon Wally 0.3.2 требует Rosetta 2.
