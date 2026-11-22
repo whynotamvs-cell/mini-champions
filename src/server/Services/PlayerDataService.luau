@@ -1,7 +1,7 @@
 --!strict
 -- The only owner of player data and the only module that requires ProfileStore
 -- (docs/DATA_SCHEMA.md 2, 5; docs/ARCHITECTURE.md 5). Other services read with Get() and
--- write with Update(); nobody touches Profile.Data directly.
+-- write with Update(); nobody touches Profile.Data directly. Load failures end in failLoad().
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")

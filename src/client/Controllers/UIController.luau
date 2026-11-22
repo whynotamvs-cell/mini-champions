@@ -83,7 +83,7 @@ local function buildLoading()
 	-- Shown only when the server reports that the profile could not be loaded.
 	loadingTitle = Components.label({
 		Size = UDim2.fromOffset(460, 44),
-		Position = UDim2.fromScale(0.5, 0.34),
+		Position = UDim2.fromScale(0.5, 0.28),
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		TextColor3 = Theme.Accent,
 		ZIndex = 101,
@@ -93,7 +93,7 @@ local function buildLoading()
 	})
 	loadingHint = Components.label({
 		Size = UDim2.fromOffset(460, 56),
-		Position = UDim2.fromScale(0.5, 0.68),
+		Position = UDim2.fromScale(0.5, 0.76),
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		TextColor3 = Theme.Muted,
 		TextWrapped = true,
