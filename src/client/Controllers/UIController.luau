@@ -8,6 +8,7 @@ local Workspace = game:GetService("Workspace")
 
 local GameConfig = require(ReplicatedStorage.Shared.Config.Game)
 local Components = require(script.Parent.Parent.UI.Components)
+local Juice = require(script.Parent.Parent.UI.Juice)
 local Net = require(script.Parent.Parent.Net)
 local DataController = require(script.Parent.DataController)
 local LocalizationController = require(script.Parent.LocalizationController)
@@ -88,9 +89,10 @@ end
 function UIController:Init()
 	DataController.Changed:Connect(function()
 		if loading then
-			loading:Destroy()
+			local cover = loading
 			loading = nil
 			loadingLabel = nil
+			Juice.fadeOutAndDestroy(cover)
 		end
 	end)
 	LocalizationController.Changed:Connect(refreshTexts)
@@ -159,6 +161,7 @@ function UIController:Toast(key: string, args: { [string]: any }?, seconds: numb
 		MaxTextSize = 24,
 		Parent = toast,
 	})
+	Juice.pop(toast, 0.8, 0.25)
 	local connection = LocalizationController.Changed:Connect(function()
 		label.Text = L(key, args)
 	end)

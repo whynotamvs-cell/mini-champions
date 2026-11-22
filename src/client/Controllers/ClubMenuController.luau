@@ -8,6 +8,7 @@ local UserInputService = game:GetService("UserInputService")
 local Economy = require(ReplicatedStorage.Shared.Config.Economy)
 local Format = require(ReplicatedStorage.Shared.Utilities.Format)
 local Components = require(script.Parent.Parent.UI.Components)
+local Juice = require(script.Parent.Parent.UI.Juice)
 local Net = require(script.Parent.Parent.Net)
 local DataController = require(script.Parent.DataController)
 local LocalizationController = require(script.Parent.LocalizationController)
@@ -183,6 +184,9 @@ function ClubMenuController:Toggle()
 	local u = ui
 	if u then
 		u.frame.Visible = not u.frame.Visible
+		if u.frame.Visible then
+			Juice.pop(u.frame, 0.85, 0.3)
+		end
 		render()
 	end
 end

@@ -8,6 +8,7 @@ local RunService = game:GetService("RunService")
 
 local Format = require(ReplicatedStorage.Shared.Utilities.Format)
 local Components = require(script.Parent.Parent.UI.Components)
+local Juice = require(script.Parent.Parent.UI.Juice)
 local ClubMenuController = require(script.Parent.ClubMenuController)
 local DashController = require(script.Parent.DashController)
 local DataController = require(script.Parent.DataController)
@@ -45,6 +46,46 @@ local checkpointTotal = 0
 local countdownToken = 0
 local resultToken = 0
 local lastResult: { [string]: any }? = nil
+local starsTarget: number? = nil
+local starsToken = 0
+local starsAnimating = false
+
+-- Shows the balance: counts up when Stars are earned, jumps when they are spent.
+local function setStars(u: Ui, value: number)
+	local function text(n: number): string
+		return `{STAR} {Format.integer(n)}`
+	end
+	local previous = starsTarget
+	if previous == value then
+		if not starsAnimating then
+			u.stars.Text = text(value)
+		end
+		return
+	end
+	starsTarget = value
+	starsToken += 1
+	local token = starsToken
+	if previous == nil or value < previous then
+		starsAnimating = false
+		u.stars.Text = text(value)
+		if previous ~= nil then
+			Juice.pop(u.stars, 1.12, 0.25)
+		end
+		return
+	end
+	starsAnimating = true
+	Juice.pop(u.stars, 1.2, 0.35)
+	Juice.tweenNumber(previous, value, 0.7, function(n: number)
+		if token == starsToken then
+			u.stars.Text = text(n)
+			if n == value then
+				starsAnimating = false
+			end
+		end
+	end, function()
+		return token ~= starsToken
+	end)
+end
 
 local function render()
 	local u = ui
@@ -53,7 +94,7 @@ local function render()
 	end
 	local snapshot = DataController:Get()
 	if snapshot then
-		u.stars.Text = `{STAR} {Format.integer(snapshot.Stars)}`
+		setStars(u, snapshot.Stars)
 		u.level.Text = L("HUD.Level", { level = snapshot.Level })
 	end
 	u.clubButton.Text = L("HUD.Club")
@@ -101,7 +142,9 @@ local function showCountdown(seconds: number)
 				return
 			end
 			u.countdown.Text = tostring(n)
+			u.countdown.TextColor3 = Theme.Accent
 			u.countdown.Visible = true
+			Juice.pop(u.countdown, 1.8, 0.4)
 			task.wait(1)
 		end
 	end)
@@ -122,7 +165,9 @@ local function flashGo()
 	countdownToken += 1
 	local token = countdownToken
 	u.countdown.Text = L("Dash.Go")
+	u.countdown.TextColor3 = Theme.Good
 	u.countdown.Visible = true
+	Juice.pop(u.countdown, 2.1, 0.45)
 	task.delay(0.8, function()
 		if token == countdownToken then
 			u.countdown.Visible = false
@@ -140,6 +185,27 @@ local function showResult(event: { [string]: any })
 	local token = resultToken
 	u.result.Visible = true
 	render()
+	Juice.pop(u.result, 0.8, 0.35)
+	-- Reveal the result lines one by one (all at once when motion is reduced or the run was rejected).
+	local lines = { u.resultLine1, u.resultLine2, u.resultLine3 }
+	for _, resultLine in lines do
+		resultLine.Visible = true
+	end
+	if event.valid and not Juice.isReducedMotion() then
+		for _, resultLine in lines do
+			resultLine.Visible = false
+		end
+		task.spawn(function()
+			for _, resultLine in lines do
+				task.wait(0.25)
+				if token ~= resultToken then
+					return
+				end
+				resultLine.Visible = true
+				Juice.pop(resultLine, 1.4, 0.3)
+			end
+		end)
+	end
 	task.delay(RESULT_SECONDS, function()
 		if token == resultToken then
 			u.result.Visible = false
@@ -165,6 +231,9 @@ local function onDashEvent(event: { [string]: any })
 	elseif kind == "checkpoint" then
 		checkpointIndex = event.index
 		checkpointTotal = event.total
+		if ui then
+			Juice.pop(ui.checkpoint, 1.35, 0.3)
+		end
 	elseif kind == "missing_checkpoint" then
 		UIController:Toast("Dash.MissingCheckpoint", { index = event.next })
 	elseif kind == "finish" then
