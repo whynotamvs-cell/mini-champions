@@ -12,6 +12,7 @@ local Remotes = table.freeze({
 		PurchaseUpgrade = "Function" :: RemoteKind, -- (index: number) -> PurchaseResult
 		RequestRestart = "Event" :: RemoteKind, -- ()
 		RequestSnapshot = "Event" :: RemoteKind, -- (); client asks for the first snapshot once its listeners exist
+		TutorialAck = "Event" :: RemoteKind, -- (step: number); only step 3 "opened the club menu" is accepted
 		SendEmote = "Event" :: RemoteKind, -- (emoteId: string)
 		UpdateSettings = "Event" :: RemoteKind, -- (changes: { MusicVolume?, SfxVolume?, Language?, ReducedMotion? })
 

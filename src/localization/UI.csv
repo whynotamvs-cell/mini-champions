@@ -62,3 +62,6 @@ Emote.Clap,Bravo!,Emote bubble: clap,,Bravo!,Браво!
 Emote.ThumbsUp,Cool!,Emote bubble: thumbs up,,Cool!,Класс!
 Emote.GoodGame,Good game!,Emote bubble: good game,,Good game!,Хорошая игра!
 Emote.LetsRace,Let's race!,Emote bubble: let's race,,Let's race!,Погнали!
+Tutorial.Step,Step {step}/{total},Tutorial banner step counter,,Step {step}/{total},Шаг {step}/{total}
+Tutorial.RunTrack,Run the track to the golden finish!,Tutorial hint after reaching the start,,Run the track to the golden finish!,Пробеги трассу до золотого финиша!
+Tutorial.PressBuild,Press Build to get your first upgrade!,Tutorial hint inside the club menu,,Press Build to get your first upgrade!,"Нажми «Построить», чтобы получить первое улучшение!"

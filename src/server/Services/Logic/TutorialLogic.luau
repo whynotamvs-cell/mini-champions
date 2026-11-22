@@ -3,7 +3,8 @@
 -- so stage 2 can fill in the UI for steps 3 without a data migration.
 --   1 ReachedDashStart  2 FinishedFirstRun (+bonus)  3 OpenedClubMenu
 --   4 BoughtFirstUpgrade  5 Complete (+bonus)
--- Stage 1 passes steps 3-5 together on the first purchase.
+-- Step 3 is acknowledged by the client (TutorialAck) when the club menu opens; steps 4 and 5
+-- are passed together by the first purchase.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Economy = require(ReplicatedStorage.Shared.Config.Economy)
@@ -30,6 +31,15 @@ function TutorialLogic.advance(data: any, step: number): boolean
 		data.Tutorial.Completed = true
 	end
 	return true
+end
+
+-- Client "I opened the club menu" (TutorialAck): counts only right after the first finish, so
+-- a client can neither skip ahead nor replay a step.
+function TutorialLogic.ackOpenedClub(data: any): boolean
+	if data.Tutorial.Step ~= TutorialLogic.Steps.FinishedFirstRun then
+		return false
+	end
+	return TutorialLogic.advance(data, TutorialLogic.Steps.OpenedClubMenu)
 end
 
 function TutorialLogic.firstFinishGrant(): RewardLogic.Grant

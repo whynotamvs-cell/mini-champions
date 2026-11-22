@@ -1,11 +1,13 @@
 --!strict
--- Minimal tutorial for stage 1: steps advance only from server events (docs/ARCHITECTURE.md 5),
--- hints go to the client as localization keys, onboarding funnel steps (ARCHITECTURE.md 12.1)
+-- Tutorial: steps advance only from server events or the one validated client ack
+-- (docs/ARCHITECTURE.md 5); the client draws the hint for the saved step (Shared/Utilities/
+-- TutorialHints). Toasts only announce bonuses. Onboarding funnel steps (ARCHITECTURE.md 12.1)
 -- are logged from here.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Economy = require(ReplicatedStorage.Shared.Config.Economy)
+local Validators = require(ReplicatedStorage.Shared.Net.Validators)
 local Net = require(script.Parent.Parent.Net)
 local ClubService = require(script.Parent.ClubService)
 local PlayerDataService = require(script.Parent.PlayerDataService)
@@ -32,13 +34,20 @@ function TutorialService:Init()
 		if data.Meta.SessionCount == 1 and data.Tutorial.Step == 0 then
 			TelemetryService:Onboarding(player, 1, "Joined")
 		end
-		if data.Tutorial.Completed then
-			return
-		end
-		if data.Tutorial.Step < Steps.FinishedFirstRun then
-			notify(player, "Tutorial.GoToStart")
-		elseif data.Stars >= Economy.Upgrades[1].Price then
-			notify(player, "Tutorial.OpenClub")
+		-- The current hint is drawn by the client from Tutorial.Step in its snapshot, so a
+		-- player who rejoins mid-tutorial continues from the last completed step (TEST_PLAN F-04).
+	end)
+
+	-- Step 3: the client says the club menu was opened. Only valid right after the first finish.
+	Net.onServerEvent("TutorialAck", {
+		rate = { count = 2, per = 1 },
+		validate = Validators.tuple(Validators.integer(Steps.OpenedClubMenu, Steps.OpenedClubMenu)),
+	}, function(player: Player, _step: number)
+		local committed = PlayerDataService:Update(player, function(data): boolean?
+			return TutorialLogic.ackOpenedClub(data)
+		end)
+		if committed then
+			TelemetryService:Onboarding(player, 6, "OpenedClubMenu")
 		end
 	end)
 
@@ -69,7 +78,6 @@ function TutorialService:Init()
 		if result then
 			TelemetryService:Onboarding(player, 5, "FinishedFirstRun")
 			notify(player, "Tutorial.FinishBonus", { stars = Economy.Tutorial.FirstFinishStars })
-			notify(player, "Tutorial.OpenClub")
 		end
 	end)
 
@@ -77,9 +85,13 @@ function TutorialService:Init()
 		if index ~= 1 then
 			return
 		end
+		local before = step(player) or 0
 		local result = RewardService:Grant(player, TutorialLogic.completeGrant(), TutorialLogic.completeGuard, true)
 		if result then
-			TelemetryService:Onboarding(player, 6, "OpenedClubMenu")
+			if before < Steps.OpenedClubMenu then
+				-- The ack never arrived (e.g. the menu was opened before the first finish): log the step now.
+				TelemetryService:Onboarding(player, 6, "OpenedClubMenu")
+			end
 			TelemetryService:Onboarding(player, 7, "BoughtFirstUpgrade")
 			TelemetryService:Onboarding(player, 8, "TutorialComplete")
 			notify(player, "Tutorial.Complete")
