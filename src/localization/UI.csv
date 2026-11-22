@@ -65,3 +65,5 @@ Emote.LetsRace,Let's race!,Emote bubble: let's race,,Let's race!,Погнали!
 Tutorial.Step,Step {step}/{total},Tutorial banner step counter,,Step {step}/{total},Шаг {step}/{total}
 Tutorial.RunTrack,Run the track to the golden finish!,Tutorial hint after reaching the start,,Run the track to the golden finish!,Пробеги трассу до золотого финиша!
 Tutorial.PressBuild,Press Build to get your first upgrade!,Tutorial hint inside the club menu,,Press Build to get your first upgrade!,"Нажми «Построить», чтобы получить первое улучшение!"
+Board.Title,Fastest on this server,Results board title at the finish,,Fastest on this server,Самые быстрые на сервере
+Board.Empty,Finish a run to get on the board!,Results board when nobody has finished yet,,Finish a run to get on the board!,Финишируй и попадёшь в таблицу!

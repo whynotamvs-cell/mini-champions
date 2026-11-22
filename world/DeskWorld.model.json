@@ -3994,6 +3994,56 @@
                 "CanQuery": true,
                 "Transparency": 0.0
               }
+            },
+            {
+              "name": "ResultsBoard",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  22,
+                  12,
+                  1
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      671.5,
+                      43.0,
+                      0
+                    ],
+                    "orientation": [
+                      [
+                        0,
+                        0,
+                        1
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        -1,
+                        0,
+                        0
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.18,
+                  0.22,
+                  0.32
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
             }
           ]
         },

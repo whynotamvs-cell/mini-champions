@@ -156,7 +156,7 @@ end
 local function build(canvas: Frame): Banner
 	local frame = Components.panel({
 		Name = "TutorialBanner",
-		Size = UDim2.fromOffset(300, 64),
+		Size = UDim2.fromOffset(330, 84),
 		Position = UDim2.fromOffset(12, 68),
 		Visible = false,
 		ZIndex = 10,
@@ -178,6 +178,7 @@ local function build(canvas: Frame): Banner
 		TextXAlignment = Enum.TextXAlignment.Left,
 		ZIndex = 11,
 		MaxTextSize = 20,
+		TextWrapped = true,
 		Parent = frame,
 	})
 	return { frame = frame, step = step, hint = hint }

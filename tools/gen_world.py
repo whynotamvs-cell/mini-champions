@@ -18,6 +18,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "world")
 
 IDENTITY = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+# Turned 90 degrees about Y: the Front face (where SurfaceGuis go) looks back along -X, at runners.
+YAW_90 = [[0, 0, 1], [0, 1, 0], [-1, 0, 0]]
 
 COLORS = {
     "desk": [0.70, 0.50, 0.32],
@@ -40,6 +42,7 @@ COLORS = {
     "plot": [0.88, 0.84, 0.76],
     "banner": [1.00, 0.80, 0.25],
     "post": [0.52, 0.40, 0.30],
+    "board": [0.18, 0.22, 0.32],
 }
 
 # Cover colours cycled over the book staircase.
@@ -226,6 +229,12 @@ def build_track():
     finish_x0 = x
     x = piece("FinishPad", 20, 20, top, COLORS["finish"], x)
     zones.append(zone("FinishZone", "Finish", 5, finish_x0 + 10, top, 0, 18, 18))
+
+    # Results board just past the finish pad, facing the runners. The client draws the table on
+    # its Front face (SurfaceGui); this part only carries it.
+    board = part("ResultsBoard", (22, 12, 1), (x + 0.5, top + 7, 0), COLORS["board"], center=True)
+    board["properties"]["CFrame"]["CFrame"]["orientation"] = YAW_90
+    geo.append(board)
 
     track_length = x - 20
     return geo, zones, spawns, track_length

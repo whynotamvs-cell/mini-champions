@@ -13,6 +13,7 @@ local Remotes = table.freeze({
 		RequestRestart = "Event" :: RemoteKind, -- ()
 		RequestSnapshot = "Event" :: RemoteKind, -- (); client asks for the first snapshot once its listeners exist
 		TutorialAck = "Event" :: RemoteKind, -- (step: number); only step 3 "opened the club menu" is accepted
+		RequestBoard = "Event" :: RemoteKind, -- (); client asks for the current results board
 		SendEmote = "Event" :: RemoteKind, -- (emoteId: string)
 		UpdateSettings = "Event" :: RemoteKind, -- (changes: { MusicVolume?, SfxVolume?, Language?, ReducedMotion? })
 
@@ -21,6 +22,7 @@ local Remotes = table.freeze({
 		DashEvent = "Event" :: RemoteKind, -- (event: { kind: string, ... })
 		Notify = "Event" :: RemoteKind, -- (key: string, args: { [string]: string | number }?)
 		EmoteShown = "Event" :: RemoteKind, -- (userId: number, emoteId: string)
+		BoardUpdate = "Event" :: RemoteKind, -- (entries: { { userId, name, timeMs, medal } }) fastest first
 	}),
 })
 
