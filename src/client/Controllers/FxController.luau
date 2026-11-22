@@ -10,6 +10,7 @@ local Workspace = game:GetService("Workspace")
 
 local Juice = require(script.Parent.Parent.UI.Juice)
 local DashController = require(script.Parent.DashController)
+local DataController = require(script.Parent.DataController)
 
 local FxController = {}
 
@@ -89,8 +90,18 @@ local function onDashEvent(event: DashController.DashEvent)
 	end
 end
 
+local lastLevel: number? = nil
+
 function FxController:Init()
 	DashController.Event:Connect(onDashEvent)
+	-- Gold burst when the player level goes up (not on the first snapshot).
+	DataController.Changed:Connect(function(snapshot)
+		local level = snapshot.Level
+		if lastLevel ~= nil and level > lastLevel then
+			burst(MEDAL_COLORS.Gold, 60, NumberRange.new(14, 30), 1.4, 1.6)
+		end
+		lastLevel = level
+	end)
 end
 
 function FxController:Start() end
