@@ -43,3 +43,22 @@ Tutorial.GoToStart,Run to the blue start pad!,First hint after joining,,Run to t
 Tutorial.FinishBonus,Tutorial bonus: +{stars},Toast with the tutorial bonus after the first finish,,Tutorial bonus: +{stars},Бонус за обучение: +{stars}
 Tutorial.OpenClub,You have enough Stars! Open your Club and build something.,Hint after the first finish,,You have enough Stars! Open your Club and build something.,Звёзд хватает! Открой клуб и построй что-нибудь.
 Tutorial.Complete,Great job! Keep racing to grow your club.,Toast when the tutorial is complete,,Great job! Keep racing to grow your club.,"Отлично! Бегай ещё, чтобы развивать клуб."
+HUD.Settings,Settings,Button that opens the settings screen,,Settings,Настройки
+HUD.Emotes,Emotes,Button that opens the emote panel,,Emotes,Эмоции
+Settings.Title,Settings,Settings screen title,,Settings,Настройки
+Settings.Music,Music,Music volume label,,Music,Музыка
+Settings.Sfx,Sounds,Sound effects volume label,,Sounds,Звуки
+Settings.Language,Language,Language label,,Language,Язык
+Settings.LanguageAuto,Auto,Language follows the account,,Auto,Авто
+Settings.LanguageEn,English,Language name (always shown the same way),,English,English
+Settings.LanguageRu,Русский,Language name (always shown the same way),,Русский,Русский
+Settings.ReducedMotion,Less motion,Reduced motion toggle label,,Less motion,Меньше движения
+Settings.On,On,Toggle is on,,On,Вкл
+Settings.Off,Off,Toggle is off,,Off,Выкл
+Emote.Title,Emotes,Emote panel title,,Emotes,Эмоции
+Emote.Wave,Hi!,Emote bubble: wave,,Hi!,Привет!
+Emote.Cheer,Hooray!,Emote bubble: cheer,,Hooray!,Ура!
+Emote.Clap,Bravo!,Emote bubble: clap,,Bravo!,Браво!
+Emote.ThumbsUp,Cool!,Emote bubble: thumbs up,,Cool!,Класс!
+Emote.GoodGame,Good game!,Emote bubble: good game,,Good game!,Хорошая игра!
+Emote.LetsRace,Let's race!,Emote bubble: let's race,,Let's race!,Погнали!

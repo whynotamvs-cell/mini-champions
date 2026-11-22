@@ -12,11 +12,14 @@ local Remotes = table.freeze({
 		PurchaseUpgrade = "Function" :: RemoteKind, -- (index: number) -> PurchaseResult
 		RequestRestart = "Event" :: RemoteKind, -- ()
 		RequestSnapshot = "Event" :: RemoteKind, -- (); client asks for the first snapshot once its listeners exist
+		SendEmote = "Event" :: RemoteKind, -- (emoteId: string)
+		UpdateSettings = "Event" :: RemoteKind, -- (changes: { MusicVolume?, SfxVolume?, Language?, ReducedMotion? })
 
 		-- Server -> Client
 		DataSnapshot = "Event" :: RemoteKind, -- (snapshot: ClientSnapshot)
 		DashEvent = "Event" :: RemoteKind, -- (event: { kind: string, ... })
 		Notify = "Event" :: RemoteKind, -- (key: string, args: { [string]: string | number }?)
+		EmoteShown = "Event" :: RemoteKind, -- (userId: number, emoteId: string)
 	}),
 })
 
