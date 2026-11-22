@@ -1,7 +1,8 @@
 --!strict
 -- Emote panel and the bubbles above players' heads (docs/ARCHITECTURE.md 7). The player picks one
 -- of the preset emotes; only its ID goes to the server. Every client draws the bubble with the
--- text in its own language, so no text from other players is ever shown.
+-- text in its own language, so no text from other players is ever shown. Buttons are 120 px wide
+-- so the longest Russian name ("Хорошая игра!") fits at the smallest font (tools/studio/measure_strings.luau), and openers cap their font so labels never break mid-word.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -132,7 +133,7 @@ end
 local function build(canvas: Frame): Ui
 	local frame = Components.panel({
 		Name = "EmotePanel",
-		Size = UDim2.fromOffset(380, 220),
+		Size = UDim2.fromOffset(396, 240),
 		Position = UDim2.fromScale(0.5, 0.5),
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Visible = false,
@@ -151,8 +152,8 @@ local function build(canvas: Frame): Ui
 		local column = (i - 1) % 3
 		local row = (i - 1) // 3
 		local button = Components.button({
-			Size = UDim2.fromOffset(112, 56),
-			Position = UDim2.fromOffset(12 + column * 122, 50 + row * 64),
+			Size = UDim2.fromOffset(120, 56),
+			Position = UDim2.fromOffset(12 + column * 126, 50 + row * 64),
 			BackgroundColor3 = colorOf(item),
 			MaxTextSize = 20,
 			ZIndex = 32,
@@ -176,9 +177,10 @@ local function build(canvas: Frame): Ui
 
 	local openButton = Components.button({
 		Name = "EmoteButton",
-		Size = UDim2.fromOffset(110, 48),
+		Size = UDim2.fromOffset(130, 48),
 		Position = UDim2.new(1, -12, 0.42, -62),
 		AnchorPoint = Vector2.new(1, 0.5),
+		MaxTextSize = 18, -- a smaller cap keeps "Эмоции" on one line instead of breaking mid-word
 		Parent = canvas,
 	}, function()
 		EmoteController:Toggle()

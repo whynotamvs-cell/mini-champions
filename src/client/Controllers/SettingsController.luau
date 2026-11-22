@@ -3,6 +3,7 @@
 -- The client only sends the changed keys (debounced); the server validates and saves, then the
 -- next snapshot is what is really stored. Volumes drive the "Music" and "Sfx" SoundGroups that
 -- future sounds are routed through; reduced motion switches the cosmetic animations off.
+-- Labels wrap and the opener caps its font so Russian text never breaks mid-word (L-05).
 
 local SoundService = game:GetService("SoundService")
 local UserInputService = game:GetService("UserInputService")
@@ -178,6 +179,7 @@ local function build(canvas: Frame): Ui
 			Size = UDim2.fromOffset(width, height),
 			Position = UDim2.fromOffset(x, y),
 			TextXAlignment = Enum.TextXAlignment.Left,
+			TextWrapped = true, -- long Russian labels use a second line instead of overflowing
 			ZIndex = 33,
 			MaxTextSize = max,
 			Parent = frame,
@@ -267,10 +269,11 @@ local function build(canvas: Frame): Ui
 
 	local openButton = Components.button({
 		Name = "SettingsButton",
-		Size = UDim2.fromOffset(110, 48),
+		Size = UDim2.fromOffset(130, 48),
 		Position = UDim2.new(1, -12, 0.42, -124),
 		AnchorPoint = Vector2.new(1, 0.5),
 		BackgroundColor3 = Theme.Muted,
+		MaxTextSize = 18, -- a smaller cap keeps "Настройки" on one line instead of breaking mid-word
 		Parent = canvas,
 	}, function()
 		SettingsController:Toggle()

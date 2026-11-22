@@ -19,7 +19,7 @@ Dash.Result.Title,Finish!,Result screen title,,Finish!,Финиш!
 Dash.Result.Time,Time: {time},Run time on the result screen,,Time: {time},Время: {time}
 Dash.Result.Best,Best: {time},Personal best on the result screen,,Best: {time},Рекорд: {time}
 Dash.Result.NewBest,New record!,Shown when the run is a new personal best,,New record!,Новый рекорд!
-Dash.Result.Rejected,This run didn't count. Try again!,Run failed server validation,,This run didn't count. Try again!,Этот забег не засчитан. Попробуй ещё раз!
+Dash.Result.Rejected,This run didn't count. Try again!,Run failed server validation,,This run didn't count. Try again!,Забег не засчитан. Попробуй снова!
 Dash.Medal.Gold,Gold,Medal name,,Gold,Золото
 Dash.Medal.Silver,Silver,Medal name,,Silver,Серебро
 Dash.Medal.Bronze,Bronze,Medal name,,Bronze,Бронза
