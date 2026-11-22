@@ -43,6 +43,14 @@ COLORS = {
     "banner": [1.00, 0.80, 0.25],
     "post": [0.52, 0.40, 0.30],
     "board": [0.18, 0.22, 0.32],
+    "gold": [1.00, 0.80, 0.20],
+    "silver": [0.82, 0.86, 0.92],
+    "bronze": [0.80, 0.50, 0.25],
+    "dark": [0.20, 0.21, 0.27],
+    "wood": [0.85, 0.68, 0.45],
+    "cup": [0.30, 0.65, 0.90],
+    "lamp": [0.95, 0.35, 0.30],
+    "glow": [1.00, 0.95, 0.70],
 }
 
 # Cover colours cycled over the book staircase.
@@ -292,7 +300,17 @@ def build_hub():
 
 
 def build_upgrades():
-    """Placeholder models, authored relative to the plot centre at the origin (top surface y = 0)."""
+    """Club upgrade models, authored relative to the plot centre at the origin (top surface y = 0).
+
+    The plot is 24 x 24 (x, z in -12..12). One model per upgrade, named by Economy.Upgrades[i].Id.
+    Layout: banner back edge, trophy shelf behind the middle, ruler on the left edge, books on the
+    right, benches in the middle, pencil fence along the front, lamp back-left, pencil cup front-right.
+    """
+
+    def block(name, size, x, y0, z, color, material="SmoothPlastic", collide=True):
+        """A block standing on y0 (its bottom), centred on x/z."""
+        return part(name, size, (x, y0 + size[1] / 2, z), color, center=True, collide=collide, material=material)
+
     sticky_banner = model(
         "sticky_banner",
         [
@@ -301,7 +319,111 @@ def build_upgrades():
             part("Banner", (8, 3, 0.3), (0, 7.5, -10), COLORS["banner"], center=True),
         ],
     )
-    return model("ClubUpgrades", [sticky_banner], "Folder")
+
+    # 2. Pencil fence: upright pencils with sharpened tips along the front edge.
+    palette = ["pencil", "book", "book_alt", "book_green"]
+    fence = []
+    for i in range(12):
+        x = -11 + i * 2
+        color = COLORS[palette[i % 4]]
+        fence.append(block(f"Pencil{i + 1}", (1.2, 4, 1.2), x, 0, 11, color))
+        fence.append(block(f"Tip{i + 1}", (0.8, 0.9, 0.8), x, 4, 11, COLORS["wood"]))
+        fence.append(block(f"Lead{i + 1}", (0.3, 0.5, 0.3), x, 4.9, 11, COLORS["dark"], collide=False))
+    pencil_fence = model("pencil_fence", fence)
+
+    # 3. Eraser benches: two pink erasers in a blue paper sleeve.
+    benches = []
+    for n, x in enumerate((-5, 4), start=1):
+        benches.append(block(f"Eraser{n}", (5, 1.8, 2.6), x, 0, 4, COLORS["eraser"]))
+        benches.append(block(f"Sleeve{n}", (2.2, 1.9, 2.7), x, 0, 4, COLORS["book_alt"]))
+    eraser_benches = model("eraser_benches", benches)
+
+    # 4. Book stand: a stack of books with a winner's flag on top.
+    stand = [
+        block("BookBottom", (5.2, 1.4, 4.6), 9.5, 0, -5, COLORS["book"]),
+        block("PagesBottom", (0.3, 1.0, 4.0), 12.0, 0.2, -5, COLORS["pages"], collide=False),
+        block("BookMiddle", (4.6, 1.4, 4.1), 9.5, 1.4, -5, COLORS["book_alt"]),
+        block("BookTop", (4.0, 1.4, 3.6), 9.5, 2.8, -5, COLORS["book_green"]),
+        block("FlagPole", (0.25, 4, 0.25), 9.5, 4.2, -5, COLORS["post"], collide=False),
+        block("Flag", (2.2, 1.3, 0.15), 10.6, 6.9, -5, COLORS["finish"], collide=False),
+    ]
+    book_stand = model("book_stand", stand)
+
+    # 5. Ruler scoreboard: a tall ruler on the left edge with tick marks and a dark score panel.
+    ruler = [block("Ruler", (1, 10, 6), -11, 0, 0, COLORS["ruler"], material="Plastic")]
+    for tick in range(10):
+        long = tick % 5 == 0
+        ruler.append(
+            block(f"Tick{tick}", (0.2, 0.18, 2.4 if long else 1.4), -10.45, 0.6 + tick, 1.8, COLORS["ruler_tick"], collide=False)
+        )
+    ruler.append(block("Panel", (0.4, 3.6, 5), -10.2, 6.2, 0, COLORS["board"], collide=False))
+    for n, color in enumerate(("gold", "silver", "bronze")):
+        ruler.append(block(f"Bar{n + 1}", (0.2, 0.7, 4.2 - n * 0.9), -9.95, 8.4 - n * 1.0, 0, COLORS[color], collide=False))
+    ruler_scoreboard = model("ruler_scoreboard", ruler)
+
+    # 6. Paperclip trophy rack: a wooden shelf with gold, silver and bronze trophies.
+    rack = [
+        block("ShelfLegLeft", (0.8, 3, 1.6), -4.2, 0, -6, COLORS["wood"]),
+        block("ShelfLegRight", (0.8, 3, 1.6), 4.2, 0, -6, COLORS["wood"]),
+        block("Shelf", (10, 0.6, 2.2), 0, 3, -6, COLORS["wood"], material="Wood"),
+    ]
+    for n, (x, color) in enumerate(((-3, "gold"), (0, "silver"), (3, "bronze")), start=1):
+        rack.append(block(f"TrophyBase{n}", (1.6, 0.4, 1.6), x, 3.6, -6, COLORS["dark"], collide=False))
+        rack.append(block(f"TrophyStem{n}", (0.4, 1.4, 0.4), x, 4.0, -6, COLORS[color], material="Metal", collide=False))
+        rack.append(block(f"TrophyCup{n}", (1.6, 1.2, 1.6), x, 5.4, -6, COLORS[color], material="Metal", collide=False))
+    paperclip_trophies = model("paperclip_trophies", rack)
+
+    # 7. Desk lamp floodlight: a real warm spotlight over the plot.
+    head = block("LampHead", (3.2, 1.4, 2.6), -7.8, 8.2, -8, COLORS["lamp"])
+    lens = block("LampLens", (2.6, 0.2, 2.0), -7.8, 8.0, -8, COLORS["glow"], material="Neon", collide=False)
+    lens["children"] = [
+        {
+            "name": "Floodlight",
+            "className": "SpotLight",
+            "properties": {
+                "Brightness": 3,
+                "Range": 34,
+                "Angle": 75,
+                "Face": "Bottom",
+                "Color": [1.0, 0.9, 0.7],
+                "Shadows": False,
+            },
+        }
+    ]
+    lamp = [
+        block("LampBase", (3.4, 0.6, 3.4), -9.5, 0, -8, COLORS["dark"]),
+        block("LampArm", (0.5, 7.8, 0.5), -9.5, 0.6, -8, COLORS["dark"]),
+        block("LampBrace", (2.2, 0.5, 0.5), -8.7, 8.0, -8, COLORS["dark"], collide=False),
+        head,
+        lens,
+    ]
+    lamp_floodlight = model("lamp_floodlight", lamp)
+
+    # 8. Pencil cup tower: a blue cup bristling with tall pencils and a golden flag.
+    cup = [block("Cup", (5, 5, 5), 9, 0, 7.5, COLORS["cup"]), block("CupRim", (5.4, 0.6, 5.4), 9, 5, 7.5, COLORS["silver"])]
+    heights = (8.5, 11, 9.5, 12, 10, 8, 10.5)
+    spots = ((7.4, 6.0), (10.6, 6.0), (7.4, 9.0), (10.6, 9.0), (9.0, 7.5), (8.2, 7.5), (9.8, 7.5))
+    for n, ((x, z), h) in enumerate(zip(spots, heights), start=1):
+        cup.append(block(f"CupPencil{n}", (0.9, h, 0.9), x, 5.2, z, COLORS[palette[n % 4]], collide=False))
+        cup.append(block(f"CupTip{n}", (0.6, 0.8, 0.6), x, 5.2 + h, z, COLORS["wood"], collide=False))
+    cup.append(block("TowerFlagPole", (0.2, 2.5, 0.2), 9.0, 17.4, 7.5, COLORS["post"], collide=False))
+    cup.append(block("TowerFlag", (2.4, 1.4, 0.15), 10.2, 18.6, 7.5, COLORS["gold"], collide=False))
+    pencil_cup_tower = model("pencil_cup_tower", cup)
+
+    return model(
+        "ClubUpgrades",
+        [
+            sticky_banner,
+            pencil_fence,
+            eraser_benches,
+            book_stand,
+            ruler_scoreboard,
+            paperclip_trophies,
+            lamp_floodlight,
+            pencil_cup_tower,
+        ],
+        "Folder",
+    )
 
 
 def main():
