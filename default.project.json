@@ -45,6 +45,55 @@
         "$path": "world/DeskWorld.model.json"
       }
     },
+    "Lighting": {
+      "$properties": {
+        "Brightness": 2.4,
+        "ClockTime": 17.2,
+        "Ambient": { "Color3": [0.36, 0.3, 0.26] },
+        "OutdoorAmbient": { "Color3": [0.56, 0.48, 0.42] },
+        "ColorShift_Top": { "Color3": [1, 0.84, 0.66] },
+        "EnvironmentDiffuseScale": 0.6,
+        "EnvironmentSpecularScale": 0.4,
+        "ExposureCompensation": 0.15,
+        "GlobalShadows": true,
+        "ShadowSoftness": 0.35
+      },
+      "Atmosphere": {
+        "$className": "Atmosphere",
+        "$properties": {
+          "Density": 0.32,
+          "Offset": 0.2,
+          "Color": { "Color3": [0.94, 0.8, 0.68] },
+          "Decay": { "Color3": [0.78, 0.62, 0.5] },
+          "Glare": 0.25,
+          "Haze": 1.1
+        }
+      },
+      "WarmGrade": {
+        "$className": "ColorCorrectionEffect",
+        "$properties": {
+          "Saturation": 0.14,
+          "Contrast": 0.08,
+          "Brightness": 0.0,
+          "TintColor": { "Color3": [1, 0.96, 0.9] }
+        }
+      },
+      "Bloom": {
+        "$className": "BloomEffect",
+        "$properties": {
+          "Intensity": 0.3,
+          "Size": 22,
+          "Threshold": 1.0
+        }
+      },
+      "SunRays": {
+        "$className": "SunRaysEffect",
+        "$properties": {
+          "Intensity": 0.07,
+          "Spread": 0.6
+        }
+      }
+    },
     "TextChatService": {
       "$properties": {
         "CreateDefaultTextChannels": false,
