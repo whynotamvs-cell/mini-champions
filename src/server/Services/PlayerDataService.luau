@@ -18,6 +18,7 @@ local Server = script.Parent.Parent
 local Net = require(Server.Net)
 local ServerText = require(Server.ServerText)
 local ProfileStore = require(Server.Vendor.ProfileStore)
+local TelemetryService = require(script.Parent.TelemetryService)
 
 local Migrations = require(script.Parent.PlayerData.Migrations)
 local Snapshot = require(script.Parent.PlayerData.Snapshot)
@@ -63,10 +64,29 @@ local function scheduleSnapshot(player: Player)
 	end)
 end
 
+-- Seconds before the client is told why (it needs time to start) and before the kick. The player
+-- sees the reason on the loading screen first; the kick message is the fallback.
+local LOAD_ERROR_NOTIFY_SEC = 1.5
+local LOAD_ERROR_KICK_SEC = 5
+
+-- Loading did not work out: no profile exists, so the player must not play. Tell them why, log
+-- it (DataLoadFailed, one custom field with a reason from our own list) and kick.
+local function failLoad(player: Player, key: string, reason: string)
+	TelemetryService:Custom(player, "DataLoadFailed", 1, { reason = reason })
+	task.delay(LOAD_ERROR_NOTIFY_SEC, function()
+		if player.Parent == Players then
+			Net.fireClient("Notify", player, key)
+		end
+	end)
+	task.delay(LOAD_ERROR_KICK_SEC, function()
+		ServerText.kick(player, key)
+	end)
+end
+
 local function loadProfile(player: Player)
 	if RunService:IsStudio() and GameConfig.Studio.SimulateLoadFailure then
 		warn("[PlayerDataService] SimulateLoadFailure is on")
-		ServerText.kick(player, "Error.LoadFailed")
+		failLoad(player, "Error.LoadFailed", "simulated")
 		return
 	end
 
@@ -81,7 +101,7 @@ local function loadProfile(player: Player)
 		-- Never hand out an empty profile that could later overwrite the real one.
 		if player.Parent == Players then
 			warn(`[PlayerDataService] profile load failed for {player.UserId}`)
-			ServerText.kick(player, "Error.LoadFailed")
+			failLoad(player, "Error.LoadFailed", "store")
 		end
 		return
 	end
@@ -97,12 +117,12 @@ local function loadProfile(player: Player)
 		-- Older server code must not modify newer data (DATA_SCHEMA.md 8, rule 3).
 		warn(`[PlayerDataService] {player.UserId}: {reason}`)
 		profile:EndSession()
-		ServerText.kick(player, "Error.UpdateRequired")
+		failLoad(player, "Error.UpdateRequired", "newer")
 		return
 	elseif status == "error" then
 		warn(`[PlayerDataService] {player.UserId}: migration error: {reason}`)
 		profile:EndSession()
-		ServerText.kick(player, "Error.LoadFailed")
+		failLoad(player, "Error.LoadFailed", "migration")
 		return
 	end
 	profile.Data = migrated
