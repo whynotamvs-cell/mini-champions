@@ -20,21 +20,30 @@ OUT = os.path.join(ROOT, "world")
 IDENTITY = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
 
 COLORS = {
-    "desk": [0.62, 0.47, 0.33],
-    "hub": [0.75, 0.75, 0.75],
-    "book": [0.55, 0.57, 0.62],
-    "book_alt": [0.48, 0.50, 0.56],
-    "pencil": [0.85, 0.72, 0.35],
-    "ruler": [0.80, 0.80, 0.70],
-    "eraser": [0.90, 0.60, 0.62],
-    "note": [0.95, 0.90, 0.45],
-    "checkpoint": [0.40, 0.70, 0.45],
-    "start": [0.35, 0.55, 0.85],
-    "finish": [0.95, 0.80, 0.30],
-    "plot": [0.70, 0.70, 0.72],
-    "banner": [0.98, 0.85, 0.40],
-    "post": [0.40, 0.40, 0.42],
+    "desk": [0.70, 0.50, 0.32],
+    "hub": [0.93, 0.88, 0.78],
+    "book": [0.86, 0.33, 0.30],
+    "book_alt": [0.25, 0.58, 0.72],
+    "book_green": [0.36, 0.67, 0.45],
+    "book_purple": [0.55, 0.42, 0.72],
+    "pages": [0.97, 0.94, 0.84],
+    "pencil": [0.98, 0.78, 0.18],
+    "pencil_stripe": [0.85, 0.52, 0.10],
+    "ruler": [0.93, 0.86, 0.60],
+    "ruler_tick": [0.30, 0.24, 0.16],
+    "eraser": [0.96, 0.52, 0.58],
+    "note": [1.00, 0.92, 0.42],
+    "note_alt": [0.60, 0.90, 0.62],
+    "checkpoint": [0.30, 0.78, 0.48],
+    "start": [0.30, 0.52, 0.95],
+    "finish": [1.00, 0.78, 0.20],
+    "plot": [0.88, 0.84, 0.76],
+    "banner": [1.00, 0.80, 0.25],
+    "post": [0.52, 0.40, 0.30],
 }
+
+# Cover colours cycled over the book staircase.
+BOOK_COVERS = ["book", "book_alt", "book_green", "book_purple", "book", "book_alt"]
 
 
 def cframe(x, y, z):
@@ -54,7 +63,7 @@ def attributes(values):
     return {"Attributes": typed}
 
 
-def part(name, size, top_or_center, color, *, center=False, collide=True, touch=False, transparency=0.0, attrs=None, query=True):
+def part(name, size, top_or_center, color, *, center=False, collide=True, touch=False, transparency=0.0, attrs=None, query=True, material="SmoothPlastic"):
     """A block. By default `top_or_center` is (x, top_y, z): the walkable top surface height."""
     x, y, z = top_or_center
     cy = y if center else y - size[1] / 2
@@ -63,7 +72,7 @@ def part(name, size, top_or_center, color, *, center=False, collide=True, touch=
         "Size": list(size),
         "CFrame": cframe(x, cy, z),
         "Color": color,
-        "Material": "SmoothPlastic",
+        "Material": material,
         "TopSurface": "Smooth",
         "BottomSurface": "Smooth",
         "CanCollide": collide,
@@ -107,10 +116,18 @@ def build_track():
     zones = []
     spawns = []  # respawn points per checkpoint (index 0 = start)
 
-    def piece(name, length, width, top, color, x0, z=0.0, thickness=2.0):
+    def piece(name, length, width, top, color, x0, z=0.0, thickness=2.0, material="SmoothPlastic"):
         """Adds a block that starts at x0 along +X; returns its far edge."""
-        geo.append(part(name, (length, thickness, width), (x0 + length / 2, top, z), color))
+        geo.append(part(name, (length, thickness, width), (x0 + length / 2, top, z), color, material=material))
         return x0 + length
+
+    def decor(name, size, centre, color, material="SmoothPlastic"):
+        """Cosmetic detail: never collides, never touched, never hit by raycasts."""
+        geo.append(part(name, size, centre, color, center=True, collide=False, query=False, material=material))
+
+    def book_pages(name, x0, length, width, top, z=0.0, thickness=2.0):
+        """Cream page block visible on the front edge of a book."""
+        decor(name, (0.4, thickness - 0.6, width - 1.2), (x0 + length + 0.05, top - thickness / 2, z), COLORS["pages"])
 
     def spawn_point(name, x, top, z=0.0):
         spawns.append(
@@ -139,8 +156,12 @@ def build_track():
     top = start_top
     for i in range(6):
         top += 2
-        x = piece(f"Book{i + 1}", 10, 16, top, COLORS["book"] if i % 2 == 0 else COLORS["book_alt"], x)
-    x = piece("BookWalkway", 60, 12, top, COLORS["book"], x)
+        x0 = x
+        x = piece(f"Book{i + 1}", 10, 16, top, COLORS[BOOK_COVERS[i]], x)
+        book_pages(f"Book{i + 1}Pages", x0, 10, 16, top)
+    walk0 = x
+    x = piece("BookWalkway", 60, 12, top, COLORS["book_purple"], x)
+    book_pages("BookWalkwayPages", walk0, 60, 12, top)
 
     def checkpoint(index, x0, top_y):
         end = piece(f"Checkpoint{index}Pad", 16, 16, top_y, COLORS["checkpoint"], x0)
@@ -154,12 +175,26 @@ def build_track():
     # Segment 2: pencil beams with gaps.
     for i in range(4):
         x += 6
-        x = piece(f"Pencil{i + 1}", 24, 3, top, COLORS["pencil"], x)
+        p0 = x
+        x = piece(f"Pencil{i + 1}", 24, 3, top, COLORS["pencil"], x, material="Plastic")
+        # Painted band near the sharpened end and a pink eraser cap on the other.
+        decor(f"Pencil{i + 1}Band", (2, 2.1, 3.1), (p0 + 20, top - 1, 0), COLORS["pencil_stripe"])
+        decor(f"Pencil{i + 1}Cap", (1.5, 2.1, 3.1), (p0 + 0.75, top - 1, 0), COLORS["eraser"])
     x += 6
     x = checkpoint(2, x, top)
 
     # Segment 3: ruler bridge, then eraser hops going up and down.
-    x = piece("RulerBridge", 90, 4, top, COLORS["ruler"], x, thickness=1.0)
+    ruler0 = x
+    x = piece("RulerBridge", 90, 4, top, COLORS["ruler"], x, thickness=1.0, material="Plastic")
+    # Tick marks along one edge: long every 10, short every 5.
+    for tick in range(0, 91, 5):
+        long = tick % 10 == 0
+        decor(
+            f"RulerTick{tick}",
+            (0.3, 0.1, 1.4 if long else 0.8),
+            (ruler0 + tick, top + 0.05, -1.3 + (0 if long else 0.3)),
+            COLORS["ruler_tick"],
+        )
     hop_tops = [top + 2, top + 4, top + 2, top, top + 2]
     for i, hop_top in enumerate(hop_tops):
         x += 7
@@ -171,7 +206,16 @@ def build_track():
     # Segment 4: zigzag sticky notes.
     for i in range(6):
         x += 4
-        x = piece(f"Note{i + 1}", 10, 10, top, COLORS["note"], x, z=5.0 if i % 2 == 0 else -5.0, thickness=1.0)
+        x = piece(
+            f"Note{i + 1}",
+            10,
+            10,
+            top,
+            COLORS["note"] if i % 2 == 0 else COLORS["note_alt"],
+            x,
+            z=5.0 if i % 2 == 0 else -5.0,
+            thickness=1.0,
+        )
     x += 5
     x = checkpoint(4, x, top)
 
@@ -196,7 +240,7 @@ PLOT_TOP = 1.5
 def build_hub():
     children = [
         # Desk top: hub floor and the ground under the track. Top surface at y = 1.
-        part("DeskTop", (760, 4, 180), (270, 1, 0), COLORS["desk"]),
+        part("DeskTop", (760, 4, 180), (270, 1, 0), COLORS["desk"], material="WoodPlanks"),
         # Stairs from the hub up to the start pad (tops 2.5, 5, 7.5).
         part("StartStair1", (4, 2.5, 20), (12, 2.5, 0), COLORS["hub"], center=False),
         part("StartStair2", (4, 5, 20), (16, 5, 0), COLORS["hub"]),

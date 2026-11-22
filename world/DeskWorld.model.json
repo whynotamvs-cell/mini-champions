@@ -38,11 +38,11 @@
           }
         },
         "Color": [
-          0.62,
-          0.47,
-          0.33
+          0.7,
+          0.5,
+          0.32
         ],
-        "Material": "SmoothPlastic",
+        "Material": "WoodPlanks",
         "TopSurface": "Smooth",
         "BottomSurface": "Smooth",
         "CanCollide": true,
@@ -88,9 +88,9 @@
           }
         },
         "Color": [
-          0.75,
-          0.75,
-          0.75
+          0.93,
+          0.88,
+          0.78
         ],
         "Material": "SmoothPlastic",
         "TopSurface": "Smooth",
@@ -138,9 +138,9 @@
           }
         },
         "Color": [
-          0.75,
-          0.75,
-          0.75
+          0.93,
+          0.88,
+          0.78
         ],
         "Material": "SmoothPlastic",
         "TopSurface": "Smooth",
@@ -188,9 +188,9 @@
           }
         },
         "Color": [
-          0.75,
-          0.75,
-          0.75
+          0.93,
+          0.88,
+          0.78
         ],
         "Material": "SmoothPlastic",
         "TopSurface": "Smooth",
@@ -238,9 +238,9 @@
           }
         },
         "Color": [
-          0.75,
-          0.75,
-          0.75
+          0.93,
+          0.88,
+          0.78
         ],
         "Material": "SmoothPlastic",
         "Neutral": true,
@@ -330,9 +330,9 @@
               }
             },
             "Color": [
-              0.7,
-              0.7,
-              0.72
+              0.88,
+              0.84,
+              0.76
             ],
             "Material": "SmoothPlastic",
             "TopSurface": "Smooth",
@@ -387,9 +387,9 @@
               }
             },
             "Color": [
-              0.7,
-              0.7,
-              0.72
+              0.88,
+              0.84,
+              0.76
             ],
             "Material": "SmoothPlastic",
             "TopSurface": "Smooth",
@@ -444,9 +444,9 @@
               }
             },
             "Color": [
-              0.7,
-              0.7,
-              0.72
+              0.88,
+              0.84,
+              0.76
             ],
             "Material": "SmoothPlastic",
             "TopSurface": "Smooth",
@@ -501,9 +501,9 @@
               }
             },
             "Color": [
-              0.7,
-              0.7,
-              0.72
+              0.88,
+              0.84,
+              0.76
             ],
             "Material": "SmoothPlastic",
             "TopSurface": "Smooth",
@@ -558,9 +558,9 @@
               }
             },
             "Color": [
-              0.7,
-              0.7,
-              0.72
+              0.88,
+              0.84,
+              0.76
             ],
             "Material": "SmoothPlastic",
             "TopSurface": "Smooth",
@@ -615,9 +615,9 @@
               }
             },
             "Color": [
-              0.7,
-              0.7,
-              0.72
+              0.88,
+              0.84,
+              0.76
             ],
             "Material": "SmoothPlastic",
             "TopSurface": "Smooth",
@@ -682,9 +682,9 @@
                   }
                 },
                 "Color": [
-                  0.35,
-                  0.55,
-                  0.85
+                  0.3,
+                  0.52,
+                  0.95
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -732,9 +732,9 @@
                   }
                 },
                 "Color": [
-                  0.55,
-                  0.57,
-                  0.62
+                  0.86,
+                  0.33,
+                  0.3
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -742,6 +742,56 @@
                 "CanCollide": true,
                 "CanTouch": false,
                 "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Book1Pages",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.4,
+                  1.4,
+                  14.8
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      50.05,
+                      11.0,
+                      0.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.97,
+                  0.94,
+                  0.84
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
                 "Transparency": 0.0
               }
             },
@@ -782,9 +832,9 @@
                   }
                 },
                 "Color": [
-                  0.48,
-                  0.5,
-                  0.56
+                  0.25,
+                  0.58,
+                  0.72
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -792,6 +842,56 @@
                 "CanCollide": true,
                 "CanTouch": false,
                 "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Book2Pages",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.4,
+                  1.4,
+                  14.8
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      60.05,
+                      13.0,
+                      0.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.97,
+                  0.94,
+                  0.84
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
                 "Transparency": 0.0
               }
             },
@@ -832,9 +932,9 @@
                   }
                 },
                 "Color": [
-                  0.55,
-                  0.57,
-                  0.62
+                  0.36,
+                  0.67,
+                  0.45
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -842,6 +942,56 @@
                 "CanCollide": true,
                 "CanTouch": false,
                 "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Book3Pages",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.4,
+                  1.4,
+                  14.8
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      70.05,
+                      15.0,
+                      0.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.97,
+                  0.94,
+                  0.84
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
                 "Transparency": 0.0
               }
             },
@@ -882,9 +1032,9 @@
                   }
                 },
                 "Color": [
-                  0.48,
-                  0.5,
-                  0.56
+                  0.55,
+                  0.42,
+                  0.72
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -892,6 +1042,56 @@
                 "CanCollide": true,
                 "CanTouch": false,
                 "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Book4Pages",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.4,
+                  1.4,
+                  14.8
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      80.05,
+                      17.0,
+                      0.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.97,
+                  0.94,
+                  0.84
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
                 "Transparency": 0.0
               }
             },
@@ -932,9 +1132,9 @@
                   }
                 },
                 "Color": [
-                  0.55,
-                  0.57,
-                  0.62
+                  0.86,
+                  0.33,
+                  0.3
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -942,6 +1142,56 @@
                 "CanCollide": true,
                 "CanTouch": false,
                 "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Book5Pages",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.4,
+                  1.4,
+                  14.8
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      90.05,
+                      19.0,
+                      0.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.97,
+                  0.94,
+                  0.84
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
                 "Transparency": 0.0
               }
             },
@@ -982,9 +1232,9 @@
                   }
                 },
                 "Color": [
-                  0.48,
-                  0.5,
-                  0.56
+                  0.25,
+                  0.58,
+                  0.72
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -992,6 +1242,56 @@
                 "CanCollide": true,
                 "CanTouch": false,
                 "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Book6Pages",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.4,
+                  1.4,
+                  14.8
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      100.05,
+                      21.0,
+                      0.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.97,
+                  0.94,
+                  0.84
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
                 "Transparency": 0.0
               }
             },
@@ -1033,8 +1333,8 @@
                 },
                 "Color": [
                   0.55,
-                  0.57,
-                  0.62
+                  0.42,
+                  0.72
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -1042,6 +1342,56 @@
                 "CanCollide": true,
                 "CanTouch": false,
                 "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "BookWalkwayPages",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.4,
+                  1.4,
+                  10.8
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      160.05,
+                      21.0,
+                      0.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.97,
+                  0.94,
+                  0.84
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
                 "Transparency": 0.0
               }
             },
@@ -1082,9 +1432,9 @@
                   }
                 },
                 "Color": [
-                  0.4,
-                  0.7,
-                  0.45
+                  0.3,
+                  0.78,
+                  0.48
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -1132,16 +1482,116 @@
                   }
                 },
                 "Color": [
-                  0.85,
-                  0.72,
-                  0.35
+                  0.98,
+                  0.78,
+                  0.18
                 ],
-                "Material": "SmoothPlastic",
+                "Material": "Plastic",
                 "TopSurface": "Smooth",
                 "BottomSurface": "Smooth",
                 "CanCollide": true,
                 "CanTouch": false,
                 "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Pencil1Band",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  2,
+                  2.1,
+                  3.1
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      202,
+                      21.0,
+                      0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.52,
+                  0.1
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Pencil1Cap",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  1.5,
+                  2.1,
+                  3.1
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      182.75,
+                      21.0,
+                      0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.96,
+                  0.52,
+                  0.58
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
                 "Transparency": 0.0
               }
             },
@@ -1182,16 +1632,116 @@
                   }
                 },
                 "Color": [
-                  0.85,
-                  0.72,
-                  0.35
+                  0.98,
+                  0.78,
+                  0.18
                 ],
-                "Material": "SmoothPlastic",
+                "Material": "Plastic",
                 "TopSurface": "Smooth",
                 "BottomSurface": "Smooth",
                 "CanCollide": true,
                 "CanTouch": false,
                 "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Pencil2Band",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  2,
+                  2.1,
+                  3.1
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      232,
+                      21.0,
+                      0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.52,
+                  0.1
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Pencil2Cap",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  1.5,
+                  2.1,
+                  3.1
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      212.75,
+                      21.0,
+                      0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.96,
+                  0.52,
+                  0.58
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
                 "Transparency": 0.0
               }
             },
@@ -1232,16 +1782,116 @@
                   }
                 },
                 "Color": [
-                  0.85,
-                  0.72,
-                  0.35
+                  0.98,
+                  0.78,
+                  0.18
                 ],
-                "Material": "SmoothPlastic",
+                "Material": "Plastic",
                 "TopSurface": "Smooth",
                 "BottomSurface": "Smooth",
                 "CanCollide": true,
                 "CanTouch": false,
                 "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Pencil3Band",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  2,
+                  2.1,
+                  3.1
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      262,
+                      21.0,
+                      0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.52,
+                  0.1
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Pencil3Cap",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  1.5,
+                  2.1,
+                  3.1
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      242.75,
+                      21.0,
+                      0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.96,
+                  0.52,
+                  0.58
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
                 "Transparency": 0.0
               }
             },
@@ -1282,16 +1932,116 @@
                   }
                 },
                 "Color": [
-                  0.85,
-                  0.72,
-                  0.35
+                  0.98,
+                  0.78,
+                  0.18
                 ],
-                "Material": "SmoothPlastic",
+                "Material": "Plastic",
                 "TopSurface": "Smooth",
                 "BottomSurface": "Smooth",
                 "CanCollide": true,
                 "CanTouch": false,
                 "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Pencil4Band",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  2,
+                  2.1,
+                  3.1
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      292,
+                      21.0,
+                      0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.52,
+                  0.1
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Pencil4Cap",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  1.5,
+                  2.1,
+                  3.1
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      272.75,
+                      21.0,
+                      0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.96,
+                  0.52,
+                  0.58
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
                 "Transparency": 0.0
               }
             },
@@ -1332,9 +2082,9 @@
                   }
                 },
                 "Color": [
-                  0.4,
-                  0.7,
-                  0.45
+                  0.3,
+                  0.78,
+                  0.48
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -1382,16 +2132,966 @@
                   }
                 },
                 "Color": [
-                  0.8,
-                  0.8,
-                  0.7
+                  0.93,
+                  0.86,
+                  0.6
                 ],
-                "Material": "SmoothPlastic",
+                "Material": "Plastic",
                 "TopSurface": "Smooth",
                 "BottomSurface": "Smooth",
                 "CanCollide": true,
                 "CanTouch": false,
                 "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick0",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  1.4
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      318,
+                      22.05,
+                      -1.3
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick5",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  0.8
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      323,
+                      22.05,
+                      -1.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick10",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  1.4
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      328,
+                      22.05,
+                      -1.3
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick15",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  0.8
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      333,
+                      22.05,
+                      -1.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick20",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  1.4
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      338,
+                      22.05,
+                      -1.3
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick25",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  0.8
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      343,
+                      22.05,
+                      -1.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick30",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  1.4
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      348,
+                      22.05,
+                      -1.3
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick35",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  0.8
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      353,
+                      22.05,
+                      -1.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick40",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  1.4
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      358,
+                      22.05,
+                      -1.3
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick45",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  0.8
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      363,
+                      22.05,
+                      -1.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick50",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  1.4
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      368,
+                      22.05,
+                      -1.3
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick55",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  0.8
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      373,
+                      22.05,
+                      -1.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick60",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  1.4
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      378,
+                      22.05,
+                      -1.3
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick65",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  0.8
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      383,
+                      22.05,
+                      -1.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick70",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  1.4
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      388,
+                      22.05,
+                      -1.3
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick75",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  0.8
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      393,
+                      22.05,
+                      -1.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick80",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  1.4
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      398,
+                      22.05,
+                      -1.3
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick85",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  0.8
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      403,
+                      22.05,
+                      -1.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "RulerTick90",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  0.3,
+                  0.1,
+                  1.4
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      408,
+                      22.05,
+                      -1.3
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.24,
+                  0.16
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false,
                 "Transparency": 0.0
               }
             },
@@ -1432,9 +3132,9 @@
                   }
                 },
                 "Color": [
-                  0.9,
-                  0.6,
-                  0.62
+                  0.96,
+                  0.52,
+                  0.58
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -1482,9 +3182,9 @@
                   }
                 },
                 "Color": [
-                  0.9,
-                  0.6,
-                  0.62
+                  0.96,
+                  0.52,
+                  0.58
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -1532,9 +3232,9 @@
                   }
                 },
                 "Color": [
-                  0.9,
-                  0.6,
-                  0.62
+                  0.96,
+                  0.52,
+                  0.58
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -1582,9 +3282,9 @@
                   }
                 },
                 "Color": [
-                  0.9,
-                  0.6,
-                  0.62
+                  0.96,
+                  0.52,
+                  0.58
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -1632,9 +3332,9 @@
                   }
                 },
                 "Color": [
-                  0.9,
-                  0.6,
-                  0.62
+                  0.96,
+                  0.52,
+                  0.58
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -1682,9 +3382,9 @@
                   }
                 },
                 "Color": [
-                  0.4,
-                  0.7,
-                  0.45
+                  0.3,
+                  0.78,
+                  0.48
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -1732,9 +3432,9 @@
                   }
                 },
                 "Color": [
-                  0.95,
-                  0.9,
-                  0.45
+                  1.0,
+                  0.92,
+                  0.42
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -1782,9 +3482,9 @@
                   }
                 },
                 "Color": [
-                  0.95,
+                  0.6,
                   0.9,
-                  0.45
+                  0.62
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -1832,9 +3532,9 @@
                   }
                 },
                 "Color": [
-                  0.95,
-                  0.9,
-                  0.45
+                  1.0,
+                  0.92,
+                  0.42
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -1882,9 +3582,9 @@
                   }
                 },
                 "Color": [
-                  0.95,
+                  0.6,
                   0.9,
-                  0.45
+                  0.62
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -1932,9 +3632,9 @@
                   }
                 },
                 "Color": [
-                  0.95,
-                  0.9,
-                  0.45
+                  1.0,
+                  0.92,
+                  0.42
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -1982,9 +3682,9 @@
                   }
                 },
                 "Color": [
-                  0.95,
+                  0.6,
                   0.9,
-                  0.45
+                  0.62
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -2032,9 +3732,9 @@
                   }
                 },
                 "Color": [
-                  0.4,
-                  0.7,
-                  0.45
+                  0.3,
+                  0.78,
+                  0.48
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -2082,9 +3782,9 @@
                   }
                 },
                 "Color": [
-                  0.48,
-                  0.5,
-                  0.56
+                  0.25,
+                  0.58,
+                  0.72
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -2132,9 +3832,9 @@
                   }
                 },
                 "Color": [
-                  0.48,
-                  0.5,
-                  0.56
+                  0.25,
+                  0.58,
+                  0.72
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -2182,9 +3882,9 @@
                   }
                 },
                 "Color": [
-                  0.48,
-                  0.5,
-                  0.56
+                  0.25,
+                  0.58,
+                  0.72
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -2232,9 +3932,9 @@
                   }
                 },
                 "Color": [
-                  0.48,
-                  0.5,
-                  0.56
+                  0.25,
+                  0.58,
+                  0.72
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
@@ -2282,9 +3982,9 @@
                   }
                 },
                 "Color": [
-                  0.95,
-                  0.8,
-                  0.3
+                  1.0,
+                  0.78,
+                  0.2
                 ],
                 "Material": "SmoothPlastic",
                 "TopSurface": "Smooth",
