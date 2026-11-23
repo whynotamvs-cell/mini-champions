@@ -9,6 +9,7 @@ local TweenService = game:GetService("TweenService")
 
 local Format = require(ReplicatedStorage.Shared.Utilities.Format)
 local Formulas = require(ReplicatedStorage.Shared.Utilities.Formulas)
+local Tracks = require(ReplicatedStorage.Shared.Config.Tracks)
 local Components = require(script.Parent.Parent.UI.Components)
 local Juice = require(script.Parent.Parent.UI.Juice)
 local ClubMenuController = require(script.Parent.ClubMenuController)
@@ -195,6 +196,13 @@ local function setXp(u: Ui, snapshot: { [string]: any })
 	end
 end
 
+-- Personal best on the track a result belongs to (0 = none yet).
+local function bestTimeMs(snapshot: { [string]: any }, trackId: string?): number
+	local track = Tracks.ById[trackId or Tracks.Default]
+	local record = track and snapshot[track.DataKey]
+	return if type(record) == "table" and type(record.BestTimeMs) == "number" then record.BestTimeMs else 0
+end
+
 local function render()
 	local u = ui
 	if u == nil then
@@ -224,9 +232,9 @@ local function render()
 			u.resultLine2.Text = `+{r.stars} {STAR}`
 			u.resultLine3.Text = if r.newBest
 				then L("Dash.Result.NewBest")
-				elseif snapshot and snapshot.DeskDash.BestTimeMs > 0 then L(
+				elseif snapshot and bestTimeMs(snapshot, r.track) > 0 then L(
 					"Dash.Result.Best",
-					{ time = Format.time(snapshot.DeskDash.BestTimeMs) }
+					{ time = Format.time(bestTimeMs(snapshot, r.track)) }
 				)
 				else ""
 		else
@@ -345,6 +353,8 @@ local function onDashEvent(event: { [string]: any })
 		end
 	elseif kind == "missing_checkpoint" then
 		UIController:Toast("Dash.MissingCheckpoint", { index = event.next })
+	elseif kind == "locked" then
+		UIController:Toast("Track.Locked")
 	elseif kind == "finish" then
 		running = false
 		showResult(event)

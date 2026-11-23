@@ -167,7 +167,7 @@ for _, s in services do task.spawn(s.Start, s) end
 | `TutorialService` | Шаги обучения, продвигаются серверными событиями | `OnEvent(p, eventName)` |
 | `ClubService` | Назначение участков, покупка улучшений, отрисовка улучшений на участке | `Purchase(p, index)` |
 | `MinigameService` | Общий жизненный цикл, один активный забег на игрока | `GetActiveRun(p)` |
-| `ObstacleDash` | Логика Desk Dash | см. раздел 8 |
+| `ObstacleDash` | Логика трасс (Desk Dash, Keyboard Dash) | см. раздел 8 |
 | `EmoteService` | Проверка и рассылка эмоций | — |
 | `ChatPolicyService` | Проверка, что чат выключен; удаляет любой появившийся `TextChannel` | — |
 | `CollisionService` | Группа столкновений «Players» для всех частей персонажей (D12) | — |
@@ -214,7 +214,7 @@ end)
 
 ### 6.3. Снимок данных клиенту (D5)
 
-Сервер отправляет только то, что нужно UI: `Stars`, `Level`, `XPIntoLevel`, `XPForNext`, `ClubLevel`, `UpgradesOwned`, `Tutorial`, `DeskDash` (рекорд, медали), `Settings`. Отправка — после каждого `Update` с коалесцированием (не чаще раза в 0,2 с). Клиентские данные — только для показа; сервер их никогда не читает.
+Сервер отправляет только то, что нужно UI: `Stars`, `Level`, `XPIntoLevel`, `XPForNext`, `ClubLevel`, `UpgradesOwned`, `Tutorial`, `DeskDash` и `KeyDash` (рекорд, медали по трассам), `Settings`. Отправка — после каждого `Update` с коалесцированием (не чаще раза в 0,2 с). Клиентские данные — только для показа; сервер их никогда не читает.
 
 ## 7. Коммуникация: чат выключен, эмоции включены
 
@@ -246,7 +246,9 @@ end)
 
 Иконки — собственные (не системные эмодзи, чтобы одинаково выглядело на всех платформах).
 
-## 8. Obstacle Dash («Desk Dash»)
+## 8. Obstacle Dash («Desk Dash», «Keyboard Dash»)
+
+Один движок на несколько трасс. Всё, что отличается между трассами, описано в `src/shared/Config/Tracks.luau` (id, ключ данных, имя модели в мире, число чекпоинтов, минимумы по сегментам, порог падения, закрыта ли до конца обучения); числа медалей и таймаутов — в `Config/Economy.luau` (`Economy.Tracks`). Забег принадлежит одной трассе (`Run.track`), поэтому пределы и награды не смешиваются. В мире каждая трасса — модель под `Workspace.DeskWorld` (`DeskDash`, `KeyDash`) с папками `Geometry`, `Zones`, `Spawns` и деталью `ResultsBoard` у финиша. События `DashEvent` несут `track`; таблица результатов своя у каждой трассы (`BoardUpdate(trackId, entries)`). Закрытая трасса не стартует: сервер шлёт `{ kind = "locked" }`, клиент показывает подсказку.
 
 ### 8.1. Состояния забега (сервер)
 
@@ -358,7 +360,7 @@ Finished ──валидация провалена──► Rejected  (без 
 
 ### 12.3. Прогресс — `LogProgressionEvent` (или раздельные Start/Complete/Fail)
 
-`progressionPathName = "DeskDash"`, уровень 1 (единственная трасса), статус: начало / завершение / провал (Abandoned/Rejected).
+`progressionPathName` = `Config.Tracks[id].Progression` (`"DeskDash"` или `"KeyDash"`), уровень 1, статус: начало / завершение / провал (Abandoned/Rejected).
 
 ### 12.4. Пользовательские события — `LogCustomEvent`
 

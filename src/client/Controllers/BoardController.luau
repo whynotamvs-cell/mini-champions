@@ -1,13 +1,15 @@
 --!strict
--- Results board just past the finish: the fastest valid finishes on this server, drawn as a
--- SurfaceGui on the ResultsBoard part. Display only: the server decides what is on the board and
--- only names, times and medals arrive here. Title and empty text are localized per viewer.
+-- Results boards just past each finish line: the fastest valid finishes on this server, one board
+-- per track, drawn as a SurfaceGui on the track's ResultsBoard part. Display only: the server decides
+-- what is on a board and only names, times and medals arrive here. Title and empty text are
+-- localized per viewer.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 
 local Format = require(ReplicatedStorage.Shared.Utilities.Format)
+local Tracks = require(ReplicatedStorage.Shared.Config.Tracks)
 local Components = require(script.Parent.Parent.UI.Components)
 local Juice = require(script.Parent.Parent.UI.Juice)
 local Net = require(script.Parent.Parent.Net)
@@ -39,14 +41,15 @@ type RowUi = {
 	medal: Frame,
 }
 
-type Ui = {
+type Board = {
 	title: TextLabel,
+	subtitle: TextLabel,
 	empty: TextLabel,
 	rows: { RowUi },
+	data: { Row },
 }
 
-local ui: Ui? = nil
-local rows: { Row } = {}
+local boards: { [string]: Board } = {}
 
 -- Keeps only well-formed rows; anything unexpected is dropped, never trusted.
 local function parse(payload: any): { Row }
@@ -74,17 +77,19 @@ local function parse(payload: any): { Row }
 	return out
 end
 
-local function render(changed: { [number]: boolean }?)
-	local u = ui
-	if u == nil then
+local function render(trackId: string, changed: { [number]: boolean }?)
+	local board = boards[trackId]
+	if board == nil then
 		return
 	end
-	u.title.Text = L("Board.Title")
-	u.empty.Text = L("Board.Empty")
-	u.empty.Visible = #rows == 0
+	local track = Tracks.ById[trackId]
+	board.title.Text = L("Board.Title")
+	board.subtitle.Text = L(track.NameKey)
+	board.empty.Text = L("Board.Empty")
+	board.empty.Visible = #board.data == 0
 	local me = Players.LocalPlayer.UserId
-	for i, rowUi in u.rows do
-		local row = rows[i]
+	for i, rowUi in board.rows do
+		local row = board.data[i]
 		rowUi.frame.Visible = row ~= nil
 		if row then
 			rowUi.rank.Text = tostring(i)
@@ -99,7 +104,7 @@ local function render(changed: { [number]: boolean }?)
 	end
 end
 
-local function build(board: BasePart): Ui
+local function build(part: BasePart): Board
 	local gui = Instance.new("SurfaceGui")
 	gui.Name = "ResultsBoardGui"
 	gui.Face = Enum.NormalId.Front
@@ -108,7 +113,7 @@ local function build(board: BasePart): Ui
 	gui.LightInfluence = 0
 	gui.AlwaysOnTop = false
 	gui.ResetOnSpawn = false
-	gui.Adornee = board
+	gui.Adornee = part
 	gui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
 
 	local back = Instance.new("Frame")
@@ -118,15 +123,22 @@ local function build(board: BasePart): Ui
 	back.Parent = gui
 
 	local title = Components.label({
-		Size = UDim2.new(1, -40, 0, 70),
-		Position = UDim2.fromOffset(20, 10),
+		Size = UDim2.new(1, -40, 0, 50),
+		Position = UDim2.fromOffset(20, 6),
 		TextColor3 = Theme.Accent,
-		MaxTextSize = 56,
+		MaxTextSize = 44,
+		Parent = back,
+	})
+	local subtitle = Components.label({
+		Size = UDim2.new(1, -40, 0, 28),
+		Position = UDim2.fromOffset(20, 54),
+		TextColor3 = Theme.Muted,
+		MaxTextSize = 24,
 		Parent = back,
 	})
 	local empty = Components.label({
 		Size = UDim2.new(1, -80, 0, 100),
-		Position = UDim2.fromOffset(40, 200),
+		Position = UDim2.fromOffset(40, 210),
 		TextColor3 = Theme.TextLight,
 		MaxTextSize = 40,
 		Parent = back,
@@ -135,8 +147,8 @@ local function build(board: BasePart): Ui
 	local rowUis: { RowUi } = {}
 	for i = 1, MAX_ROWS do
 		local frame = Instance.new("Frame")
-		frame.Size = UDim2.new(1, -40, 0, 66)
-		frame.Position = UDim2.fromOffset(20, 90 + (i - 1) * 76)
+		frame.Size = UDim2.new(1, -40, 0, 62)
+		frame.Position = UDim2.fromOffset(20, 92 + (i - 1) * 76)
 		frame.BackgroundColor3 = ROW_COLOR
 		frame.BorderSizePixel = 0
 		frame.Visible = false
@@ -146,31 +158,31 @@ local function build(board: BasePart): Ui
 		corner.Parent = frame
 
 		local rank = Components.label({
-			Size = UDim2.fromOffset(60, 50),
-			Position = UDim2.fromOffset(12, 8),
+			Size = UDim2.fromOffset(60, 48),
+			Position = UDim2.fromOffset(12, 7),
 			TextColor3 = Theme.TextLight,
 			MaxTextSize = 44,
 			Parent = frame,
 		})
 		local medal = Instance.new("Frame")
 		medal.Size = UDim2.fromOffset(30, 30)
-		medal.Position = UDim2.fromOffset(82, 18)
+		medal.Position = UDim2.fromOffset(82, 16)
 		medal.BorderSizePixel = 0
 		medal.Parent = frame
 		local round = Instance.new("UICorner")
 		round.CornerRadius = UDim.new(1, 0)
 		round.Parent = medal
 		local name = Components.label({
-			Size = UDim2.new(1, -420, 0, 50),
-			Position = UDim2.fromOffset(130, 8),
+			Size = UDim2.new(1, -420, 0, 48),
+			Position = UDim2.fromOffset(130, 7),
 			TextXAlignment = Enum.TextXAlignment.Left,
 			TextColor3 = Theme.TextLight,
 			MaxTextSize = 40,
 			Parent = frame,
 		})
 		local time = Components.label({
-			Size = UDim2.fromOffset(250, 50),
-			Position = UDim2.new(1, -262, 0, 8),
+			Size = UDim2.fromOffset(250, 48),
+			Position = UDim2.new(1, -262, 0, 7),
 			TextXAlignment = Enum.TextXAlignment.Right,
 			TextColor3 = Theme.TextLight,
 			MaxTextSize = 44,
@@ -179,7 +191,7 @@ local function build(board: BasePart): Ui
 		table.insert(rowUis, { frame = frame, rank = rank, name = name, time = time, medal = medal })
 	end
 
-	return { title = title, empty = empty, rows = rowUis }
+	return { title = title, subtitle = subtitle, empty = empty, rows = rowUis, data = {} }
 end
 
 -- Which row positions got a new or faster result since the last update (for the pop).
@@ -194,30 +206,51 @@ local function changedRows(old: { Row }, new: { Row }): { [number]: boolean }
 	return changed
 end
 
+-- Looks for Workspace.DeskWorld.<WorldName>.Geometry.ResultsBoard.
+local function findBoardPart(world: Instance, track: Tracks.Track): BasePart?
+	local model = world:WaitForChild(track.WorldName, 30)
+	local geometry = model and model:WaitForChild("Geometry", 30)
+	local part = geometry and geometry:WaitForChild("ResultsBoard", 30)
+	return if part and part:IsA("BasePart") then part else nil
+end
+
 function BoardController:Init()
 	LocalizationController.Changed:Connect(function()
-		render(nil)
+		for trackId in boards do
+			render(trackId, nil)
+		end
 	end)
 end
 
 function BoardController:Start()
 	local world = Workspace:WaitForChild("DeskWorld", 30)
-	local board = world
-		and world:WaitForChild("DeskDash", 30)
-		and world.DeskDash:WaitForChild("Geometry", 30)
-		and world.DeskDash.Geometry:WaitForChild("ResultsBoard", 30)
-	if board == nil or not board:IsA("BasePart") then
-		warn("[BoardController] ResultsBoard part not found; the results board is not shown")
+	if world == nil then
+		warn("[BoardController] DeskWorld not found; the results boards are not shown")
 		return
 	end
-	ui = build(board)
-	render(nil)
+	for _, trackId in Tracks.Order do
+		local track = Tracks.ById[trackId]
+		local part = findBoardPart(world, track)
+		if part then
+			boards[trackId] = build(part)
+			render(trackId, nil)
+		else
+			warn(`[BoardController] ResultsBoard of "{trackId}" not found; its board is not shown`)
+		end
+	end
 
-	Net.onClientEvent("BoardUpdate", function(payload: any)
+	Net.onClientEvent("BoardUpdate", function(trackId: any, payload: any)
+		if type(trackId) ~= "string" then
+			return
+		end
+		local board = boards[trackId]
+		if board == nil then
+			return
+		end
 		local new = parse(payload)
-		local changed = changedRows(rows, new)
-		rows = new
-		render(changed)
+		local changed = changedRows(board.data, new)
+		board.data = new
+		render(trackId, changed)
 	end)
 	Net.fireServer("RequestBoard")
 end
