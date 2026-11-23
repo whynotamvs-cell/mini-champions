@@ -723,6 +723,15 @@ def build_scenery():
         tacks.append(prop_cylinder(f"TackPin{i + 1}", 1.6, 6, x, y + 7, z, COLORS["steel"], material="Metal", collide=False))
     out.append(model("Thumbtacks", tacks))
 
+    # Guide to the Keyboard Dash start: a trail of magenta tiles along the desk, and a tall glowing
+    # beacon over each start pad so both tracks can be found from the hub.
+    trail = []
+    for i in range(14):
+        trail.append(prop_block(f"Tile{i + 1}", (6, 0.3, 6), 6, y, -16 - i * 9, COLORS["keys_start"], material="Neon", collide=False))
+    out.append(model("KeysTrail", trail))
+    for name, x, z, color in (("DeskBeacon", 30, 16, "start"), ("KeysBeacon", 30, -126, "keys_start")):
+        out.append(model(name, [prop_block("Pillar", (3, 36, 3), x, 10, z, COLORS[color], material="Neon", collide=False)]))
+
     return out
 
 

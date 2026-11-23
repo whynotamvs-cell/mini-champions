@@ -12284,6 +12284,824 @@
               }
             }
           ]
+        },
+        {
+          "name": "KeysTrail",
+          "className": "Model",
+          "children": [
+            {
+              "name": "Tile1",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -16
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile2",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -25
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile3",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -34
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile4",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -43
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile5",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -52
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile6",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -61
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile7",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -70
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile8",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -79
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile9",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -88
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile10",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -97
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile11",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -106
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile12",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -115
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile13",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -124
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile14",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -133
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            }
+          ]
+        },
+        {
+          "name": "DeskBeacon",
+          "className": "Model",
+          "children": [
+            {
+              "name": "Pillar",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  3,
+                  36,
+                  3
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      30,
+                      28.0,
+                      16
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.52,
+                  0.95
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            }
+          ]
+        },
+        {
+          "name": "KeysBeacon",
+          "className": "Model",
+          "children": [
+            {
+              "name": "Pillar",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  3,
+                  36,
+                  3
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      30,
+                      28.0,
+                      -126
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            }
+          ]
         }
       ]
     },
