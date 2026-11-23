@@ -38,10 +38,15 @@ function Formulas.clubLevel(upgradesOwned: number): number
 	return upgradesOwned + 1
 end
 
-function Formulas.medalForTime(timeMs: number): Medal
-	if timeMs <= Economy.DashTiming.GoldMaxMs then
+-- Medal for a valid finish time on a track (default: Desk Dash). Limits: Economy.Tracks[trackId].
+function Formulas.medalForTime(timeMs: number, trackId: string?): Medal
+	local timing = (Economy.Tracks :: any)[trackId or "desk"]
+	if timing == nil then
+		timing = Economy.DashTiming
+	end
+	if timeMs <= timing.GoldMaxMs then
 		return "Gold" :: Medal
-	elseif timeMs <= Economy.DashTiming.SilverMaxMs then
+	elseif timeMs <= timing.SilverMaxMs then
 		return "Silver" :: Medal
 	end
 	return "Bronze" :: Medal

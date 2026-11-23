@@ -5,9 +5,12 @@ local JestGlobals = require(ReplicatedStorage.DevPackages.JestGlobals)
 local describe, it, expect = JestGlobals.describe, JestGlobals.it, JestGlobals.expect
 
 local Dash = require(ReplicatedStorage.Shared.Config.Dash)
+local Tracks = require(ReplicatedStorage.Shared.Config.Tracks)
 local DashRun = require(ServerScriptService.Server.Services.Minigames.DashRun)
 
 local COUNTDOWN_MS = Dash.CountdownSec * 1000
+local Desk = Tracks.ById.desk
+local Keys = Tracks.ById.keys
 
 -- Starts a run at t=0 and returns it in Running state at t=COUNTDOWN_MS.
 local function running(): DashRun.Run
@@ -19,7 +22,7 @@ end
 -- Passes all checkpoints with `segmentMs` between splits, returns the time of the last split.
 local function passAll(run: DashRun.Run, segmentMs: number): number
 	local t = COUNTDOWN_MS
-	for i = 1, Dash.CheckpointCount do
+	for i = 1, Desk.CheckpointCount do
 		t += segmentMs
 		DashRun.reachCheckpoint(run, i, t)
 	end
@@ -85,7 +88,7 @@ describe("DashRun finish and reward", function()
 		local t = COUNTDOWN_MS
 		t += 100 -- teleported to checkpoint 1
 		DashRun.reachCheckpoint(run, 1, t)
-		for i = 2, Dash.CheckpointCount do
+		for i = 2, Desk.CheckpointCount do
 			t += 15_000
 			DashRun.reachCheckpoint(run, i, t)
 		end
@@ -105,8 +108,8 @@ end)
 describe("DashRun abandon and timeout", function()
 	it("times out after TimeoutSec (TEST_PLAN D-06)", function()
 		local run = running()
-		expect(DashRun.tick(run, COUNTDOWN_MS + Dash.TimeoutSec * 1000)).toBeNil()
-		expect(DashRun.tick(run, COUNTDOWN_MS + Dash.TimeoutSec * 1000 + 1)).toBe("timeout")
+		expect(DashRun.tick(run, COUNTDOWN_MS + Desk.TimeoutSec * 1000)).toBeNil()
+		expect(DashRun.tick(run, COUNTDOWN_MS + Desk.TimeoutSec * 1000 + 1)).toBe("timeout")
 		expect(run.state).toBe("Abandoned")
 		expect(DashRun.markRewarded(run)).toBe(false)
 	end)
@@ -129,6 +132,52 @@ describe("DashRun helpers", function()
 	it("maxStep has a floor and scales with time", function()
 		expect(DashRun.maxStep(0.01)).toBe(Dash.MinStepAllowanceStuds)
 		expect(DashRun.maxStep(1)).toBe(Dash.MaxHorizontalSpeed)
+	end)
+end)
+
+describe("DashRun with several tracks", function()
+	it("a run keeps the limits of its own track", function()
+		local run = DashRun.new("k1", 0, Keys)
+		expect(run.track.Id).toBe("keys")
+		DashRun.tick(run, COUNTDOWN_MS)
+		local t = COUNTDOWN_MS
+		for i = 1, Keys.CheckpointCount do
+			t += Keys.SegmentMinMs[i] + 500
+			expect(DashRun.reachCheckpoint(run, i, t)).toBe(true)
+		end
+		-- Keys.MinValidTimeMs (30 s) is lower than Desk's (35 s): a 32 s keys run is valid ...
+		local finishAt = COUNTDOWN_MS + Keys.MinValidTimeMs + 2_000
+		expect(DashRun.reachFinish(run, finishAt)).toBe("valid")
+	end)
+
+	it("the same 32 s time is too fast on Desk Dash", function()
+		local run = DashRun.new("d1", 0, Desk)
+		DashRun.tick(run, COUNTDOWN_MS)
+		local t = COUNTDOWN_MS
+		for i = 1, Desk.CheckpointCount do
+			t += Desk.SegmentMinMs[i] + 500
+			DashRun.reachCheckpoint(run, i, t)
+		end
+		local finishAt = COUNTDOWN_MS + Keys.MinValidTimeMs + 2_000
+		expect(DashRun.reachFinish(run, finishAt)).toBe("rejected")
+		expect(run.rejectReason).toBe("too_fast")
+	end)
+
+	it("defaults to Desk Dash when no track is given", function()
+		expect(DashRun.new("x", 0).track.Id).toBe("desk")
+	end)
+
+	it("rejects a too-fast segment on the keys track by its own minimum", function()
+		local run = DashRun.new("k2", 0, Keys)
+		DashRun.tick(run, COUNTDOWN_MS)
+		local t = COUNTDOWN_MS + 1_000 -- first segment far below Keys.SegmentMinMs[1]
+		DashRun.reachCheckpoint(run, 1, t)
+		for i = 2, Keys.CheckpointCount do
+			t += 20_000
+			DashRun.reachCheckpoint(run, i, t)
+		end
+		expect(DashRun.reachFinish(run, t + 20_000)).toBe("rejected")
+		expect(run.rejectReason).toBe("segment_1_too_fast")
 	end)
 end)
 

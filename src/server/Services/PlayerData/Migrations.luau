@@ -5,10 +5,24 @@
 export type Migration = (data: any) -> any
 export type Status = "ok" | "newer" | "error"
 
-local CURRENT_VERSION = 1
+local CURRENT_VERSION = 2
 
 local MIGRATIONS: { [number]: Migration } = {
-	-- [1] = function(data) data.Club.Decor = {}; return data end, -- example for v2
+	-- v1 -> v2 (second track): a record for Keyboard Dash. Existing data is never touched.
+	[1] = function(data: any): any
+		local minigames = data.Minigames
+		if type(minigames) ~= "table" then
+			error("Minigames is not a table")
+		end
+		if minigames.KeyDash == nil then
+			minigames.KeyDash = {
+				Finishes = 0,
+				BestTimeMs = 0,
+				Medals = { Bronze = false, Silver = false, Gold = false },
+			}
+		end
+		return data
+	end,
 }
 
 local Migrations = {}

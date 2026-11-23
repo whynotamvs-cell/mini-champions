@@ -1,6 +1,21 @@
 --!strict
 -- Economy numbers. This file and docs/ECONOMY.md MUST change together, in the same commit.
 
+-- Medal limits and anti-cheat minimums per track, in ms (ECONOMY.md 2.2). Gold <= GoldMaxMs,
+-- Silver <= SilverMaxMs, anything faster than MinValidTimeMs is rejected.
+local DeskTiming = table.freeze({
+	GoldMaxMs = 55_000,
+	SilverMaxMs = 70_000,
+	MinValidTimeMs = 35_000,
+	TimeoutSec = 180,
+})
+local KeysTiming = table.freeze({
+	GoldMaxMs = 47_000,
+	SilverMaxMs = 60_000,
+	MinValidTimeMs = 30_000,
+	TimeoutSec = 180,
+})
+
 local Economy = table.freeze({
 	CurrencyName = "Stars",
 
@@ -17,13 +32,13 @@ local Economy = table.freeze({
 		FirstGoldStars = 100,
 	}),
 
-	-- ECONOMY.md 2.2 (starting values, tune after the track is built)
-	DashTiming = table.freeze({
-		GoldMaxMs = 55_000,
-		SilverMaxMs = 70_000,
-		MinValidTimeMs = 35_000,
-		TimeoutSec = 180,
+	-- ECONOMY.md 2.2 (starting values, tune after the track is built). One entry per track
+	-- (Config.Tracks); DashTiming is the Desk Dash entry, kept under its old name.
+	Tracks = table.freeze({
+		desk = DeskTiming,
+		keys = KeysTiming,
 	}),
+	DashTiming = DeskTiming,
 
 	-- ECONOMY.md 2.3
 	Tutorial = table.freeze({

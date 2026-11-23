@@ -1,10 +1,21 @@
 --!strict
--- Player data types. Schema v1, see docs/DATA_SCHEMA.md 4.
+-- Player data types. Schema v2, see docs/DATA_SCHEMA.md 4.
 
 export type Medal = "Bronze" | "Silver" | "Gold"
 export type Language = "auto" | "en" | "ru"
 
-export type PlayerDataV1 = {
+-- Best time and medals of one track (Profile.Data.Minigames.<Track.DataKey>).
+export type TrackRecord = {
+	Finishes: number,
+	BestTimeMs: number,
+	Medals: {
+		Bronze: boolean,
+		Silver: boolean,
+		Gold: boolean,
+	},
+}
+
+export type PlayerDataV2 = {
 	SchemaVersion: number,
 	Stars: number,
 	LifetimeStars: number,
@@ -17,15 +28,8 @@ export type PlayerDataV1 = {
 		UpgradesOwned: number,
 	},
 	Minigames: {
-		DeskDash: {
-			Finishes: number,
-			BestTimeMs: number,
-			Medals: {
-				Bronze: boolean,
-				Silver: boolean,
-				Gold: boolean,
-			},
-		},
+		DeskDash: TrackRecord,
+		KeyDash: TrackRecord,
 	},
 	RecentGrants: { string },
 	Settings: {
@@ -41,7 +45,7 @@ export type PlayerDataV1 = {
 	},
 }
 
-export type PlayerData = PlayerDataV1
+export type PlayerData = PlayerDataV2
 
 -- What the client receives (docs/ARCHITECTURE.md 6.3). Display only; the server never reads it back.
 export type ClientSnapshot = {
@@ -52,10 +56,8 @@ export type ClientSnapshot = {
 	ClubLevel: number,
 	UpgradesOwned: number,
 	Tutorial: { Step: number, Completed: boolean },
-	DeskDash: {
-		BestTimeMs: number,
-		Medals: { Bronze: boolean, Silver: boolean, Gold: boolean },
-	},
+	DeskDash: { BestTimeMs: number, Medals: { Bronze: boolean, Silver: boolean, Gold: boolean } },
+	KeyDash: { BestTimeMs: number, Medals: { Bronze: boolean, Silver: boolean, Gold: boolean } },
 	Settings: {
 		MusicVolume: number,
 		SfxVolume: number,

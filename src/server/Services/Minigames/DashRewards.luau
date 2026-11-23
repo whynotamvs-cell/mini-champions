@@ -1,8 +1,10 @@
 --!strict
--- Builds the grants for a valid Desk Dash finish (docs/ECONOMY.md 2.1). Pure.
+-- Builds the grants for a valid track finish (docs/ECONOMY.md 2.1). Pure. Rewards are the same on
+-- every track; SKUs, grant ids and the record being updated follow the track (Config.Tracks).
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Economy = require(ReplicatedStorage.Shared.Config.Economy)
+local Tracks = require(ReplicatedStorage.Shared.Config.Tracks)
 local Formulas = require(ReplicatedStorage.Shared.Utilities.Formulas)
 local PlayerDataTypes = require(ReplicatedStorage.Shared.Types.PlayerData)
 
@@ -15,20 +17,25 @@ export type FirstMedal = { medal: Medal, grant: Grant }
 
 local DashRewards = {}
 
+local function trackOrDefault(track: Tracks.Track?): Tracks.Track
+	return track or Tracks.ById[Tracks.Default]
+end
+
 -- Keyed by string: luau-lsp 1.70 rejects singleton-union keys in indexers.
 local MEDAL_RANK: { [string]: number } = { Bronze = 1, Silver = 2, Gold = 3 }
 local TIERS: { Medal } = { "Bronze" :: Medal, "Silver" :: Medal, "Gold" :: Medal }
 
 -- The per-run grant: finish + medal bonus (repeats every run).
-function DashRewards.runGrant(runId: string, medal: Medal): Grant
+function DashRewards.runGrant(runId: string, medal: Medal, track: Tracks.Track?): Grant
 	local d = Economy.Dash
-	local lines = { { sku = "dash_finish", stars = d.FinishStars } }
+	local prefix = trackOrDefault(track).SkuPrefix
+	local lines = { { sku = `{prefix}_finish`, stars = d.FinishStars } }
 	local xp = d.FinishXP
 	if medal == "Silver" then
-		table.insert(lines, { sku = "dash_medal_silver", stars = d.SilverBonusStars })
+		table.insert(lines, { sku = `{prefix}_medal_silver`, stars = d.SilverBonusStars })
 		xp += d.SilverBonusXP
 	elseif medal == "Gold" then
-		table.insert(lines, { sku = "dash_medal_gold", stars = d.GoldBonusStars })
+		table.insert(lines, { sku = `{prefix}_medal_gold`, stars = d.GoldBonusStars })
 		xp += d.GoldBonusXP
 	end
 	return { source = "DashRun", grantId = `dash:{runId}`, lines = lines, xp = xp }
@@ -36,8 +43,9 @@ end
 
 -- One-time grants for every medal tier reached for the first time. A first Gold also
 -- awards first Silver and first Bronze (ECONOMY.md 2.1).
-function DashRewards.firstMedalGrants(medal: Medal): { FirstMedal }
+function DashRewards.firstMedalGrants(medal: Medal, track: Tracks.Track?): { FirstMedal }
 	local d = Economy.Dash
+	local prefix = trackOrDefault(track).SkuPrefix
 	local amounts: { [string]: number } =
 		{ Bronze = d.FirstBronzeStars, Silver = d.FirstSilverStars, Gold = d.FirstGoldStars }
 	local result: { FirstMedal } = {}
@@ -48,8 +56,8 @@ function DashRewards.firstMedalGrants(medal: Medal): { FirstMedal }
 				medal = tier :: Medal,
 				grant = {
 					source = "DashFirstMedal",
-					grantId = `medal:dash:{lower}`,
-					lines = { { sku = `dash_first_{lower}`, stars = amounts[tier] } },
+					grantId = `medal:{prefix}:{lower}`,
+					lines = { { sku = `{prefix}_first_{lower}`, stars = amounts[tier] } },
 					xp = 0,
 				},
 			}
@@ -60,9 +68,10 @@ function DashRewards.firstMedalGrants(medal: Medal): { FirstMedal }
 end
 
 -- Guard for a first-medal grant: aborts if the medal flag is already set, otherwise sets it.
-function DashRewards.firstMedalGuard(medal: Medal): (data: any) -> boolean
+function DashRewards.firstMedalGuard(medal: Medal, track: Tracks.Track?): (data: any) -> boolean
+	local dataKey = trackOrDefault(track).DataKey
 	return function(data: any): boolean
-		local medals = data.Minigames.DeskDash.Medals
+		local medals = data.Minigames[dataKey].Medals
 		if medals[medal] then
 			return false
 		end
@@ -73,10 +82,11 @@ end
 
 -- Guard for the run grant: records the finish and the personal best in the same update.
 -- `isNewBest` is set through the returned getter.
-function DashRewards.recordFinishGuard(timeMs: number): ((data: any) -> boolean, () -> boolean)
+function DashRewards.recordFinishGuard(timeMs: number, track: Tracks.Track?): ((data: any) -> boolean, () -> boolean)
+	local dataKey = trackOrDefault(track).DataKey
 	local newBest = false
 	return function(data: any): boolean
-		local dash = data.Minigames.DeskDash
+		local dash = data.Minigames[dataKey]
 		dash.Finishes += 1
 		if dash.BestTimeMs == 0 or timeMs < dash.BestTimeMs then
 			dash.BestTimeMs = timeMs
@@ -88,6 +98,7 @@ function DashRewards.recordFinishGuard(timeMs: number): ((data: any) -> boolean,
 	end
 end
 
+-- medalForTime(timeMs, trackId?) uses the limits of that track.
 DashRewards.medalForTime = Formulas.medalForTime
 
 return DashRewards
