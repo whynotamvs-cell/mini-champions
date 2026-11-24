@@ -77,7 +77,8 @@ describe("DashRun finish and reward", function()
 
 	it("rejects a run faster than MinValidTimeMs (TEST_PLAN X-08)", function()
 		local run = running()
-		local t = passAll(run, 6_000)
+		-- Every segment is above its own minimum, but the whole run (4 x 5 s + 5 s) is below MinValidTimeMs.
+		local t = passAll(run, 5_000)
 		expect(DashRun.reachFinish(run, t + 5_000)).toBe("rejected")
 		expect(run.rejectReason).toBe("too_fast")
 		expect(DashRun.markRewarded(run)).toBe(false)
@@ -145,12 +146,12 @@ describe("DashRun with several tracks", function()
 			t += Keys.SegmentMinMs[i] + 500
 			expect(DashRun.reachCheckpoint(run, i, t)).toBe(true)
 		end
-		-- Keys.MinValidTimeMs (30 s) is lower than Desk's (35 s): a 32 s keys run is valid ...
-		local finishAt = COUNTDOWN_MS + Keys.MinValidTimeMs + 2_000
+		-- Keys.MinValidTimeMs is a little lower than Desk's: a run of exactly that time is valid ...
+		local finishAt = COUNTDOWN_MS + Keys.MinValidTimeMs + 500
 		expect(DashRun.reachFinish(run, finishAt)).toBe("valid")
 	end)
 
-	it("the same 32 s time is too fast on Desk Dash", function()
+	it("the same time is too fast on Desk Dash", function()
 		local run = DashRun.new("d1", 0, Desk)
 		DashRun.tick(run, COUNTDOWN_MS)
 		local t = COUNTDOWN_MS
@@ -158,7 +159,8 @@ describe("DashRun with several tracks", function()
 			t += Desk.SegmentMinMs[i] + 500
 			DashRun.reachCheckpoint(run, i, t)
 		end
-		local finishAt = COUNTDOWN_MS + Keys.MinValidTimeMs + 2_000
+		local finishAt = COUNTDOWN_MS + Keys.MinValidTimeMs + 500
+		expect(Keys.MinValidTimeMs).toBeLessThan(Desk.MinValidTimeMs)
 		expect(DashRun.reachFinish(run, finishAt)).toBe("rejected")
 		expect(run.rejectReason).toBe("too_fast")
 	end)
