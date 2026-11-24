@@ -210,6 +210,10 @@ def rects_overlap(a, b, margin=0.0):
     )
 
 
+def shade(color, factor):
+    return [round(min(1.0, c * factor), 3) for c in color]
+
+
 class TrackBuilder:
     """Lays a track piece by piece along a heading, turning at pads, and checks every jump."""
 
@@ -240,6 +244,92 @@ class TrackBuilder:
         need = gap + 1.5 * max(rise, 0)
         assert need <= JUMP_BUDGET, f"{self.label}: {pname} -> {name}: jump {need:.1f} > {JUMP_BUDGET}"
 
+    def _decorate(self, name, cx, cz, sx, sz, top, thick, color):
+        """Cosmetic details on and under a piece (never collide, never hit by raycasts): a support
+        column to the floor, and themed marks (page edges, pencil bands, keycap plates, ...)."""
+
+        def deco(label, size, x, y, z, col, material="SmoothPlastic"):
+            self.geo.append(part(f"{name}_{label}", size, (x, y, z), col, center=True, collide=False, query=False, material=material))
+
+        base = name.rstrip("0123456789")
+        along_x = sx >= sz
+        surface = top  # top surface of the piece
+        mid = top - thick / 2  # centre height of the piece body
+
+        # Support column: a stack / stilt under the platform, so nothing floats in the air.
+        height = top - thick - FLOOR_Y
+        if height > 1:
+            if self.label == "keys":
+                col = COLORS["keycap_dark"] if base in ("Key", "ZigKey", "ArrowKey") else shade(COLORS["dark"], 1.2)
+            else:
+                col = shade(color, 0.55)
+            width_x = max(1.0, min(sx * 0.6, 8.0)) if sx > 3.5 else 1.2
+            width_z = max(1.0, min(sz * 0.6, 8.0)) if sz > 3.5 else 1.2
+            deco("Support", (width_x, height, width_z), cx, FLOOR_Y + height / 2, cz, col)
+
+        long_len = max(sx, sz)
+
+        if base in ("Book", "BookWalkway", "Climb"):
+            # cream page edges along both long sides and a darker title band on the cover
+            if along_x:
+                deco("PagesA", (sx * 0.96, thick * 0.5, 0.5), cx, mid, cz + sz / 2 - 0.1, COLORS["pages"])
+                deco("PagesB", (sx * 0.96, thick * 0.5, 0.5), cx, mid, cz - sz / 2 + 0.1, COLORS["pages"])
+                deco("Band", (sx * 0.8, 0.15, 1.6), cx, surface + 0.08, cz, shade(color, 0.7))
+            else:
+                deco("PagesA", (0.5, thick * 0.5, sz * 0.96), cx + sx / 2 - 0.1, mid, cz, COLORS["pages"])
+                deco("PagesB", (0.5, thick * 0.5, sz * 0.96), cx - sx / 2 + 0.1, mid, cz, COLORS["pages"])
+                deco("Band", (1.6, 0.15, sz * 0.8), cx, surface + 0.08, cz, shade(color, 0.7))
+        elif base == "Pencil":
+            deco("Ferrule", (2.2, thick + 0.2, sz + 0.2), cx + sx / 2 - 5, mid, cz, COLORS["steel"], "Metal")
+            deco("Cap", (3.0, thick + 0.2, sz + 0.2), cx - sx / 2 + 1.5, mid, cz, COLORS["eraser"])
+            deco("Stripe", (long_len * 0.4, 0.12, 0.6), cx - 2, surface + 0.06, cz, COLORS["pencil_stripe"])
+        elif base == "Eraser":
+            deco("Sleeve", (sx * 0.42, thick + 0.2, sz + 0.2), cx, mid, cz, COLORS["dark"])
+        elif base == "RulerBridge":
+            for k in range(int(long_len / 4)):
+                off = -long_len / 2 + 2 + k * 4
+                tick = (0.3, 0.12, 1.0) if along_x else (1.0, 0.12, 0.3)
+                if along_x:
+                    deco(f"Tick{k}", tick, cx + off, surface + 0.06, cz - sz / 2 + 0.7, COLORS["ruler_tick"])
+                else:
+                    deco(f"Tick{k}", tick, cx - sx / 2 + 0.7, surface + 0.06, cz + off, COLORS["ruler_tick"])
+        elif base == "Note":
+            deco("Glue", (sx, 0.14, 2.2), cx, surface + 0.07, cz - sz / 2 + 1.1, shade(color, 0.8))
+            deco("ScribbleA", (sx * 0.6, 0.12, 0.35), cx, surface + 0.06, cz + 0.5, COLORS["dark"])
+            deco("ScribbleB", (sx * 0.45, 0.12, 0.35), cx - 1, surface + 0.06, cz + 2.3, COLORS["dark"])
+        elif base == "StartPad":
+            for k in (-5, 0, 5):
+                deco(f"Chevron{k}", (1.4, 0.14, 11), cx + k, surface + 0.07, cz, COLORS["pages"])
+        elif base == "FinishPad":
+            for i in range(5):
+                for j in range(5):
+                    if (i + j) % 2 == 0:
+                        deco(f"Check{i}{j}", (3.6, 0.14, 3.6), cx - 7.2 + i * 3.6, surface + 0.07, cz - 7.2 + j * 3.6, COLORS["dark"])
+        elif base.startswith("Checkpoint") and base.endswith("Pad"):
+            for fx, fz in ((-5.5, -5.5), (5.5, 5.5)):
+                deco(f"Pole{fx}", (0.5, 7, 0.5), cx + fx, surface + 3.5, cz + fz, COLORS["post"])
+                deco(f"Flag{fx}", (3, 2, 0.2), cx + fx + 1.5, surface + 6, cz + fz, COLORS["key_green"])
+        elif base in ("Key", "ZigKey", "ArrowKey"):
+            plate = shade(color, 1.1 if color[0] < 0.9 else 0.96)
+            deco("Plate", (sx - 2.4, 0.25, sz - 2.4), cx, surface + 0.12, cz, plate)
+            deco("LegendStem", (0.8, 0.14, 3.4), cx, surface + 0.32, cz, COLORS["dark"] if color[0] > 0.6 else COLORS["pages"])
+            deco("LegendBar", (3.2, 0.14, 0.8), cx, surface + 0.32, cz - 1.4, COLORS["dark"] if color[0] > 0.6 else COLORS["pages"])
+        elif base == "Cable":
+            plug_long = (3.0, thick + 1.0, 3.8) if along_x else (3.8, thick + 1.0, 3.0)
+            for sign in (-1, 1):
+                if along_x:
+                    deco(f"Plug{sign}", plug_long, cx + sign * (sx / 2 - 1.5), mid, cz, COLORS["steel"], "Metal")
+                else:
+                    deco(f"Plug{sign}", plug_long, cx, mid, cz + sign * (sz / 2 - 1.5), COLORS["steel"], "Metal")
+            for k in range(1, 3):
+                if along_x:
+                    deco(f"Clip{k}", (1.2, thick + 0.5, 3.8), cx - sx / 2 + k * sx / 3, mid, cz, shade(COLORS["cable"], 2.4))
+                else:
+                    deco(f"Clip{k}", (3.8, thick + 0.5, 1.2), cx, mid, cz - sz / 2 + k * sz / 3, shade(COLORS["cable"], 2.4))
+        elif base == "EnterStep":
+            deco("EnterBar", (6, 0.14, 0.8), cx, surface + 0.07, cz + 1, COLORS["pages"])
+            deco("EnterDrop", (0.8, 0.14, 3.2), cx + 2.6, surface + 0.07, cz - 0.4, COLORS["pages"])
+
     def _spawn(self, name, x, top, z):
         self.spawns.append(
             {
@@ -264,6 +354,7 @@ class TrackBuilder:
         self.last = (rect, top, name)
         self.rects.append(rect)
         self.path.append((cx, top, cz))
+        self._decorate(name, cx, cz, size_x, size_z, top, thickness, color)
         return len(self.path) - 1
 
     # -- public
