@@ -1,9 +1,9 @@
 --!strict
 -- Obstacle track sounds: countdown ticks, GO, jump and landing during a run, checkpoint chime, fall,
--- and the finish jingle by medal. Each track has its own set (Config.Sounds): Desk Dash is wooden
--- and papery, Keyboard Dash is clicky and electronic. Driven only by server DashEvents and the
--- local character's own jump/landing; all sounds go through the "Sfx" SoundGroup so the volume
--- setting applies.
+-- and the finish jingle by medal. Each track plays cues from its own sprite file (Config.Sounds,
+-- made by tools/gen_sounds.py). A track whose sprite has no asset id yet stays silent. Driven only by
+-- server DashEvents and the local character's own jump/landing; every sound goes through the "Sfx"
+-- SoundGroup, so the volume setting applies.
 
 local ContentProvider = game:GetService("ContentProvider")
 local Debris = game:GetService("Debris")
@@ -19,6 +19,7 @@ local DashController = require(script.Parent.DashController)
 local SoundController = {}
 
 local MIN_GAP_SEC = 0.09 -- jump/landing sounds never stack tighter than this
+local LOAD_TIMEOUT_SEC = 3
 
 local activeTrack: string? = nil
 local countdownToken = 0
@@ -36,28 +37,19 @@ local function sfxGroup(): SoundGroup
 	return group
 end
 
-local function playStep(step: Sounds.Step)
-	local function fire()
-		local sound = Instance.new("Sound")
-		sound.SoundId = step.id
-		sound.PlaybackSpeed = step.speed
-		sound.Volume = step.volume
-		sound.SoundGroup = sfxGroup()
-		sound.Parent = SoundService
-		sound.Ended:Once(function()
-			sound:Destroy()
-		end)
-		sound:Play()
-		Debris:AddItem(sound, 4) -- fallback if Ended never fires
+local function spriteOf(trackId: any): Sounds.Sprite?
+	if type(trackId) ~= "string" then
+		return nil
 	end
-	if step.delay > 0 then
-		task.delay(step.delay, fire)
-	else
-		fire()
+	local sprite = (Sounds.Tracks :: any)[trackId] :: Sounds.Sprite?
+	if sprite == nil or sprite.asset == "" then
+		return nil -- no sprite uploaded yet: this track stays silent
 	end
+	return sprite
 end
 
-local function playCue(steps: { Sounds.Step }, throttleKey: string?)
+-- Plays one cue of a sprite: starts the file at the cue's offset, stops it after the cue's length.
+local function playCue(sprite: Sounds.Sprite, cue: Sounds.Cue, throttleKey: string?)
 	if throttleKey then
 		local now = os.clock()
 		if now - (lastPlayed[throttleKey] or 0) < MIN_GAP_SEC then
@@ -65,24 +57,46 @@ local function playCue(steps: { Sounds.Step }, throttleKey: string?)
 		end
 		lastPlayed[throttleKey] = now
 	end
-	for _, step in steps do
-		playStep(step)
-	end
-end
-
-local function cuesOf(trackId: any): Sounds.Cues?
-	if type(trackId) ~= "string" then
-		return nil
-	end
-	return (Sounds.Tracks :: any)[trackId]
+	task.spawn(function()
+		local sound = Instance.new("Sound")
+		sound.SoundId = sprite.asset
+		sound.Volume = cue.volume
+		sound.SoundGroup = sfxGroup()
+		sound.Parent = SoundService
+		Debris:AddItem(sound, cue.length + LOAD_TIMEOUT_SEC + 1) -- safety net
+		if not sound.IsLoaded then
+			local loaded = false
+			sound.Loaded:Once(function()
+				loaded = true
+			end)
+			local waited = 0
+			while not loaded and waited < LOAD_TIMEOUT_SEC do
+				task.wait(0.05)
+				waited += 0.05
+			end
+			if not loaded then
+				sound:Destroy()
+				return
+			end
+		end
+		sound.TimePosition = cue.start
+		sound:Play()
+		task.delay(cue.length, function()
+			if sound.Parent then
+				sound:Stop()
+				sound:Destroy()
+			end
+		end)
+	end)
 end
 
 local function onDashEvent(event: DashController.DashEvent)
 	local trackId = event.track
-	local cues = cuesOf(trackId)
-	if cues == nil then
+	local sprite = spriteOf(trackId)
+	if sprite == nil then
 		return
 	end
+	local cues = sprite.cues
 	local kind = event.kind
 	if kind == "countdown" then
 		countdownToken += 1
@@ -91,7 +105,7 @@ local function onDashEvent(event: DashController.DashEvent)
 		for i = 0, seconds - 1 do
 			task.delay(i, function()
 				if token == countdownToken then
-					playCue(cues.tick)
+					playCue(sprite, cues.tick)
 				end
 			end)
 		end
@@ -99,16 +113,16 @@ local function onDashEvent(event: DashController.DashEvent)
 		countdownToken += 1
 		activeTrack = trackId
 		fallen = false
-		playCue(cues.go)
+		playCue(sprite, cues.go)
 	elseif kind == "checkpoint" then
-		playCue(cues.checkpoint)
+		playCue(sprite, cues.checkpoint)
 	elseif kind == "finish" then
 		activeTrack = nil
 		if event.valid == true then
 			local medal = if event.medal == "Gold" or event.medal == "Silver" then event.medal else "Bronze"
-			playCue((cues.finish :: any)[medal])
+			playCue(sprite, (cues :: any)["finish" .. medal])
 		else
-			playCue(cues.rejected)
+			playCue(sprite, cues.rejected)
 		end
 	elseif kind == "cancel" or kind == "abandon" then
 		countdownToken += 1
@@ -122,15 +136,14 @@ local function hookCharacter(character: Model)
 		return
 	end
 	humanoid.StateChanged:Connect(function(_old, new)
-		local trackId = activeTrack
-		local cues = cuesOf(trackId)
-		if trackId == nil or cues == nil then
+		local sprite = spriteOf(activeTrack)
+		if sprite == nil then
 			return
 		end
 		if new == Enum.HumanoidStateType.Jumping then
-			playCue(cues.jump, "jump")
+			playCue(sprite, sprite.cues.jump, "jump")
 		elseif new == Enum.HumanoidStateType.Landed then
-			playCue(cues.land, "land")
+			playCue(sprite, sprite.cues.land, "land")
 		end
 	end)
 end
@@ -149,7 +162,8 @@ function SoundController:Start()
 	-- A fall below the track's height plays once; the server teleports the player back.
 	RunService.Heartbeat:Connect(function()
 		local trackId = activeTrack
-		if trackId == nil then
+		local sprite = spriteOf(trackId)
+		if trackId == nil or sprite == nil then
 			return
 		end
 		local track = Tracks.ById[trackId]
@@ -161,22 +175,25 @@ function SoundController:Start()
 		local y = root.Position.Y
 		if y < track.FallResetY and not fallen then
 			fallen = true
-			local cues = cuesOf(trackId)
-			if cues then
-				playCue(cues.fall)
-			end
+			playCue(sprite, sprite.cues.fall)
 		elseif y >= track.FallResetY + 3 then
 			fallen = false
 		end
 	end)
 
-	-- Warm the cache so the first jump does not wait for the file.
+	-- Warm the cache so the first cue does not wait for the file.
 	task.spawn(function()
 		local templates: { Instance } = {}
-		for id in Sounds.Verified do
-			local sound = Instance.new("Sound")
-			sound.SoundId = id
-			table.insert(templates, sound)
+		for _, trackId in Tracks.Order do
+			local sprite: Sounds.Sprite = (Sounds.Tracks :: any)[trackId]
+			if sprite.asset ~= "" then
+				local sound = Instance.new("Sound")
+				sound.SoundId = sprite.asset
+				table.insert(templates, sound)
+			end
+		end
+		if #templates == 0 then
+			return
 		end
 		pcall(function()
 			ContentProvider:PreloadAsync(templates)

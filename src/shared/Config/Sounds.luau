@@ -1,92 +1,72 @@
 --!strict
--- Sound cues of the obstacle tracks. Every sound is an engine built-in (rbxasset://sounds/...), so
--- nothing is downloaded and there are no licence questions; each one was loaded in Studio and has a
--- real length (VERIFIED below). Tracks sound different by pitch and by sound choice: Desk Dash is
--- wooden and papery (thunks, snaps), Keyboard Dash is clicky and electronic (clicks, pings).
--- Volumes are relative; the player's Sfx volume (Settings) scales them through the "Sfx" SoundGroup.
+-- Sound cues of the obstacle tracks. Each track has one "sprite": a single audio file with every cue
+-- back to back, synthesized by tools/gen_sounds.py (own work: no samples, no third-party audio). The
+-- game plays a cue by starting the sound at the cue's offset and stopping it after its length.
+-- Desk Dash is warm marimba/wood, Keyboard Dash is bright triangle beeps and clean key clicks.
+--
+-- Until a sprite is uploaded and its asset id is set below, that track is silent (no sounds at all
+-- rather than harsh stand-ins). Upload assets/audio/<track>.wav as an Audio asset, then paste the id.
+-- SLOTS must match tools/gen_sounds.py.
 
-export type Step = { id: string, speed: number, volume: number, delay: number }
+export type Cue = { start: number, length: number, volume: number }
 export type Cues = {
-	tick: { Step }, -- countdown 3-2-1, once per second
-	go: { Step },
-	jump: { Step },
-	land: { Step },
-	checkpoint: { Step },
-	fall: { Step },
-	finish: { Gold: { Step }, Silver: { Step }, Bronze: { Step } },
-	rejected: { Step },
+	tick: Cue, -- countdown 3-2-1, once per second
+	go: Cue,
+	jump: Cue,
+	land: Cue,
+	checkpoint: Cue,
+	fall: Cue,
+	finishBronze: Cue,
+	finishSilver: Cue,
+	finishGold: Cue,
+	rejected: Cue,
 }
 
-local PREFIX = "rbxasset://sounds/"
+export type Sprite = {
+	asset: string, -- "rbxassetid://<id>" once uploaded; "" = silent
+	cues: Cues,
+}
 
--- Checked 2026-11-24 in Studio: IsLoaded and TimeLength > 0 (length in seconds in the comment).
-local Verified: { [string]: number } = table.freeze({
-	[PREFIX .. "action_jump.mp3"] = 0.34,
-	[PREFIX .. "action_jump_land.mp3"] = 0.26,
-	[PREFIX .. "clickfast.wav"] = 0.29,
-	[PREFIX .. "button.wav"] = 0.58,
-	[PREFIX .. "electronicpingshort.wav"] = 0.72,
-	[PREFIX .. "snap.mp3"] = 0.42,
-	[PREFIX .. "switch.wav"] = 0.24,
-	[PREFIX .. "SWITCH3.wav"] = 0.37,
-	[PREFIX .. "kerplunk.wav"] = 0.37,
-	[PREFIX .. "victory.wav"] = 1.31,
-	[PREFIX .. "hit.wav"] = 0.84,
-	[PREFIX .. "bass.mp3"] = 1.01,
-})
-
-local JUMP = PREFIX .. "action_jump.mp3"
-local LAND = PREFIX .. "action_jump_land.mp3"
-local CLICK = PREFIX .. "clickfast.wav"
-local PING = PREFIX .. "electronicpingshort.wav"
-local SNAP = PREFIX .. "snap.mp3"
-local SWITCH = PREFIX .. "switch.wav"
-local SWITCH3 = PREFIX .. "SWITCH3.wav"
-local THUNK = PREFIX .. "kerplunk.wav"
-local VICTORY = PREFIX .. "victory.wav"
-local HIT = PREFIX .. "hit.wav"
-local BASS = PREFIX .. "bass.mp3"
-
-local function step(id: string, speed: number, volume: number, delay: number?): Step
-	return { id = id, speed = speed, volume = volume, delay = delay or 0 }
+local function cue(start: number, length: number, volume: number): Cue
+	return { start = start, length = length, volume = volume }
 end
 
-local desk: Cues = {
-	tick = { step(THUNK, 1.0, 0.7) },
-	go = { step(SNAP, 1.15, 0.9), step(THUNK, 0.8, 0.6) },
-	jump = { step(JUMP, 0.85, 0.5) },
-	land = { step(LAND, 1.1, 0.4), step(THUNK, 1.6, 0.35) },
-	checkpoint = { step(SWITCH3, 1.0, 0.8), step(SNAP, 1.6, 0.5, 0.12) },
-	fall = { step(HIT, 0.7, 0.6) },
-	finish = {
-		Gold = { step(VICTORY, 1.0, 0.9), step(SNAP, 1.5, 0.6, 0.35) },
-		Silver = { step(VICTORY, 0.92, 0.85) },
-		Bronze = { step(VICTORY, 0.84, 0.8) },
-	},
-	rejected = { step(HIT, 0.6, 0.6) },
-}
-
-local keys: Cues = {
-	tick = { step(SWITCH, 1.6, 0.7) },
-	go = { step(PING, 1.4, 0.8), step(CLICK, 1.2, 0.6, 0.1) },
-	jump = { step(CLICK, 1.35, 0.55) },
-	land = { step(CLICK, 0.9, 0.5) },
-	checkpoint = { step(PING, 1.25, 0.8), step(PING, 1.7, 0.5, 0.15) },
-	fall = { step(BASS, 1.4, 0.5) },
-	finish = {
-		Gold = { step(VICTORY, 1.15, 0.9), step(PING, 1.6, 0.6, 0.3), step(PING, 2.0, 0.5, 0.5) },
-		Silver = { step(VICTORY, 1.05, 0.85), step(PING, 1.5, 0.5, 0.3) },
-		Bronze = { step(VICTORY, 0.95, 0.8) },
-	},
-	rejected = { step(BASS, 1.0, 0.55) },
-}
+-- Offsets and lengths in seconds (tools/gen_sounds.py SLOTS) and relative loudness. The clean
+-- synthesized files are fairly quiet (peaks 0.1-0.6 of full scale), so volumes sit above 1.
+local function cues(): Cues
+	return {
+		tick = cue(0.0, 0.30, 1.4),
+		go = cue(0.5, 0.55, 1.6),
+		jump = cue(1.2, 0.25, 1.5),
+		land = cue(1.7, 0.25, 1.4),
+		checkpoint = cue(2.2, 0.60, 1.6),
+		fall = cue(3.0, 0.50, 1.4),
+		finishBronze = cue(3.8, 1.00, 1.7),
+		finishSilver = cue(5.0, 1.30, 1.7),
+		finishGold = cue(6.5, 1.90, 1.7),
+		rejected = cue(8.6, 0.60, 1.4),
+	}
+end
 
 local Sounds = table.freeze({
-	Verified = Verified,
 	Tracks = table.freeze({
-		desk = desk,
-		keys = keys,
+		desk = table.freeze({ asset = "", cues = table.freeze(cues()) }) :: Sprite,
+		keys = table.freeze({ asset = "", cues = table.freeze(cues()) }) :: Sprite,
 	}),
+	CueNames = table.freeze({
+		"tick",
+		"go",
+		"jump",
+		"land",
+		"checkpoint",
+		"fall",
+		"finishBronze",
+		"finishSilver",
+		"finishGold",
+		"rejected",
+	}),
+	-- Longest sprite in seconds (a cue must end inside it).
+	SpriteSeconds = 9.4,
 })
 
 return Sounds
