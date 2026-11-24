@@ -50,8 +50,8 @@ end
 
 local Sounds = table.freeze({
 	Tracks = table.freeze({
-		desk = table.freeze({ asset = "", cues = table.freeze(cues()) }) :: Sprite,
-		keys = table.freeze({ asset = "", cues = table.freeze(cues()) }) :: Sprite,
+		desk = table.freeze({ asset = "rbxassetid://102128474716270", cues = table.freeze(cues()) }) :: Sprite,
+		keys = table.freeze({ asset = "rbxassetid://75328552759052", cues = table.freeze(cues()) }) :: Sprite,
 	}),
 	CueNames = table.freeze({
 		"tick",
