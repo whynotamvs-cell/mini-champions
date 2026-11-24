@@ -78,3 +78,6 @@ Track.KeysName,Keyboard Dash,Name of the second track,,Keyboard Dash,Забег 
 Track.Locked,Finish the tutorial to unlock this track!,Toast when standing on a locked start pad,,Finish the tutorial to unlock this track!,"Пройди обучение, чтобы открыть эту трассу!"
 Track.LockedSign,Finish the tutorial first,Short note on the sign above a locked track,,Finish the tutorial first,Сначала пройди обучение
 Track.Unlocked,New track open: Keyboard Dash!,Toast when the tutorial ends and the second track unlocks,,New track open: Keyboard Dash!,Открыта новая трасса: Забег по клавиатуре!
+HUD.Records,Records,Button that opens the records screen,,Records,Рекорды
+Records.Title,Your records,Records screen title,,Your records,Твои рекорды
+Records.None,No record yet,Shown when a track has no finish yet,,No record yet,Пока нет рекорда

@@ -36,11 +36,22 @@ local function setLanguage(language: string)
 		if myRequest ~= requestId then
 			return -- a newer choice arrived while this one was loading
 		end
+		if not ok then
+			-- E.g. GetTranslatorForPlayerAsync needs a published place. Never leave the UI without
+			-- text: fall back to English, the source language of every key.
+			warn(`[Localization] translator for "{language}" failed: {result}; falling back to English`)
+			ok, result = pcall(function(): Translator
+				return LocalizationService:GetTranslatorForLocaleAsync("en")
+			end)
+			if myRequest ~= requestId then
+				return
+			end
+		end
 		if ok then
 			translator = result
 			LocalizationController.Changed:Fire()
 		else
-			warn(`[Localization] translator for "{language}" failed: {result}`)
+			warn(`[Localization] English fallback failed too: {result}`)
 		end
 	end)
 end
