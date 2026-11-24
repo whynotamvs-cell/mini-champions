@@ -42,9 +42,9 @@
               }
             },
             "Color": [
+              0.52,
               0.4,
-              0.4,
-              0.42
+              0.3
             ],
             "Material": "SmoothPlastic",
             "TopSurface": "Smooth",
@@ -92,9 +92,9 @@
               }
             },
             "Color": [
+              0.52,
               0.4,
-              0.4,
-              0.42
+              0.3
             ],
             "Material": "SmoothPlastic",
             "TopSurface": "Smooth",
@@ -142,14 +142,4874 @@
               }
             },
             "Color": [
-              0.98,
-              0.85,
-              0.4
+              1.0,
+              0.8,
+              0.25
             ],
             "Material": "SmoothPlastic",
             "TopSurface": "Smooth",
             "BottomSurface": "Smooth",
             "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "pencil_fence",
+      "className": "Model",
+      "children": [
+        {
+          "name": "Pencil1",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1.2,
+              4,
+              1.2
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -11,
+                  2.0,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.98,
+              0.78,
+              0.18
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tip1",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.8,
+              0.9,
+              0.8
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -11,
+                  4.45,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Lead1",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.3,
+              0.5,
+              0.3
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -11,
+                  5.15,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.2,
+              0.21,
+              0.27
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Pencil2",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1.2,
+              4,
+              1.2
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -9,
+                  2.0,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.86,
+              0.33,
+              0.3
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tip2",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.8,
+              0.9,
+              0.8
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -9,
+                  4.45,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Lead2",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.3,
+              0.5,
+              0.3
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -9,
+                  5.15,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.2,
+              0.21,
+              0.27
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Pencil3",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1.2,
+              4,
+              1.2
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -7,
+                  2.0,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.25,
+              0.58,
+              0.72
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tip3",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.8,
+              0.9,
+              0.8
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -7,
+                  4.45,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Lead3",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.3,
+              0.5,
+              0.3
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -7,
+                  5.15,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.2,
+              0.21,
+              0.27
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Pencil4",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1.2,
+              4,
+              1.2
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -5,
+                  2.0,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.36,
+              0.67,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tip4",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.8,
+              0.9,
+              0.8
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -5,
+                  4.45,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Lead4",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.3,
+              0.5,
+              0.3
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -5,
+                  5.15,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.2,
+              0.21,
+              0.27
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Pencil5",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1.2,
+              4,
+              1.2
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -3,
+                  2.0,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.98,
+              0.78,
+              0.18
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tip5",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.8,
+              0.9,
+              0.8
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -3,
+                  4.45,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Lead5",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.3,
+              0.5,
+              0.3
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -3,
+                  5.15,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.2,
+              0.21,
+              0.27
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Pencil6",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1.2,
+              4,
+              1.2
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -1,
+                  2.0,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.86,
+              0.33,
+              0.3
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tip6",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.8,
+              0.9,
+              0.8
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -1,
+                  4.45,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Lead6",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.3,
+              0.5,
+              0.3
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -1,
+                  5.15,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.2,
+              0.21,
+              0.27
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Pencil7",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1.2,
+              4,
+              1.2
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  1,
+                  2.0,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.25,
+              0.58,
+              0.72
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tip7",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.8,
+              0.9,
+              0.8
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  1,
+                  4.45,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Lead7",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.3,
+              0.5,
+              0.3
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  1,
+                  5.15,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.2,
+              0.21,
+              0.27
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Pencil8",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1.2,
+              4,
+              1.2
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  3,
+                  2.0,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.36,
+              0.67,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tip8",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.8,
+              0.9,
+              0.8
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  3,
+                  4.45,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Lead8",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.3,
+              0.5,
+              0.3
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  3,
+                  5.15,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.2,
+              0.21,
+              0.27
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Pencil9",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1.2,
+              4,
+              1.2
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  5,
+                  2.0,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.98,
+              0.78,
+              0.18
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tip9",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.8,
+              0.9,
+              0.8
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  5,
+                  4.45,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Lead9",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.3,
+              0.5,
+              0.3
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  5,
+                  5.15,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.2,
+              0.21,
+              0.27
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Pencil10",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1.2,
+              4,
+              1.2
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  7,
+                  2.0,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.86,
+              0.33,
+              0.3
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tip10",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.8,
+              0.9,
+              0.8
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  7,
+                  4.45,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Lead10",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.3,
+              0.5,
+              0.3
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  7,
+                  5.15,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.2,
+              0.21,
+              0.27
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Pencil11",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1.2,
+              4,
+              1.2
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  9,
+                  2.0,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.25,
+              0.58,
+              0.72
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tip11",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.8,
+              0.9,
+              0.8
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  9,
+                  4.45,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Lead11",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.3,
+              0.5,
+              0.3
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  9,
+                  5.15,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.2,
+              0.21,
+              0.27
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Pencil12",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1.2,
+              4,
+              1.2
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  11,
+                  2.0,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.36,
+              0.67,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tip12",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.8,
+              0.9,
+              0.8
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  11,
+                  4.45,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Lead12",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.3,
+              0.5,
+              0.3
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  11,
+                  5.15,
+                  11
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.2,
+              0.21,
+              0.27
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "eraser_benches",
+      "className": "Model",
+      "children": [
+        {
+          "name": "Eraser1",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              5,
+              1.8,
+              2.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -5,
+                  0.9,
+                  4
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.96,
+              0.52,
+              0.58
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Sleeve1",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              2.2,
+              1.9,
+              2.7
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -5,
+                  0.95,
+                  4
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.25,
+              0.58,
+              0.72
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Eraser2",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              5,
+              1.8,
+              2.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  4,
+                  0.9,
+                  4
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.96,
+              0.52,
+              0.58
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Sleeve2",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              2.2,
+              1.9,
+              2.7
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  4,
+                  0.95,
+                  4
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.25,
+              0.58,
+              0.72
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "book_stand",
+      "className": "Model",
+      "children": [
+        {
+          "name": "BookBottom",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              5.2,
+              1.4,
+              4.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  9.5,
+                  0.7,
+                  -5
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.86,
+              0.33,
+              0.3
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "PagesBottom",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.3,
+              1.0,
+              4.0
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  12.0,
+                  0.7,
+                  -5
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.97,
+              0.94,
+              0.84
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "BookMiddle",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              4.6,
+              1.4,
+              4.1
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  9.5,
+                  2.0999999999999996,
+                  -5
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.25,
+              0.58,
+              0.72
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "BookTop",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              4.0,
+              1.4,
+              3.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  9.5,
+                  3.5,
+                  -5
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.36,
+              0.67,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "FlagPole",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.25,
+              4,
+              0.25
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  9.5,
+                  6.2,
+                  -5
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.52,
+              0.4,
+              0.3
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Flag",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              2.2,
+              1.3,
+              0.15
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  10.6,
+                  7.550000000000001,
+                  -5
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              1.0,
+              0.78,
+              0.2
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "ruler_scoreboard",
+      "className": "Model",
+      "children": [
+        {
+          "name": "Ruler",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1,
+              10,
+              6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -11,
+                  5.0,
+                  0
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.93,
+              0.86,
+              0.6
+            ],
+            "Material": "Plastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tick0",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.2,
+              0.18,
+              2.4
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -10.45,
+                  0.69,
+                  1.8
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.3,
+              0.24,
+              0.16
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tick1",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.2,
+              0.18,
+              1.4
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -10.45,
+                  1.6900000000000002,
+                  1.8
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.3,
+              0.24,
+              0.16
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tick2",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.2,
+              0.18,
+              1.4
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -10.45,
+                  2.69,
+                  1.8
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.3,
+              0.24,
+              0.16
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tick3",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.2,
+              0.18,
+              1.4
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -10.45,
+                  3.69,
+                  1.8
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.3,
+              0.24,
+              0.16
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tick4",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.2,
+              0.18,
+              1.4
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -10.45,
+                  4.6899999999999995,
+                  1.8
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.3,
+              0.24,
+              0.16
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tick5",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.2,
+              0.18,
+              2.4
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -10.45,
+                  5.6899999999999995,
+                  1.8
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.3,
+              0.24,
+              0.16
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tick6",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.2,
+              0.18,
+              1.4
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -10.45,
+                  6.6899999999999995,
+                  1.8
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.3,
+              0.24,
+              0.16
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tick7",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.2,
+              0.18,
+              1.4
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -10.45,
+                  7.6899999999999995,
+                  1.8
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.3,
+              0.24,
+              0.16
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tick8",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.2,
+              0.18,
+              1.4
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -10.45,
+                  8.69,
+                  1.8
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.3,
+              0.24,
+              0.16
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Tick9",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.2,
+              0.18,
+              1.4
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -10.45,
+                  9.69,
+                  1.8
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.3,
+              0.24,
+              0.16
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Panel",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.4,
+              3.6,
+              5
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -10.2,
+                  8.0,
+                  0
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.18,
+              0.22,
+              0.32
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Bar1",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.2,
+              0.7,
+              4.2
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -9.95,
+                  8.75,
+                  0
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              1.0,
+              0.8,
+              0.2
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Bar2",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.2,
+              0.7,
+              3.3000000000000003
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -9.95,
+                  7.75,
+                  0
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.82,
+              0.86,
+              0.92
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Bar3",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.2,
+              0.7,
+              2.4000000000000004
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -9.95,
+                  6.75,
+                  0
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.8,
+              0.5,
+              0.25
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "paperclip_trophies",
+      "className": "Model",
+      "children": [
+        {
+          "name": "ShelfLegLeft",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.8,
+              3,
+              1.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -4.2,
+                  1.5,
+                  -6
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "ShelfLegRight",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.8,
+              3,
+              1.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  4.2,
+                  1.5,
+                  -6
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "Shelf",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              10,
+              0.6,
+              2.2
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  0,
+                  3.3,
+                  -6
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "Wood",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "TrophyBase1",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1.6,
+              0.4,
+              1.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -3,
+                  3.8000000000000003,
+                  -6
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.2,
+              0.21,
+              0.27
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "TrophyStem1",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.4,
+              1.4,
+              0.4
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -3,
+                  4.7,
+                  -6
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              1.0,
+              0.8,
+              0.2
+            ],
+            "Material": "Metal",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "TrophyCup1",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1.6,
+              1.2,
+              1.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -3,
+                  6.0,
+                  -6
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              1.0,
+              0.8,
+              0.2
+            ],
+            "Material": "Metal",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "TrophyBase2",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1.6,
+              0.4,
+              1.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  0,
+                  3.8000000000000003,
+                  -6
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.2,
+              0.21,
+              0.27
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "TrophyStem2",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.4,
+              1.4,
+              0.4
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  0,
+                  4.7,
+                  -6
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.82,
+              0.86,
+              0.92
+            ],
+            "Material": "Metal",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "TrophyCup2",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1.6,
+              1.2,
+              1.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  0,
+                  6.0,
+                  -6
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.82,
+              0.86,
+              0.92
+            ],
+            "Material": "Metal",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "TrophyBase3",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1.6,
+              0.4,
+              1.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  3,
+                  3.8000000000000003,
+                  -6
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.2,
+              0.21,
+              0.27
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "TrophyStem3",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.4,
+              1.4,
+              0.4
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  3,
+                  4.7,
+                  -6
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.8,
+              0.5,
+              0.25
+            ],
+            "Material": "Metal",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "TrophyCup3",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              1.6,
+              1.2,
+              1.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  3,
+                  6.0,
+                  -6
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.8,
+              0.5,
+              0.25
+            ],
+            "Material": "Metal",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "lamp_floodlight",
+      "className": "Model",
+      "children": [
+        {
+          "name": "LampBase",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              3.4,
+              0.6,
+              3.4
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -9.5,
+                  0.3,
+                  -8
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.2,
+              0.21,
+              0.27
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "LampArm",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.5,
+              7.8,
+              0.5
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -9.5,
+                  4.5,
+                  -8
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.2,
+              0.21,
+              0.27
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "LampBrace",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              2.2,
+              0.5,
+              0.5
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -8.7,
+                  8.25,
+                  -8
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.2,
+              0.21,
+              0.27
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "LampHead",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              3.2,
+              1.4,
+              2.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -7.8,
+                  8.899999999999999,
+                  -8
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.95,
+              0.35,
+              0.3
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "LampLens",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              2.6,
+              0.2,
+              2.0
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  -7.8,
+                  8.1,
+                  -8
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              1.0,
+              0.95,
+              0.7
+            ],
+            "Material": "Neon",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          },
+          "children": [
+            {
+              "name": "Floodlight",
+              "className": "SpotLight",
+              "properties": {
+                "Brightness": 3,
+                "Range": 34,
+                "Angle": 75,
+                "Face": "Bottom",
+                "Color": [
+                  1.0,
+                  0.9,
+                  0.7
+                ],
+                "Shadows": false
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pencil_cup_tower",
+      "className": "Model",
+      "children": [
+        {
+          "name": "Cup",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              5,
+              5,
+              5
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  9,
+                  2.5,
+                  7.5
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.3,
+              0.65,
+              0.9
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "CupRim",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              5.4,
+              0.6,
+              5.4
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  9,
+                  5.3,
+                  7.5
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.82,
+              0.86,
+              0.92
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": true,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "CupPencil1",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.9,
+              8.5,
+              0.9
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  7.4,
+                  9.45,
+                  6.0
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.86,
+              0.33,
+              0.3
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "CupTip1",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.6,
+              0.8,
+              0.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  7.4,
+                  14.1,
+                  6.0
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "CupPencil2",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.9,
+              11,
+              0.9
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  10.6,
+                  10.7,
+                  6.0
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.25,
+              0.58,
+              0.72
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "CupTip2",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.6,
+              0.8,
+              0.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  10.6,
+                  16.599999999999998,
+                  6.0
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "CupPencil3",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.9,
+              9.5,
+              0.9
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  7.4,
+                  9.95,
+                  9.0
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.36,
+              0.67,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "CupTip3",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.6,
+              0.8,
+              0.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  7.4,
+                  15.1,
+                  9.0
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "CupPencil4",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.9,
+              12,
+              0.9
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  10.6,
+                  11.2,
+                  9.0
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.98,
+              0.78,
+              0.18
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "CupTip4",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.6,
+              0.8,
+              0.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  10.6,
+                  17.599999999999998,
+                  9.0
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "CupPencil5",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.9,
+              10,
+              0.9
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  9.0,
+                  10.2,
+                  7.5
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.86,
+              0.33,
+              0.3
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "CupTip5",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.6,
+              0.8,
+              0.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  9.0,
+                  15.6,
+                  7.5
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "CupPencil6",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.9,
+              8,
+              0.9
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  8.2,
+                  9.2,
+                  7.5
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.25,
+              0.58,
+              0.72
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "CupTip6",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.6,
+              0.8,
+              0.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  8.2,
+                  13.6,
+                  7.5
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "CupPencil7",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.9,
+              10.5,
+              0.9
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  9.8,
+                  10.45,
+                  7.5
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.36,
+              0.67,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "CupTip7",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.6,
+              0.8,
+              0.6
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  9.8,
+                  16.099999999999998,
+                  7.5
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.85,
+              0.68,
+              0.45
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "TowerFlagPole",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              0.2,
+              2.5,
+              0.2
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  9.0,
+                  18.65,
+                  7.5
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              0.52,
+              0.4,
+              0.3
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
+            "CanTouch": false,
+            "CanQuery": true,
+            "Transparency": 0.0
+          }
+        },
+        {
+          "name": "TowerFlag",
+          "className": "Part",
+          "properties": {
+            "Anchored": true,
+            "Size": [
+              2.4,
+              1.4,
+              0.15
+            ],
+            "CFrame": {
+              "CFrame": {
+                "position": [
+                  10.2,
+                  19.3,
+                  7.5
+                ],
+                "orientation": [
+                  [
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "Color": [
+              1.0,
+              0.8,
+              0.2
+            ],
+            "Material": "SmoothPlastic",
+            "TopSurface": "Smooth",
+            "BottomSurface": "Smooth",
+            "CanCollide": false,
             "CanTouch": false,
             "CanQuery": true,
             "Transparency": 0.0

@@ -8,6 +8,7 @@ local Workspace = game:GetService("Workspace")
 
 local GameConfig = require(ReplicatedStorage.Shared.Config.Game)
 local Components = require(script.Parent.Parent.UI.Components)
+local Juice = require(script.Parent.Parent.UI.Juice)
 local Net = require(script.Parent.Parent.Net)
 local DataController = require(script.Parent.DataController)
 local LocalizationController = require(script.Parent.LocalizationController)
@@ -42,6 +43,9 @@ canvas.Parent = screen
 local loading: Frame? = nil
 local loadingLabel: TextLabel? = nil
 local loadingKey = "UI.Loading"
+local loadingTitle: TextLabel? = nil
+local loadingHint: TextLabel? = nil
+local loadError: string? = nil -- localization key of the server's "could not load" reason
 local toastHolder: Frame? = nil
 
 local function updateScale()
@@ -76,21 +80,72 @@ local function buildLoading()
 		MaxTextSize = 36,
 		Parent = frame,
 	})
+	-- Shown only when the server reports that the profile could not be loaded.
+	loadingTitle = Components.label({
+		Size = UDim2.fromOffset(460, 44),
+		Position = UDim2.fromScale(0.5, 0.28),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		TextColor3 = Theme.Accent,
+		ZIndex = 101,
+		MaxTextSize = 34,
+		Visible = false,
+		Parent = frame,
+	})
+	loadingHint = Components.label({
+		Size = UDim2.fromOffset(460, 56),
+		Position = UDim2.fromScale(0.5, 0.76),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		TextColor3 = Theme.Muted,
+		TextWrapped = true,
+		ZIndex = 101,
+		MaxTextSize = 22,
+		Visible = false,
+		Parent = frame,
+	})
 	loading = frame
 end
 
 local function refreshTexts()
 	if loadingLabel then
-		loadingLabel.Text = L(loadingKey)
+		loadingLabel.Text = L(loadError or loadingKey)
+		loadingLabel.TextWrapped = true
 	end
+	if loadingTitle and loadError then
+		loadingTitle.Text = L("Error.Title")
+	end
+	if loadingHint and loadError then
+		loadingHint.Text = L("Error.RejoinHint")
+	end
+end
+
+-- The server could not load this player's data and is about to kick: replace "Loading…" with
+-- the reason and a hint, so the player is not left staring at a spinner.
+local function showLoadError(key: string)
+	if loading == nil then
+		return
+	end
+	loadError = key
+	for _, label in { loadingTitle, loadingHint } do
+		if label then
+			label.Visible = true
+		end
+	end
+	if loadingLabel then
+		loadingLabel.Size = UDim2.fromOffset(460, 90)
+		loadingLabel.TextColor3 = Theme.TextLight
+	end
+	refreshTexts()
 end
 
 function UIController:Init()
 	DataController.Changed:Connect(function()
 		if loading then
-			loading:Destroy()
+			local cover = loading
 			loading = nil
 			loadingLabel = nil
+			loadingTitle = nil
+			loadingHint = nil
+			Juice.fadeOutAndDestroy(cover)
 		end
 	end)
 	LocalizationController.Changed:Connect(refreshTexts)
@@ -121,13 +176,18 @@ function UIController:Start()
 	refreshTexts()
 
 	Net.onClientEvent("Notify", function(key: string, args: { [string]: any }?)
-		if type(key) == "string" then
+		if type(key) ~= "string" then
+			return
+		end
+		if loading and string.find(key, "^Error%.") ~= nil then
+			showLoadError(key) -- before the first snapshot an Error.* key means the load failed
+		else
 			UIController:Toast(key, args)
 		end
 	end)
 
 	task.delay(GameConfig.LoadTimeoutSec, function()
-		if loading then
+		if loading and loadError == nil then
 			loadingKey = "UI.LoadingSlow"
 			refreshTexts()
 		end
@@ -159,6 +219,7 @@ function UIController:Toast(key: string, args: { [string]: any }?, seconds: numb
 		MaxTextSize = 24,
 		Parent = toast,
 	})
+	Juice.pop(toast, 0.8, 0.25)
 	local connection = LocalizationController.Changed:Connect(function()
 		label.Text = L(key, args)
 	end)

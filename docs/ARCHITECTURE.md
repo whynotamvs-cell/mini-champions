@@ -186,12 +186,14 @@ for _, s in services do task.spawn(s.Start, s) end
 | `PurchaseUpgrade` | C→S (RemoteFunction) | `index: number` | целое, 1..8, `== UpgradesOwned + 1`, профиль Ready | 2/с |
 | `SendEmote` | C→S | `emoteId: string` | строка ≤ 32, есть в `Config.Emotes` | 1 / 2 с |
 | `UpdateSettings` | C→S | `{ MusicVolume, SfxVolume, Language, ReducedMotion }` | типы, диапазоны, перечисление языков, лишние ключи отбрасываются | 2/с |
-| `TutorialAck` | C→S | `step: number` | только для шагов-подсказок «прочитал», шаг == текущий | 2/с |
+| `TutorialAck` | C→S | `step: number` | только шаг 3 «открыл меню клуба»; принимается, только если сохранённый шаг == 2 | 2/с |
+| `RequestBoard` | C→S | — | клиент просит текущую таблицу результатов (профиль Ready не нужен) | 1/с |
 | `RequestRestart` | C→S | — | игрок в активном забеге | 1/с |
 | `RequestSnapshot` | C→S | — | профиль Ready; клиент просит первый снимок, когда его обработчики уже подключены | 1/с |
 | `DataSnapshot` | S→C | снимок данных клиента | — | — |
 | `DashEvent` | S→C | `{ kind, ... }` (countdown, start, checkpoint, finish, abandon) | — | — |
 | `EmoteShown` | S→C | `userId, emoteId` | — | — |
+| `BoardUpdate` | S→C | `{ {userId, name, timeMs, medal} }`, быстрейшие первыми, до 5 строк | только валидные финиши этого сервера; в профиль не пишется | — |
 | `Notify` | S→C | `key: string, args?` | ключ локализации, а не текст | — |
 
 Клиент **не присылает**: время забега, чекпоинты, финиш, суммы Stars, номер участка.

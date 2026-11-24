@@ -1,13 +1,15 @@
 --!strict
--- Club menu: next upgrade, price and the Build button. Sends only the intent ("buy index N");
+-- Club menu: next upgrade, price and the Build button (tutorial target "BuyButton"). Sends only the intent ("buy index N");
 -- the server checks order, price and balance (docs/ARCHITECTURE.md 6.1).
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
 local Economy = require(ReplicatedStorage.Shared.Config.Economy)
+local Signal = require(ReplicatedStorage.Shared.Utilities.Signal)
 local Format = require(ReplicatedStorage.Shared.Utilities.Format)
 local Components = require(script.Parent.Parent.UI.Components)
+local Juice = require(script.Parent.Parent.UI.Juice)
 local Net = require(script.Parent.Parent.Net)
 local DataController = require(script.Parent.DataController)
 local LocalizationController = require(script.Parent.LocalizationController)
@@ -17,6 +19,9 @@ local L = LocalizationController.L
 local STAR = Components.STAR
 
 local ClubMenuController = {}
+
+-- Fired when the menu becomes visible (the tutorial listens). Handlers must not yield.
+ClubMenuController.Opened = Signal.new() :: Signal.Signal<>
 
 type Ui = {
 	frame: Frame,
@@ -128,6 +133,7 @@ local function build(canvas: Frame): Ui
 	local price = line(138, 28, 24)
 	local status = line(168, 22, 18)
 	local buyButton = Components.button({
+		Name = "BuyButton",
 		Size = UDim2.fromOffset(150, 52),
 		Position = UDim2.new(0.5, -8, 1, -12),
 		AnchorPoint = Vector2.new(1, 1),
@@ -183,6 +189,10 @@ function ClubMenuController:Toggle()
 	local u = ui
 	if u then
 		u.frame.Visible = not u.frame.Visible
+		if u.frame.Visible then
+			Juice.pop(u.frame, 0.85, 0.3)
+			ClubMenuController.Opened:Fire()
+		end
 		render()
 	end
 end

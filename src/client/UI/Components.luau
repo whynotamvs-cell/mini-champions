@@ -2,6 +2,8 @@
 -- UI building blocks, Mobile First (docs/ARCHITECTURE.md 11). Sizes are in the 844x390 base
 -- layout; UIController scales the whole screen. Text is always set by code (AutoLocalize off).
 
+local Juice = require(script.Parent.Juice)
+
 local Components = {}
 
 Components.Theme = table.freeze({
@@ -88,7 +90,10 @@ function Components.button(props: { [string]: any }, onActivated: () -> ()): Tex
 	stroke.Thickness = 2
 	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	stroke.Parent = button
-	button.Activated:Connect(onActivated)
+	button.Activated:Connect(function()
+		Juice.pop(button, 0.92, 0.2) -- press feedback
+		onActivated()
+	end)
 	return button
 end
 

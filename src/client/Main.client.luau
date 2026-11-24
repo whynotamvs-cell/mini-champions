@@ -14,6 +14,11 @@ local CONTROLLER_ORDER: { string } = {
 	"DashController",
 	"ClubMenuController",
 	"HudController",
+	"TutorialController",
+	"BoardController",
+	"SettingsController",
+	"EmoteController",
+	"FxController",
 }
 
 local function loadControllers(): { Controller }

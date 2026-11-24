@@ -84,6 +84,17 @@ function Validators.enumString(values: { string }): Validator
 	end
 end
 
+-- A plain table (no metatable). Its contents are NOT checked here; the handler must sanitize
+-- every field it reads and ignore the rest.
+function Validators.plainTable(): Validator
+	return function(value: any): (boolean, string?)
+		if type(value) ~= "table" or getmetatable(value) ~= nil then
+			return false, "not a plain table"
+		end
+		return true
+	end
+end
+
 -- Validates the full argument list: exactly #validators arguments, each passing its validator.
 function Validators.tuple(...: Validator): TupleValidator
 	local validators = { ... }
