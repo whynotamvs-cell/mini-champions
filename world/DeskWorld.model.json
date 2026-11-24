@@ -9,14 +9,14 @@
         "Size": [
           820,
           4,
-          180
+          270
         ],
         "CFrame": {
           "CFrame": {
             "position": [
               300,
               -1.0,
-              0
+              -45
             ],
             "orientation": [
               [
@@ -4601,6 +4601,2442 @@
                       603,
                       27.0,
                       0.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Transparency": 1.0,
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "KeyDash",
+      "className": "Model",
+      "children": [
+        {
+          "name": "Geometry",
+          "className": "Folder",
+          "children": [
+            {
+              "name": "KeyStair1",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  4,
+                  2.5,
+                  20
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      12,
+                      1.25,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.93,
+                  0.88,
+                  0.78
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "KeyStair2",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  4,
+                  5,
+                  20
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      16,
+                      2.5,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.93,
+                  0.88,
+                  0.78
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "KeyStair3",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  3,
+                  7.5,
+                  20
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      19,
+                      3.75,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.93,
+                  0.88,
+                  0.78
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "StartPad",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  20,
+                  2.0,
+                  20
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      30.0,
+                      9.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Key1",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  10,
+                  3.0,
+                  10
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      48.0,
+                      9.5,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.93,
+                  0.94,
+                  0.97
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Key2",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  10,
+                  3.0,
+                  10
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      61.0,
+                      10.5,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.32,
+                  0.4
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Key3",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  10,
+                  3.0,
+                  10
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      74.0,
+                      11.5,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.93,
+                  0.94,
+                  0.97
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Key4",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  10,
+                  3.0,
+                  10
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      87.0,
+                      12.5,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.32,
+                  0.4
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Key5",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  10,
+                  3.0,
+                  10
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      100.0,
+                      13.5,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.93,
+                  0.94,
+                  0.97
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Key6",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  10,
+                  3.0,
+                  10
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      113.0,
+                      14.5,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.32,
+                  0.4
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Key7",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  10,
+                  3.0,
+                  10
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      126.0,
+                      15.5,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.93,
+                  0.94,
+                  0.97
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Key8",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  10,
+                  3.0,
+                  10
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      139.0,
+                      16.5,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.32,
+                  0.4
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Checkpoint1Pad",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  16,
+                  2.0,
+                  16
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      155.0,
+                      17.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.78,
+                  0.48
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Cable1",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  36,
+                  1.5,
+                  3
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      187.0,
+                      17.25,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.16,
+                  0.17,
+                  0.22
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Cable2",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  36,
+                  1.5,
+                  3
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      229.0,
+                      17.25,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.16,
+                  0.17,
+                  0.22
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Cable3",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  36,
+                  1.5,
+                  3
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      271.0,
+                      17.25,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.16,
+                  0.17,
+                  0.22
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Checkpoint2Pad",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  16,
+                  2.0,
+                  16
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      303.0,
+                      17.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.78,
+                  0.48
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "ZigKey1",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  9,
+                  3.0,
+                  9
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      320.5,
+                      16.5,
+                      -134.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.55,
+                  0.92
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "ZigKey2",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  9,
+                  3.0,
+                  9
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      334.5,
+                      18.5,
+                      -146.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.9,
+                  0.35,
+                  0.35
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "ZigKey3",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  9,
+                  3.0,
+                  9
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      348.5,
+                      16.5,
+                      -134.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.55,
+                  0.92
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "ZigKey4",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  9,
+                  3.0,
+                  9
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      362.5,
+                      18.5,
+                      -146.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.9,
+                  0.35,
+                  0.35
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "ZigKey5",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  9,
+                  3.0,
+                  9
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      376.5,
+                      16.5,
+                      -134.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.55,
+                  0.92
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "ZigKey6",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  9,
+                  3.0,
+                  9
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      390.5,
+                      18.5,
+                      -146.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.9,
+                  0.35,
+                  0.35
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "ZigKey7",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  9,
+                  3.0,
+                  9
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      404.5,
+                      16.5,
+                      -134.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.55,
+                  0.92
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "ZigKey8",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  9,
+                  3.0,
+                  9
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      418.5,
+                      18.5,
+                      -146.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.9,
+                  0.35,
+                  0.35
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Checkpoint3Pad",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  16,
+                  2.0,
+                  16
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      436.0,
+                      17.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.78,
+                  0.48
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "ArrowKey1",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  9,
+                  3.0,
+                  9
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      452.5,
+                      19.5,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.32,
+                  0.4
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "ArrowKey2",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  9,
+                  3.0,
+                  9
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      465.5,
+                      22.5,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.93,
+                  0.94,
+                  0.97
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "ArrowKey3",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  9,
+                  3.0,
+                  9
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      478.5,
+                      25.5,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.32,
+                  0.4
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "ArrowKey4",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  9,
+                  3.0,
+                  9
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      491.5,
+                      28.5,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.93,
+                  0.94,
+                  0.97
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Checkpoint4Pad",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  16,
+                  2.0,
+                  16
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      508.0,
+                      29.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.78,
+                  0.48
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "EnterStep1",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  10,
+                  2.0,
+                  12
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      524.0,
+                      31.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.35,
+                  0.75,
+                  0.5
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "EnterStep2",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  10,
+                  2.0,
+                  12
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      537.0,
+                      33.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.35,
+                  0.75,
+                  0.5
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "EnterStep3",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  10,
+                  2.0,
+                  12
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      550.0,
+                      35.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.35,
+                  0.75,
+                  0.5
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "FinishPad",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  20,
+                  2.0,
+                  20
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      568.0,
+                      35.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.96,
+                  0.58,
+                  0.25
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "ResultsBoard",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  22,
+                  12,
+                  1
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      578.5,
+                      43.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        0,
+                        0,
+                        1
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        -1,
+                        0,
+                        0
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.18,
+                  0.22,
+                  0.32
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": true,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            }
+          ]
+        },
+        {
+          "name": "Zones",
+          "className": "Folder",
+          "children": [
+            {
+              "name": "StartZone",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  18,
+                  6,
+                  18
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      30,
+                      13.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  1,
+                  1,
+                  1
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": true,
+                "CanQuery": false,
+                "Transparency": 1.0,
+                "Attributes": {
+                  "Attributes": {
+                    "DashZone": {
+                      "String": "Start"
+                    },
+                    "Index": {
+                      "Float64": 0.0
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Checkpoint1",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  14,
+                  8,
+                  14
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      155,
+                      22.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  1,
+                  1,
+                  1
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": true,
+                "CanQuery": false,
+                "Transparency": 1.0,
+                "Attributes": {
+                  "Attributes": {
+                    "DashZone": {
+                      "String": "Checkpoint"
+                    },
+                    "Index": {
+                      "Float64": 1.0
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Checkpoint2",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  14,
+                  8,
+                  14
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      303,
+                      22.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  1,
+                  1,
+                  1
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": true,
+                "CanQuery": false,
+                "Transparency": 1.0,
+                "Attributes": {
+                  "Attributes": {
+                    "DashZone": {
+                      "String": "Checkpoint"
+                    },
+                    "Index": {
+                      "Float64": 2.0
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Checkpoint3",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  14,
+                  8,
+                  14
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      436,
+                      22.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  1,
+                  1,
+                  1
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": true,
+                "CanQuery": false,
+                "Transparency": 1.0,
+                "Attributes": {
+                  "Attributes": {
+                    "DashZone": {
+                      "String": "Checkpoint"
+                    },
+                    "Index": {
+                      "Float64": 3.0
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Checkpoint4",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  14,
+                  8,
+                  14
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      508,
+                      34.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  1,
+                  1,
+                  1
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": true,
+                "CanQuery": false,
+                "Transparency": 1.0,
+                "Attributes": {
+                  "Attributes": {
+                    "DashZone": {
+                      "String": "Checkpoint"
+                    },
+                    "Index": {
+                      "Float64": 4.0
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "FinishZone",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  18,
+                  8,
+                  18
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      568,
+                      40.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  1,
+                  1,
+                  1
+                ],
+                "Material": "SmoothPlastic",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": true,
+                "CanQuery": false,
+                "Transparency": 1.0,
+                "Attributes": {
+                  "Attributes": {
+                    "DashZone": {
+                      "String": "Finish"
+                    },
+                    "Index": {
+                      "Float64": 5.0
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Spawns",
+          "className": "Folder",
+          "children": [
+            {
+              "name": "Spawn0",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  2,
+                  1,
+                  2
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      30,
+                      13.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Transparency": 1.0,
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false
+              }
+            },
+            {
+              "name": "Spawn1",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  2,
+                  1,
+                  2
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      155,
+                      21.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Transparency": 1.0,
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false
+              }
+            },
+            {
+              "name": "Spawn2",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  2,
+                  1,
+                  2
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      303,
+                      21.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Transparency": 1.0,
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false
+              }
+            },
+            {
+              "name": "Spawn3",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  2,
+                  1,
+                  2
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      436,
+                      21.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Transparency": 1.0,
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false
+              }
+            },
+            {
+              "name": "Spawn4",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  2,
+                  1,
+                  2
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      508,
+                      33.0,
+                      -140.0
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Transparency": 1.0,
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": false
+              }
+            },
+            {
+              "name": "ReturnPoint",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  2,
+                  1,
+                  2
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      2,
+                      4.5,
+                      -140.0
                     ],
                     "orientation": [
                       [
@@ -9848,6 +12284,824 @@
               }
             }
           ]
+        },
+        {
+          "name": "KeysTrail",
+          "className": "Model",
+          "children": [
+            {
+              "name": "Tile1",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -16
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile2",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -25
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile3",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -34
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile4",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -43
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile5",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -52
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile6",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -61
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile7",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -70
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile8",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -79
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile9",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -88
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile10",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -97
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile11",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -106
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile12",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -115
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile13",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -124
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            },
+            {
+              "name": "Tile14",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  6,
+                  0.3,
+                  6
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      6,
+                      1.15,
+                      -133
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            }
+          ]
+        },
+        {
+          "name": "DeskBeacon",
+          "className": "Model",
+          "children": [
+            {
+              "name": "Pillar",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  3,
+                  36,
+                  3
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      30,
+                      28.0,
+                      16
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.3,
+                  0.52,
+                  0.95
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            }
+          ]
+        },
+        {
+          "name": "KeysBeacon",
+          "className": "Model",
+          "children": [
+            {
+              "name": "Pillar",
+              "className": "Part",
+              "properties": {
+                "Anchored": true,
+                "Size": [
+                  3,
+                  36,
+                  3
+                ],
+                "CFrame": {
+                  "CFrame": {
+                    "position": [
+                      30,
+                      28.0,
+                      -126
+                    ],
+                    "orientation": [
+                      [
+                        1,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        1,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        1
+                      ]
+                    ]
+                  }
+                },
+                "Color": [
+                  0.85,
+                  0.38,
+                  0.78
+                ],
+                "Material": "Neon",
+                "TopSurface": "Smooth",
+                "BottomSurface": "Smooth",
+                "CanCollide": false,
+                "CanTouch": false,
+                "CanQuery": true,
+                "Transparency": 0.0
+              }
+            }
+          ]
         }
       ]
     },
@@ -9863,14 +13117,14 @@
             "Size": [
               2,
               200,
-              184
+              274
             ],
             "CFrame": {
               "CFrame": {
                 "position": [
                   -111,
                   100,
-                  0
+                  -45
                 ],
                 "orientation": [
                   [
@@ -9913,14 +13167,14 @@
             "Size": [
               2,
               200,
-              184
+              274
             ],
             "CFrame": {
               "CFrame": {
                 "position": [
                   711,
                   100,
-                  0
+                  -45
                 ],
                 "orientation": [
                   [
@@ -9970,7 +13224,7 @@
                 "position": [
                   300,
                   100,
-                  -91
+                  -181
                 ],
                 "orientation": [
                   [

@@ -4,7 +4,7 @@ local JestGlobals = require(ReplicatedStorage.DevPackages.JestGlobals)
 local describe, it, expect = JestGlobals.describe, JestGlobals.it, JestGlobals.expect
 
 local Economy = require(ReplicatedStorage.Shared.Config.Economy)
-local Dash = require(ReplicatedStorage.Shared.Config.Dash)
+local Tracks = require(ReplicatedStorage.Shared.Config.Tracks)
 
 describe("Config.Economy", function()
 	it("has 8 upgrades whose prices sum to 3 950", function()
@@ -49,14 +49,42 @@ describe("Config.Economy", function()
 	end)
 end)
 
-describe("Config.Dash", function()
-	it("has one minimum per segment and their sum stays below MinValidTimeMs", function()
-		expect(#Dash.SegmentMinMs).toBe(Dash.CheckpointCount + 1)
-		local sum = 0
-		for _, ms in Dash.SegmentMinMs do
-			sum += ms
+describe("Config.Tracks", function()
+	it("has one minimum per segment and their sum stays below MinValidTimeMs, for every track", function()
+		for _, trackId in Tracks.Order do
+			local track = Tracks.ById[trackId]
+			expect(#track.SegmentMinMs).toBe(track.CheckpointCount + 1)
+			local sum = 0
+			for _, ms in track.SegmentMinMs do
+				sum += ms
+			end
+			expect(sum).toBeLessThanOrEqual(track.MinValidTimeMs)
 		end
-		expect(sum).toBeLessThanOrEqual(Dash.MinValidTimeMs)
+	end)
+
+	it("orders medal thresholds sensibly, for every track", function()
+		for _, trackId in Tracks.Order do
+			local t = Tracks.ById[trackId]
+			expect(t.MinValidTimeMs).toBeLessThan(t.GoldMaxMs)
+			expect(t.GoldMaxMs).toBeLessThan(t.SilverMaxMs)
+			expect(t.SilverMaxMs).toBeLessThan(t.TimeoutSec * 1000)
+		end
+	end)
+
+	it("lists every track once, with unique data keys, and the default exists", function()
+		local keys: { [string]: boolean } = {}
+		for _, trackId in Tracks.Order do
+			local track = Tracks.ById[trackId]
+			expect(track.Id).toBe(trackId)
+			expect(keys[track.DataKey]).toBe(nil)
+			keys[track.DataKey] = true
+		end
+		expect(Tracks.ById[Tracks.Default] ~= nil).toBe(true)
+	end)
+
+	it("only the first track is open from the start", function()
+		expect(Tracks.ById.desk.RequiresTutorial).toBe(false)
+		expect(Tracks.ById.keys.RequiresTutorial).toBe(true)
 	end)
 end)
 

@@ -22,7 +22,7 @@ local Remotes = table.freeze({
 		DashEvent = "Event" :: RemoteKind, -- (event: { kind: string, ... })
 		Notify = "Event" :: RemoteKind, -- (key: string, args: { [string]: string | number }?)
 		EmoteShown = "Event" :: RemoteKind, -- (userId: number, emoteId: string)
-		BoardUpdate = "Event" :: RemoteKind, -- (entries: { { userId, name, timeMs, medal } }) fastest first
+		BoardUpdate = "Event" :: RemoteKind, -- (trackId: string, entries: { { userId, name, timeMs, medal } }) fastest first
 	}),
 })
 

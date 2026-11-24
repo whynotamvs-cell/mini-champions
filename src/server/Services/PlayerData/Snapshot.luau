@@ -9,7 +9,8 @@ local Snapshot = {}
 
 function Snapshot.build(data: PlayerDataTypes.PlayerData): PlayerDataTypes.ClientSnapshot
 	local level, into, nextNeed = Formulas.levelInfo(data.XP)
-	local dash = data.Minigames.DeskDash
+	local desk = data.Minigames.DeskDash
+	local keys = data.Minigames.KeyDash
 	return {
 		Stars = data.Stars,
 		Level = level,
@@ -19,8 +20,12 @@ function Snapshot.build(data: PlayerDataTypes.PlayerData): PlayerDataTypes.Clien
 		UpgradesOwned = data.Club.UpgradesOwned,
 		Tutorial = { Step = data.Tutorial.Step, Completed = data.Tutorial.Completed },
 		DeskDash = {
-			BestTimeMs = dash.BestTimeMs,
-			Medals = { Bronze = dash.Medals.Bronze, Silver = dash.Medals.Silver, Gold = dash.Medals.Gold },
+			BestTimeMs = desk.BestTimeMs,
+			Medals = { Bronze = desk.Medals.Bronze, Silver = desk.Medals.Silver, Gold = desk.Medals.Gold },
+		},
+		KeyDash = {
+			BestTimeMs = keys.BestTimeMs,
+			Medals = { Bronze = keys.Medals.Bronze, Silver = keys.Medals.Silver, Gold = keys.Medals.Gold },
 		},
 		Settings = {
 			MusicVolume = data.Settings.MusicVolume,

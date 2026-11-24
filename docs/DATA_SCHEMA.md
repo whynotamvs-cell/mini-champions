@@ -54,11 +54,21 @@
 
 Суффикс `_v1` у хранилища меняется **только** при несовместимой смене всей модели хранения. Обычные изменения схемы делаются миграциями внутри того же хранилища.
 
-## 4. Схема данных v1
+## 4. Схема данных v2
 
 ```luau
-export type PlayerDataV1 = {
-	SchemaVersion: number, -- = 1
+export type TrackRecord = {
+	Finishes: number,
+	BestTimeMs: number,   -- 0 = рекорда нет
+	Medals: {
+		Bronze: boolean,
+		Silver: boolean,
+		Gold: boolean,
+	},
+}
+
+export type PlayerDataV2 = {
+	SchemaVersion: number, -- = 2
 
 	-- Валюта и прогресс
 	Stars: number,          -- 0..1_000_000, целое
@@ -77,16 +87,10 @@ export type PlayerDataV1 = {
 	},
 
 	-- Мини-игры
+	-- По одной записи на трассу (ключ = Config.Tracks[id].DataKey)
 	Minigames: {
-		DeskDash: {
-			Finishes: number,
-			BestTimeMs: number,   -- 0 = рекорда нет
-			Medals: {
-				Bronze: boolean,
-				Silver: boolean,
-				Gold: boolean,
-			},
-		},
+		DeskDash: TrackRecord,
+		KeyDash: TrackRecord,   -- добавлено в v2 (вторая трасса, «Keyboard Dash»)
 	},
 
 	-- Идемпотентность наград (кольцевой буфер последних grantId)
@@ -112,8 +116,8 @@ export type PlayerDataV1 = {
 ### Шаблон (значения по умолчанию)
 
 ```luau
-local TEMPLATE: PlayerDataV1 = {
-	SchemaVersion = 1,
+local TEMPLATE: PlayerDataV2 = {
+	SchemaVersion = 2,
 	Stars = 0,
 	LifetimeStars = 0,
 	XP = 0,
@@ -121,6 +125,11 @@ local TEMPLATE: PlayerDataV1 = {
 	Club = { UpgradesOwned = 0 },
 	Minigames = {
 		DeskDash = {
+			Finishes = 0,
+			BestTimeMs = 0,
+			Medals = { Bronze = false, Silver = false, Gold = false },
+		},
+		KeyDash = {
 			Finishes = 0,
 			BestTimeMs = 0,
 			Medals = { Bronze = false, Silver = false, Gold = false },
@@ -218,9 +227,19 @@ BindToClose
 -- src/server/Services/PlayerData/Migrations.luau
 local MIGRATIONS = {
 	-- [fromVersion] = function(data) ... return data end  -- приводит к fromVersion + 1
-	-- [1] = function(data) data.Club.Decor = {}; data.SchemaVersion = 2; return data end,
+	-- v1 -> v2 (вторая трасса): добавляет пустую запись KeyDash, остальные данные не трогает.
+	[1] = function(data) if data.Minigames.KeyDash == nil then data.Minigames.KeyDash = { Finishes = 0, BestTimeMs = 0, Medals = { Bronze = false, Silver = false, Gold = false } } end return data end,
 }
 ```
+
+**История версий:**
+
+| Версия | Что изменилось | Миграция |
+|---|---|---|
+| 1 | Начальная схема (этап 1) | — |
+| 2 | `Minigames.KeyDash` — рекорд и медали второй трассы | `[1]`: добавляет пустую запись; тест — `tests/specs/Migrations.spec.luau` («Migration 1 -> 2») |
+
+Сервер старой версии (v1), загрузивший профиль v2, **не изменяет и не сохраняет** его: игрок кикается с сообщением об обновлении (правило 3 ниже). Поэтому при выкладке v2 сначала обновляются серверы.
 
 Правила:
 1. Миграции только вперёд, по одной версии за шаг, чистые функции, без `yield`.
@@ -238,7 +257,7 @@ local MIGRATIONS = {
 | `XP` | целое ≥ 0 |
 | `Club.UpgradesOwned` | целое 0..8 |
 | `Tutorial.Step` | целое 0..5 |
-| `BestTimeMs` | 0 или ≥ `minValidTime` (35 000) |
+| `BestTimeMs` (каждой трассы) | 0 или ≥ `MinValidTimeMs` этой трассы (Desk Dash — 35 000, Keyboard Dash — 30 000) |
 | `Settings.*Volume` | 0..1 |
 | `Settings.Language` | одно из `auto`, `en`, `ru` |
 | `RecentGrants` | ≤ 50 строк, каждая ≤ 64 символов |

@@ -1,6 +1,7 @@
 --!strict
--- Desk Dash on the server (docs/ARCHITECTURE.md 8). The client never reports times,
--- checkpoints or finishes: everything is detected here from the replicated root part position.
+-- Obstacle tracks on the server (docs/ARCHITECTURE.md 8): Desk Dash and Keyboard Dash share one
+-- engine. The client never reports times, checkpoints or finishes: everything is detected here from
+-- the replicated root part position. Each run belongs to one track (Config.Tracks).
 
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
@@ -9,6 +10,7 @@ local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
 local Dash = require(ReplicatedStorage.Shared.Config.Dash)
+local Tracks = require(ReplicatedStorage.Shared.Config.Tracks)
 local PlayerDataTypes = require(ReplicatedStorage.Shared.Types.PlayerData)
 local Signal = require(ReplicatedStorage.Shared.Utilities.Signal)
 
@@ -28,37 +30,47 @@ type Zone = {
 	part: BasePart,
 }
 
+-- The world objects of one track, found by name under Workspace.DeskWorld.
+type TrackWorld = {
+	track: Tracks.Track,
+	startZone: Zone,
+	finishZone: Zone,
+	checkpointZones: { [number]: Zone },
+	spawns: { [number]: BasePart },
+	returnPoint: BasePart?,
+}
+
 type PlayerState = {
 	run: DashRun.Run?,
 	onStartPad: boolean,
 	lastPos: Vector3?,
 	teleportGraceUntil: number,
 	returnAt: number?,
+	returnPoint: BasePart?,
 	lastMissingHintAt: number,
+	lastLockedHintAt: number,
 }
 
 export type FinishInfo = {
 	timeMs: number,
 	medal: Medal,
 	firstFinish: boolean,
+	trackId: string,
 }
 
 local TELEPORT_GRACE_SEC = 0.5
 local MISSING_HINT_COOLDOWN_SEC = 2
+local LOCKED_HINT_COOLDOWN_SEC = 4
 
 local ObstacleDash = {}
 
 -- Signals for TutorialService and others. Handlers must not yield.
-ObstacleDash.EnteredStart = Signal.new() :: Signal.Signal<Player>
-ObstacleDash.RunStarted = Signal.new() :: Signal.Signal<Player>
-ObstacleDash.CheckpointReached = Signal.new() :: Signal.Signal<Player, number>
+ObstacleDash.EnteredStart = Signal.new() :: Signal.Signal<Player, string>
+ObstacleDash.RunStarted = Signal.new() :: Signal.Signal<Player, string>
+ObstacleDash.CheckpointReached = Signal.new() :: Signal.Signal<Player, number, string>
 ObstacleDash.Finished = Signal.new() :: Signal.Signal<Player, FinishInfo>
 
-local startZone: Zone? = nil
-local finishZone: Zone? = nil
-local checkpointZones: { [number]: Zone } = {}
-local spawns: { [number]: BasePart } = {}
-local returnPoint: BasePart? = nil
+local worlds: { [string]: TrackWorld } = {}
 local states: { [Player]: PlayerState } = {}
 
 local function nowMs(): number
@@ -74,7 +86,9 @@ local function stateOf(player: Player): PlayerState
 			lastPos = nil,
 			teleportGraceUntil = 0,
 			returnAt = nil,
+			returnPoint = nil,
 			lastMissingHintAt = 0,
+			lastLockedHintAt = 0,
 		}
 		states[player] = state
 	end
@@ -96,7 +110,8 @@ local function inZone(position: Vector3, zone: Zone?): boolean
 	return DashRun.inBox(position.X, position.Y, position.Z, c.X, c.Y, c.Z, s.X, s.Y, s.Z)
 end
 
-local function send(player: Player, payload: { [string]: any })
+local function send(player: Player, trackId: string, payload: { [string]: any })
+	payload.track = trackId
 	Net.fireClient("DashEvent", player, payload)
 end
 
@@ -111,10 +126,15 @@ local function teleport(player: Player, target: BasePart?)
 	character:PivotTo(target.CFrame)
 end
 
+local function worldOf(run: DashRun.Run): TrackWorld
+	return worlds[run.track.Id]
+end
+
 local function teleportToCheckpoint(player: Player)
 	local run = stateOf(player).run
 	if run then
-		teleport(player, spawns[run.lastCheckpoint] or spawns[0])
+		local world = worldOf(run)
+		teleport(player, world.spawns[run.lastCheckpoint] or world.spawns[0])
 	end
 end
 
@@ -127,53 +147,60 @@ local function endRun(player: Player, reason: string, notify: boolean)
 	local wasRunning = run.state == "Running"
 	if DashRun.abandon(run, reason) then
 		if wasRunning then
-			TelemetryService:Progression(player, "Fail", reason)
+			TelemetryService:Progression(player, "Fail", reason, run.track.Progression)
 		end
 		if notify then
-			send(player, { kind = "abandon", reason = reason })
+			send(player, run.track.Id, { kind = "abandon", reason = reason })
 		end
 	end
 	state.run = nil
 end
 
-local function startCountdown(player: Player)
+local function startCountdown(player: Player, track: Tracks.Track)
 	local state = stateOf(player)
-	state.run = DashRun.new(HttpService:GenerateGUID(false), nowMs())
-	send(player, { kind = "countdown", seconds = Dash.CountdownSec })
-	ObstacleDash.EnteredStart:Fire(player)
+	state.run = DashRun.new(HttpService:GenerateGUID(false), nowMs(), track)
+	send(player, track.Id, { kind = "countdown", seconds = Dash.CountdownSec })
+	ObstacleDash.EnteredStart:Fire(player, track.Id)
 end
 
 local function reward(player: Player, run: DashRun.Run)
 	if not DashRun.markRewarded(run) then
 		return
 	end
+	local track = run.track
 	local timeMs = run.timeMs :: number
-	local medal: Medal = DashRewards.medalForTime(timeMs)
+	local medal: Medal = DashRewards.medalForTime(timeMs, track.Id)
 
 	local before = PlayerDataService:Get(player)
-	local firstFinish = before ~= nil and before.Minigames.DeskDash.Finishes == 0
+	local record = before and (before.Minigames :: any)[track.DataKey]
+	local firstFinish = record ~= nil and record.Finishes == 0
 
-	local recordGuard, isNewBest = DashRewards.recordFinishGuard(timeMs)
+	local recordGuard, isNewBest = DashRewards.recordFinishGuard(timeMs, track)
 	local starsTotal = 0
-	local runResult = RewardService:Grant(player, DashRewards.runGrant(run.runId, medal), recordGuard)
+	local runResult = RewardService:Grant(player, DashRewards.runGrant(run.runId, medal, track), recordGuard)
 	if runResult then
 		starsTotal += runResult.starsAdded + runResult.levelUpStars
 	end
 
 	local firstMedals: { Medal } = {}
-	for _, first in DashRewards.firstMedalGrants(medal) do
-		local result = RewardService:Grant(player, first.grant, DashRewards.firstMedalGuard(first.medal), true)
+	for _, first in DashRewards.firstMedalGrants(medal, track) do
+		local result = RewardService:Grant(player, first.grant, DashRewards.firstMedalGuard(first.medal, track), true)
 		if result then
 			starsTotal += result.starsAdded + result.levelUpStars
 			table.insert(firstMedals, first.medal)
 		end
 	end
 
-	TelemetryService:Progression(player, "Complete")
-	TelemetryService:Custom(player, "DashFinishTimeSec", timeMs / 1000)
-	TelemetryService:Custom(player, "DashMedal", if medal == "Gold" then 3 elseif medal == "Silver" then 2 else 1)
+	TelemetryService:Progression(player, "Complete", nil, track.Progression)
+	TelemetryService:Custom(player, "DashFinishTimeSec", timeMs / 1000, { track = track.Id })
+	TelemetryService:Custom(
+		player,
+		"DashMedal",
+		if medal == "Gold" then 3 elseif medal == "Silver" then 2 else 1,
+		{ track = track.Id }
+	)
 
-	send(player, {
+	send(player, track.Id, {
 		kind = "finish",
 		valid = true,
 		timeMs = timeMs,
@@ -182,35 +209,38 @@ local function reward(player: Player, run: DashRun.Run)
 		newBest = isNewBest(),
 		firstMedals = firstMedals,
 	})
-	ObstacleDash.Finished:Fire(player, { timeMs = timeMs, medal = medal, firstFinish = firstFinish })
+	ObstacleDash.Finished:Fire(
+		player,
+		{ timeMs = timeMs, medal = medal, firstFinish = firstFinish, trackId = track.Id }
+	)
 end
 
-local function onCheckpoint(player: Player, index: number)
+local function onCheckpoint(player: Player, trackId: string, index: number)
 	local run = stateOf(player).run
-	if run and DashRun.reachCheckpoint(run, index, nowMs()) then
-		send(player, { kind = "checkpoint", index = index, total = Dash.CheckpointCount })
-		ObstacleDash.CheckpointReached:Fire(player, index)
+	if run and run.track.Id == trackId and DashRun.reachCheckpoint(run, index, nowMs()) then
+		send(player, trackId, { kind = "checkpoint", index = index, total = run.track.CheckpointCount })
+		ObstacleDash.CheckpointReached:Fire(player, index, trackId)
 	end
 end
 
-local function onFinish(player: Player)
+local function onFinish(player: Player, trackId: string)
 	local state = stateOf(player)
 	local run = state.run
-	if run == nil then
+	if run == nil or run.track.Id ~= trackId then
 		return
 	end
 	local outcome = DashRun.reachFinish(run, nowMs())
 	if outcome == "missing_checkpoint" then
 		if os.clock() - state.lastMissingHintAt > MISSING_HINT_COOLDOWN_SEC then
 			state.lastMissingHintAt = os.clock()
-			send(player, { kind = "missing_checkpoint", next = run.lastCheckpoint + 1 })
+			send(player, trackId, { kind = "missing_checkpoint", next = run.lastCheckpoint + 1 })
 		end
 		return
 	elseif outcome == "rejected" then
-		TelemetryService:Progression(player, "Fail", run.rejectReason)
-		TelemetryService:Custom(player, "DashRejected", 1, { reason = run.rejectReason or "unknown" })
-		warn(`[ObstacleDash] run rejected for {player.UserId}: {run.rejectReason}`)
-		send(player, { kind = "finish", valid = false })
+		TelemetryService:Progression(player, "Fail", run.rejectReason, run.track.Progression)
+		TelemetryService:Custom(player, "DashRejected", 1, { reason = run.rejectReason or "unknown", track = trackId })
+		warn(`[ObstacleDash] run rejected for {player.UserId} on {trackId}: {run.rejectReason}`)
+		send(player, trackId, { kind = "finish", valid = false })
 	elseif outcome == "valid" then
 		reward(player, run)
 	else
@@ -218,6 +248,27 @@ local function onFinish(player: Player)
 	end
 	state.run = nil
 	state.returnAt = os.clock() + Dash.ReturnDelaySec
+	state.returnPoint = worlds[trackId].returnPoint
+end
+
+-- The track whose start pad the position is standing on, if any.
+local function startPadAt(position: Vector3): Tracks.Track?
+	for _, trackId in Tracks.Order do
+		local world = worlds[trackId]
+		if world and inZone(position, world.startZone) then
+			return world.track
+		end
+	end
+	return nil
+end
+
+-- A locked track (needs the finished tutorial) never starts a run; the player is told why.
+local function isUnlocked(player: Player, track: Tracks.Track): boolean
+	if not track.RequiresTutorial then
+		return true
+	end
+	local data = PlayerDataService:Get(player)
+	return data ~= nil and data.Tutorial.Completed
 end
 
 local function poll(player: Player, dtSec: number)
@@ -227,48 +278,59 @@ local function poll(player: Player, dtSec: number)
 	end
 	local state = stateOf(player)
 	local position = root.Position
-	local onStart = inZone(position, startZone)
 	local run = state.run
+	local onStart: boolean
 
 	if run == nil then
-		if onStart and not state.onStartPad and PlayerDataService:IsReady(player) then
-			startCountdown(player)
-		end
-	elseif run.state == "Countdown" then
-		if not onStart then
-			DashRun.leaveStart(run)
-			state.run = nil
-			send(player, { kind = "cancel" })
-		elseif DashRun.tick(run, nowMs()) == "started" then
-			send(player, { kind = "start", startMs = run.startMs })
-			TelemetryService:Progression(player, "Start")
-			ObstacleDash.RunStarted:Fire(player)
-		end
-	elseif run.state == "Running" then
-		if DashRun.tick(run, nowMs()) == "timeout" then
-			TelemetryService:Progression(player, "Fail", "timeout")
-			send(player, { kind = "abandon", reason = "timeout" })
-			state.run = nil
-			teleport(player, returnPoint)
-		else
-			local last = state.lastPos
-			if last and os.clock() > state.teleportGraceUntil then
-				local dx, dz = position.X - last.X, position.Z - last.Z
-				if math.sqrt(dx * dx + dz * dz) > DashRun.maxStep(dtSec) then
-					DashRun.markSuspicious(run)
-				end
+		local padTrack = startPadAt(position)
+		onStart = padTrack ~= nil
+		if padTrack and not state.onStartPad and PlayerDataService:IsReady(player) then
+			if isUnlocked(player, padTrack) then
+				startCountdown(player, padTrack)
+			elseif os.clock() - state.lastLockedHintAt > LOCKED_HINT_COOLDOWN_SEC then
+				state.lastLockedHintAt = os.clock()
+				send(player, padTrack.Id, { kind = "locked" })
 			end
-			if position.Y < Dash.FallResetY then
-				teleportToCheckpoint(player)
-				return
+		end
+	else
+		local world = worldOf(run)
+		onStart = inZone(position, world.startZone)
+		if run.state == "Countdown" then
+			if not onStart then
+				DashRun.leaveStart(run)
+				state.run = nil
+				send(player, run.track.Id, { kind = "cancel" })
+			elseif DashRun.tick(run, nowMs()) == "started" then
+				send(player, run.track.Id, { kind = "start", startMs = run.startMs })
+				TelemetryService:Progression(player, "Start", nil, run.track.Progression)
+				ObstacleDash.RunStarted:Fire(player, run.track.Id)
 			end
-			if Dash.CheckpointDetection == "Poll" then
-				local nextZone = checkpointZones[run.lastCheckpoint + 1]
-				if nextZone and inZone(position, nextZone) then
-					onCheckpoint(player, run.lastCheckpoint + 1)
+		elseif run.state == "Running" then
+			if DashRun.tick(run, nowMs()) == "timeout" then
+				TelemetryService:Progression(player, "Fail", "timeout", run.track.Progression)
+				send(player, run.track.Id, { kind = "abandon", reason = "timeout" })
+				state.run = nil
+				teleport(player, world.returnPoint)
+			else
+				local last = state.lastPos
+				if last and os.clock() > state.teleportGraceUntil then
+					local dx, dz = position.X - last.X, position.Z - last.Z
+					if math.sqrt(dx * dx + dz * dz) > DashRun.maxStep(dtSec) then
+						DashRun.markSuspicious(run)
+					end
 				end
-				if inZone(position, finishZone) then
-					onFinish(player)
+				if position.Y < run.track.FallResetY then
+					teleportToCheckpoint(player)
+					return
+				end
+				if Dash.CheckpointDetection == "Poll" then
+					local nextZone = world.checkpointZones[run.lastCheckpoint + 1]
+					if nextZone and inZone(position, nextZone) then
+						onCheckpoint(player, run.track.Id, run.lastCheckpoint + 1)
+					end
+					if inZone(position, world.finishZone) then
+						onFinish(player, run.track.Id)
+					end
 				end
 			end
 		end
@@ -276,16 +338,26 @@ local function poll(player: Player, dtSec: number)
 
 	if state.returnAt and os.clock() >= state.returnAt then
 		state.returnAt = nil
-		teleport(player, returnPoint)
+		teleport(player, state.returnPoint)
 	end
 
 	state.onStartPad = onStart
 	state.lastPos = if os.clock() > state.teleportGraceUntil then root.Position else nil
 end
 
-local function collectZones(world: Instance)
-	local track = world:WaitForChild("DeskDash")
-	for _, zonePart in track:WaitForChild("Zones"):GetChildren() do
+-- Finds the zones and spawn points of one track under `deskWorld`. Returns nil (with a warning)
+-- for a track whose model is missing, so an old place file still runs with the tracks it has.
+local function collectTrack(deskWorld: Instance, track: Tracks.Track): TrackWorld?
+	local model = deskWorld:WaitForChild(track.WorldName, 10)
+	if model == nil then
+		warn(`[ObstacleDash] track "{track.Id}": model "{track.WorldName}" not found, track disabled`)
+		return nil
+	end
+
+	local startZone: Zone? = nil
+	local finishZone: Zone? = nil
+	local checkpointZones: { [number]: Zone } = {}
+	for _, zonePart in model:WaitForChild("Zones"):GetChildren() do
 		if zonePart:IsA("BasePart") then
 			local kind = zonePart:GetAttribute("DashZone")
 			local index = zonePart:GetAttribute("Index")
@@ -301,48 +373,76 @@ local function collectZones(world: Instance)
 			end
 		end
 	end
-	for _, spawnPart in track:WaitForChild("Spawns"):GetChildren() do
+
+	local spawns: { [number]: BasePart } = {}
+	local spawnFolder = model:WaitForChild("Spawns")
+	for _, spawnPart in spawnFolder:GetChildren() do
 		local index = tonumber(string.match(spawnPart.Name, "^Spawn(%d+)$"))
 		if index and spawnPart:IsA("BasePart") then
 			spawns[index] = spawnPart
 		end
 	end
-	local point = world:FindFirstChild("ReturnPoint")
-	returnPoint = if point and point:IsA("BasePart") then point else spawns[0]
+	-- Desk Dash keeps its ReturnPoint beside the track model; other tracks keep it in their Spawns.
+	local point = spawnFolder:FindFirstChild("ReturnPoint") or deskWorld:FindFirstChild("ReturnPoint")
+	local returnPoint = if point and point:IsA("BasePart") then point else spawns[0]
 
-	assert(startZone and finishZone, "[ObstacleDash] Start/Finish zones missing")
-	for i = 1, Dash.CheckpointCount do
-		assert(checkpointZones[i], `[ObstacleDash] Checkpoint{i} zone missing`)
-		assert(spawns[i], `[ObstacleDash] Spawn{i} missing`)
+	assert(startZone and finishZone, `[ObstacleDash] {track.Id}: Start/Finish zones missing`)
+	for i = 1, track.CheckpointCount do
+		assert(checkpointZones[i], `[ObstacleDash] {track.Id}: Checkpoint{i} zone missing`)
+		assert(spawns[i], `[ObstacleDash] {track.Id}: Spawn{i} missing`)
 	end
+	return {
+		track = track,
+		startZone = startZone,
+		finishZone = finishZone,
+		checkpointZones = checkpointZones,
+		spawns = spawns,
+		returnPoint = returnPoint,
+	}
 end
 
 local function connectTouched()
-	for _, zone in checkpointZones do
-		zone.part.Touched:Connect(function(hit: BasePart)
+	for trackId, world in worlds do
+		for _, zone in world.checkpointZones do
+			zone.part.Touched:Connect(function(hit: BasePart)
+				local player = Players:GetPlayerFromCharacter(hit.Parent)
+				if player then
+					onCheckpoint(player, trackId, zone.index)
+				end
+			end)
+		end
+		world.finishZone.part.Touched:Connect(function(hit: BasePart)
 			local player = Players:GetPlayerFromCharacter(hit.Parent)
 			if player then
-				onCheckpoint(player, zone.index)
+				local run = stateOf(player).run
+				if run and run.state == "Running" then
+					onFinish(player, trackId)
+				end
 			end
 		end)
 	end
-	local finish = finishZone :: Zone
-	finish.part.Touched:Connect(function(hit: BasePart)
-		local player = Players:GetPlayerFromCharacter(hit.Parent)
-		if player then
-			local run = stateOf(player).run
-			if run and run.state == "Running" then
-				onFinish(player)
-			end
-		end
-	end)
 end
 
 function ObstacleDash:Init() end
 
 function ObstacleDash:Start()
-	collectZones(Workspace:WaitForChild("DeskWorld"))
-	print(`[ObstacleDash] ready, checkpoint detection: {Dash.CheckpointDetection}`)
+	local deskWorld = Workspace:WaitForChild("DeskWorld")
+	for _, trackId in Tracks.Order do
+		local track = Tracks.ById[trackId]
+		local world = collectTrack(deskWorld, track)
+		if world then
+			worlds[trackId] = world
+		elseif trackId == Tracks.Default then
+			error("[ObstacleDash] the default track is missing")
+		end
+	end
+	local ready = {}
+	for _, trackId in Tracks.Order do
+		if worlds[trackId] then
+			table.insert(ready, trackId)
+		end
+	end
+	print(`[ObstacleDash] ready ({table.concat(ready, ", ")}), checkpoint detection: {Dash.CheckpointDetection}`)
 	if Dash.CheckpointDetection == "Touched" then
 		connectTouched()
 	end
@@ -361,14 +461,14 @@ function ObstacleDash:Start()
 		end
 	end
 
-	local function track(player: Player)
+	local function watch(player: Player)
 		player.CharacterAdded:Connect(function(character)
 			onCharacterAdded(player, character)
 		end)
 	end
-	Players.PlayerAdded:Connect(track)
+	Players.PlayerAdded:Connect(watch)
 	for _, player in Players:GetPlayers() do
-		track(player)
+		watch(player)
 	end
 	Players.PlayerRemoving:Connect(function(player)
 		endRun(player, "left", false)
@@ -389,10 +489,12 @@ function ObstacleDash:Start()
 	end)
 end
 
--- RequestRestart from the client: abandon the active run and go back to the hub.
+-- RequestRestart from the client: abandon the active run and go back to the track's start area.
 function ObstacleDash:Restart(player: Player)
 	local state = stateOf(player)
-	if state.run and DashRun.isActive(state.run) then
+	local run = state.run
+	if run and DashRun.isActive(run) then
+		local returnPoint = worldOf(run).returnPoint
 		endRun(player, "restart", true)
 		teleport(player, returnPoint)
 	end

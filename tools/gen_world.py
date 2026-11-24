@@ -62,6 +62,14 @@ COLORS = {
     "coffee": [0.36, 0.22, 0.14],
     "calc": [0.28, 0.30, 0.36],
     "screen": [0.55, 0.85, 0.60],
+    "keycap": [0.93, 0.94, 0.97],
+    "keycap_dark": [0.30, 0.32, 0.40],
+    "key_red": [0.90, 0.35, 0.35],
+    "key_blue": [0.30, 0.55, 0.92],
+    "key_green": [0.35, 0.75, 0.50],
+    "keys_start": [0.85, 0.38, 0.78],
+    "cable": [0.16, 0.17, 0.22],
+    "enter": [0.96, 0.58, 0.25],
 }
 
 # Cover colours cycled over the book staircase.
@@ -259,6 +267,131 @@ def build_track():
     return geo, zones, spawns, track_length
 
 
+# --- Keyboard Dash track --------------------------------------------------------------------
+
+KEYS_Z = -140.0  # the track runs along +X at this z; the desk is widened to the north to hold it
+
+
+def build_keys_track():
+    """The second track: over a giant keyboard, along a cable and up the arrow keys.
+
+    Same rules as Desk Dash (zone attributes DashZone/Index, Spawn0..4, 4 checkpoints), built the same
+    way. Returns the walkable geometry, zones, spawns, the track length and the zone centres.
+    """
+    geo = []
+    zones = []
+    spawns = []
+    z0 = KEYS_Z
+
+    def piece(name, length, width, top, color, x0, z=z0, thickness=2.0, material="SmoothPlastic"):
+        geo.append(part(name, (length, thickness, width), (x0 + length / 2, top, z), color, material=material))
+        return x0 + length
+
+    def spawn_point(name, x, top, z=z0):
+        spawns.append(
+            {
+                "name": name,
+                "className": "Part",
+                "properties": {
+                    "Anchored": True,
+                    "Size": [2, 1, 2],
+                    "CFrame": cframe(x, top + 3, z),
+                    "Transparency": 1.0,
+                    "CanCollide": False,
+                    "CanTouch": False,
+                    "CanQuery": False,
+                },
+            }
+        )
+
+    # Start pad (magenta), reached by stairs from the desk.
+    start_top = 10.0
+    for n, (sx, sh) in enumerate(((12, 2.5), (16, 5), (19, 7.5)), start=1):
+        width = 4 if n < 3 else 3
+        geo.append(part(f"KeyStair{n}", (width, sh, 20), (sx, sh, z0), COLORS["hub"]))
+    x = piece("StartPad", 20, 20, start_top, COLORS["keys_start"], 20)
+    zones.append(zone("StartZone", "Start", 0, 30, start_top, z0, 18, 18, height=6))
+    spawn_point("Spawn0", 30, start_top)
+
+    def checkpoint(index, x0, top_y):
+        end = piece(f"Checkpoint{index}Pad", 16, 16, top_y, COLORS["checkpoint"], x0)
+        cx = x0 + 8
+        zones.append(zone(f"Checkpoint{index}", "Checkpoint", index, cx, top_y, z0, 14, 14))
+        spawn_point(f"Spawn{index}", cx, top_y)
+        return end
+
+    # Segment 1: a row of keycaps, each one a stud higher.
+    top = start_top
+    for i in range(8):
+        top += 1
+        x += 3
+        x = piece(f"Key{i + 1}", 10, 10, top, COLORS["keycap"] if i % 2 == 0 else COLORS["keycap_dark"], x, thickness=3.0)
+    x += 3
+    x = checkpoint(1, x, top)
+
+    # Segment 2: three stretches of cable with gaps (narrow: 3 studs).
+    for i in range(3):
+        x += 6
+        x = piece(f"Cable{i + 1}", 36, 3, top, COLORS["cable"], x, thickness=1.5)
+    x += 6
+    x = checkpoint(2, x, top)
+
+    # Segment 3: zigzag keys, alternating sides and heights.
+    for i in range(8):
+        x += 5
+        x = piece(
+            f"ZigKey{i + 1}",
+            9,
+            9,
+            top + (2 if i % 2 else 0),
+            COLORS["key_blue"] if i % 2 == 0 else COLORS["key_red"],
+            x,
+            z=z0 + (6 if i % 2 == 0 else -6),
+            thickness=3.0,
+        )
+    x += 5
+    x = checkpoint(3, x, top)
+
+    # Segment 4: arrow keys climbing up, three studs each.
+    for i in range(4):
+        top += 3
+        x += 4
+        x = piece(f"ArrowKey{i + 1}", 9, 9, top, COLORS["keycap_dark"] if i % 2 == 0 else COLORS["keycap"], x, thickness=3.0)
+    x += 4
+    x = checkpoint(4, x, top)
+
+    # Segment 5: three wide steps up to the Enter key (finish).
+    for i in range(3):
+        top += 2
+        x += 3
+        x = piece(f"EnterStep{i + 1}", 10, 12, top, COLORS["key_green"], x)
+    x += 3
+    finish_x0 = x
+    x = piece("FinishPad", 20, 20, top, COLORS["enter"], x)
+    zones.append(zone("FinishZone", "Finish", 5, finish_x0 + 10, top, z0, 18, 18))
+
+    board = part("ResultsBoard", (22, 12, 1), (x + 0.5, top + 7, z0), COLORS["board"], center=True)
+    board["properties"]["CFrame"]["CFrame"]["orientation"] = YAW_90
+    geo.append(board)
+
+    spawns.append(
+        {
+            "name": "ReturnPoint",
+            "className": "Part",
+            "properties": {
+                "Anchored": True,
+                "Size": [2, 1, 2],
+                "CFrame": cframe(2, 4.5, z0),
+                "Transparency": 1.0,
+                "CanCollide": False,
+                "CanTouch": False,
+                "CanQuery": False,
+            },
+        }
+    )
+    return geo, zones, spawns, x - 20
+
+
 # --- Hub and club plots ----------------------------------------------------------------
 
 PLOT_POSITIONS = [(-25, -40), (-55, -40), (-85, -40), (-25, 40), (-55, 40), (-85, 40)]
@@ -268,7 +401,7 @@ PLOT_TOP = 1.5
 def build_hub():
     children = [
         # Desk top: hub floor and the ground under the track. Top surface at y = 1.
-        part("DeskTop", (820, 4, 180), (300, 1, 0), COLORS["desk"], material="WoodPlanks"),
+        part("DeskTop", (820, 4, 270), (300, 1, -45), COLORS["desk"], material="WoodPlanks"),
         # Stairs from the hub up to the start pad (tops 2.5, 5, 7.5).
         part("StartStair1", (4, 2.5, 20), (12, 2.5, 0), COLORS["hub"], center=False),
         part("StartStair2", (4, 5, 20), (16, 5, 0), COLORS["hub"]),
@@ -590,6 +723,15 @@ def build_scenery():
         tacks.append(prop_cylinder(f"TackPin{i + 1}", 1.6, 6, x, y + 7, z, COLORS["steel"], material="Metal", collide=False))
     out.append(model("Thumbtacks", tacks))
 
+    # Guide to the Keyboard Dash start: a trail of magenta tiles along the desk, and a tall glowing
+    # beacon over each start pad so both tracks can be found from the hub.
+    trail = []
+    for i in range(14):
+        trail.append(prop_block(f"Tile{i + 1}", (6, 0.3, 6), 6, y, -16 - i * 9, COLORS["keys_start"], material="Neon", collide=False))
+    out.append(model("KeysTrail", trail))
+    for name, x, z, color in (("DeskBeacon", 30, 16, "start"), ("KeysBeacon", 30, -126, "keys_start")):
+        out.append(model(name, [prop_block("Pillar", (3, 36, 3), x, 10, z, COLORS[color], material="Neon", collide=False)]))
+
     return out
 
 
@@ -600,15 +742,16 @@ def build_bounds():
         return part(name, size, (x, 100, z), [1, 1, 1], center=True, collide=True, transparency=1.0, query=False)
 
     return [
-        wall("WallWest", (2, 200, 184), -111, 0),
-        wall("WallEast", (2, 200, 184), 711, 0),
-        wall("WallNorth", (824, 200, 2), 300, -91),
+        wall("WallWest", (2, 200, 274), -111, -45),
+        wall("WallEast", (2, 200, 274), 711, -45),
+        wall("WallNorth", (824, 200, 2), 300, -181),
         wall("WallSouth", (824, 200, 2), 300, 91),
     ]
 
 
 def main():
     geo, zones, spawns, length = build_track()
+    key_geo, key_zones, key_spawns, key_length = build_keys_track()
     world = {
         "className": "Model",
         "children": build_hub()
@@ -619,6 +762,14 @@ def main():
                     folder("Geometry", geo),
                     folder("Zones", zones),
                     folder("Spawns", spawns),
+                ],
+            ),
+            model(
+                "KeyDash",
+                [
+                    folder("Geometry", key_geo),
+                    folder("Zones", key_zones),
+                    folder("Spawns", key_spawns),
                 ],
             ),
             folder("Scenery", build_scenery()),
@@ -635,6 +786,7 @@ def main():
         json.dump(upgrades, f, indent=2)
         f.write("\n")
     print(f"track length ~{length:.0f} studs, {len(geo)} pieces, {len(zones)} zones")
+    print(f"keys track length ~{key_length:.0f} studs, {len(key_geo)} pieces, {len(key_zones)} zones")
 
 
 if __name__ == "__main__":

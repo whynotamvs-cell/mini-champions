@@ -74,14 +74,16 @@ function TelemetryService:Economy(
 	end)
 end
 
-function TelemetryService:Progression(player: Player, status: ProgressionStatus, levelName: string?)
-	emit(`progression {player.UserId} {PROGRESSION_PATH} {status}`, function()
+-- `path` is the progression path (the track); defaults to the first track.
+function TelemetryService:Progression(player: Player, status: ProgressionStatus, levelName: string?, path: string?)
+	local progression = path or PROGRESSION_PATH
+	emit(`progression {player.UserId} {progression} {status}`, function()
 		if status == "Start" then
-			AnalyticsService:LogProgressionStartEvent(player, PROGRESSION_PATH, 1, levelName)
+			AnalyticsService:LogProgressionStartEvent(player, progression, 1, levelName)
 		elseif status == "Complete" then
-			AnalyticsService:LogProgressionCompleteEvent(player, PROGRESSION_PATH, 1, levelName)
+			AnalyticsService:LogProgressionCompleteEvent(player, progression, 1, levelName)
 		else
-			AnalyticsService:LogProgressionFailEvent(player, PROGRESSION_PATH, 1, levelName)
+			AnalyticsService:LogProgressionFailEvent(player, progression, 1, levelName)
 		end
 	end)
 end

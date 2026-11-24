@@ -5,6 +5,7 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Economy = require(ReplicatedStorage.Shared.Config.Economy)
+local Tracks = require(ReplicatedStorage.Shared.Config.Tracks)
 local TableUtil = require(ReplicatedStorage.Shared.Utilities.TableUtil)
 
 local Template = require(script.Parent.Template)
@@ -95,21 +96,26 @@ local function run(data: any, repair: boolean): { string }
 
 	local minigames = ensureTable(ctx, data, "Minigames", Template.Minigames, "Minigames")
 	if type(minigames) == "table" then
-		local dash = ensureTable(ctx, minigames, "DeskDash", Template.Minigames.DeskDash, "Minigames.DeskDash")
-		if type(dash) == "table" then
-			integer(ctx, dash, "Finishes", 0, BIG, "DeskDash.Finishes")
-			integer(ctx, dash, "BestTimeMs", 0, BIG, "DeskDash.BestTimeMs")
-			local best = dash.BestTimeMs
-			if isFinite(best) and best > 0 and best < Economy.DashTiming.MinValidTimeMs then
-				table.insert(ctx.issues, `DeskDash.BestTimeMs: {best} below MinValidTimeMs`)
-				if repair then
-					dash.BestTimeMs = 0
+		for _, trackId in Tracks.Order do
+			local track = Tracks.ById[trackId]
+			local key = track.DataKey
+			local template = (Template.Minigames :: any)[key]
+			local dash = ensureTable(ctx, minigames, key, template, `Minigames.{key}`)
+			if type(dash) == "table" then
+				integer(ctx, dash, "Finishes", 0, BIG, `{key}.Finishes`)
+				integer(ctx, dash, "BestTimeMs", 0, BIG, `{key}.BestTimeMs`)
+				local best = dash.BestTimeMs
+				if isFinite(best) and best > 0 and best < track.MinValidTimeMs then
+					table.insert(ctx.issues, `{key}.BestTimeMs: {best} below MinValidTimeMs`)
+					if repair then
+						dash.BestTimeMs = 0
+					end
 				end
-			end
-			local medals = ensureTable(ctx, dash, "Medals", Template.Minigames.DeskDash.Medals, "DeskDash.Medals")
-			if type(medals) == "table" then
-				for _, medal in { "Bronze", "Silver", "Gold" } do
-					boolean(ctx, medals, medal, false, `DeskDash.Medals.{medal}`)
+				local medals = ensureTable(ctx, dash, "Medals", template.Medals, `{key}.Medals`)
+				if type(medals) == "table" then
+					for _, medal in { "Bronze", "Silver", "Gold" } do
+						boolean(ctx, medals, medal, false, `{key}.Medals.{medal}`)
+					end
 				end
 			end
 		end

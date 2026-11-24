@@ -1,5 +1,5 @@
 --!strict
--- Desk Dash run state machine (docs/ARCHITECTURE.md 8.1). Pure: no Roblox APIs, times in ms
+-- Obstacle track run state machine (docs/ARCHITECTURE.md 8.1). Pure: no Roblox APIs, times in ms
 -- from the server clock passed in by the caller. Every transition is synchronous.
 --
 --   Countdown --left start--> Cancelled
@@ -12,11 +12,13 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Dash = require(ReplicatedStorage.Shared.Config.Dash)
+local Tracks = require(ReplicatedStorage.Shared.Config.Tracks)
 
 export type State = "Countdown" | "Running" | "Finished" | "Rewarded" | "Rejected" | "Abandoned" | "Cancelled"
 
 export type Run = {
 	runId: string,
+	track: Tracks.Track,
 	state: State,
 	countdownStartMs: number,
 	startMs: number?,
@@ -33,9 +35,12 @@ export type FinishOutcome = "valid" | "rejected" | "missing_checkpoint" | "ignor
 
 local DashRun = {}
 
-function DashRun.new(runId: string, nowMs: number): Run
+-- `track` defaults to Desk Dash; each run keeps its own track so limits and checkpoint counts
+-- never mix between tracks.
+function DashRun.new(runId: string, nowMs: number, track: Tracks.Track?): Run
 	return {
 		runId = runId,
+		track = track or Tracks.ById[Tracks.Default],
 		state = "Countdown",
 		countdownStartMs = nowMs,
 		startMs = nil,
@@ -69,7 +74,7 @@ function DashRun.tick(run: Run, nowMs: number): string?
 		run.startMs = nowMs
 		run.lastSplitMs = nowMs
 		return "started"
-	elseif run.state == "Running" and run.startMs and nowMs - run.startMs > Dash.TimeoutSec * 1000 then
+	elseif run.state == "Running" and run.startMs and nowMs - run.startMs > run.track.TimeoutSec * 1000 then
 		run.state = "Abandoned"
 		run.abandonReason = "timeout"
 		return "timeout"
@@ -79,7 +84,7 @@ end
 
 -- Only lastCheckpoint + 1 counts; anything else is ignored (no skipping, no going back).
 function DashRun.reachCheckpoint(run: Run, index: number, nowMs: number): boolean
-	if run.state ~= "Running" or index ~= run.lastCheckpoint + 1 or index > Dash.CheckpointCount then
+	if run.state ~= "Running" or index ~= run.lastCheckpoint + 1 or index > run.track.CheckpointCount then
 		return false
 	end
 	table.insert(run.segmentMs, nowMs - run.lastSplitMs)
@@ -98,7 +103,7 @@ function DashRun.reachFinish(run: Run, nowMs: number): FinishOutcome
 	if run.state ~= "Running" or run.startMs == nil then
 		return "ignored"
 	end
-	if run.lastCheckpoint < Dash.CheckpointCount then
+	if run.lastCheckpoint < run.track.CheckpointCount then
 		return "missing_checkpoint"
 	end
 	table.insert(run.segmentMs, nowMs - run.lastSplitMs)
@@ -108,11 +113,11 @@ function DashRun.reachFinish(run: Run, nowMs: number): FinishOutcome
 	local reason: string? = nil
 	if run.suspicious then
 		reason = "suspicious_movement"
-	elseif (run.timeMs :: number) < Dash.MinValidTimeMs then
+	elseif (run.timeMs :: number) < run.track.MinValidTimeMs then
 		reason = "too_fast"
 	else
 		for i, ms in run.segmentMs do
-			local min = Dash.SegmentMinMs[i]
+			local min = run.track.SegmentMinMs[i]
 			if min and ms < min then
 				reason = `segment_{i}_too_fast`
 				break

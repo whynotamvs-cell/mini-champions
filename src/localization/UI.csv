@@ -73,3 +73,8 @@ HUD.LevelUp,Level {level}!,Big flash when the player levels up,,Level {level}!,�
 HUD.XpGain,+{xp} XP,Floating text when XP is earned,,+{xp} XP,+{xp} опыта
 Error.Title,Something went wrong,Title of the loading-failed screen,,Something went wrong,Что-то пошло не так
 Error.RejoinHint,Leave the game and join again in a minute.,Hint under the loading-failed message,,Leave the game and join again in a minute.,Выйди из игры и зайди снова через минуту.
+Track.DeskName,Desk Dash,Name of the first track,,Desk Dash,Забег по столу
+Track.KeysName,Keyboard Dash,Name of the second track,,Keyboard Dash,Забег по клавиатуре
+Track.Locked,Finish the tutorial to unlock this track!,Toast when standing on a locked start pad,,Finish the tutorial to unlock this track!,"Пройди обучение, чтобы открыть эту трассу!"
+Track.LockedSign,Finish the tutorial first,Short note on the sign above a locked track,,Finish the tutorial first,Сначала пройди обучение
+Track.Unlocked,New track open: Keyboard Dash!,Toast when the tutorial ends and the second track unlocks,,New track open: Keyboard Dash!,Открыта новая трасса: Забег по клавиатуре!

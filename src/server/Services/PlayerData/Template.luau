@@ -1,11 +1,11 @@
 --!strict
--- Default profile, schema v1 (docs/DATA_SCHEMA.md 4). Changing it requires a migration.
+-- Default profile, schema v2 (docs/DATA_SCHEMA.md 4). Changing it requires a migration.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local PlayerDataTypes = require(ReplicatedStorage.Shared.Types.PlayerData)
 
-local TEMPLATE: PlayerDataTypes.PlayerDataV1 = {
-	SchemaVersion = 1,
+local TEMPLATE: PlayerDataTypes.PlayerDataV2 = {
+	SchemaVersion = 2,
 	Stars = 0,
 	LifetimeStars = 0,
 	XP = 0,
@@ -13,6 +13,11 @@ local TEMPLATE: PlayerDataTypes.PlayerDataV1 = {
 	Club = { UpgradesOwned = 0 },
 	Minigames = {
 		DeskDash = {
+			Finishes = 0,
+			BestTimeMs = 0,
+			Medals = { Bronze = false, Silver = false, Gold = false },
+		},
+		KeyDash = {
 			Finishes = 0,
 			BestTimeMs = 0,
 			Medals = { Bronze = false, Silver = false, Gold = false },

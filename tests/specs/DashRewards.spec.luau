@@ -8,6 +8,7 @@ local TableUtil = require(ReplicatedStorage.Shared.Utilities.TableUtil)
 local Services = ServerScriptService.Server.Services
 local Template = require(Services.PlayerData.Template)
 local RewardLogic = require(Services.Logic.RewardLogic)
+local Tracks = require(ReplicatedStorage.Shared.Config.Tracks)
 local DashRewards = require(Services.Minigames.DashRewards)
 
 describe("DashRewards.runGrant", function()
@@ -57,6 +58,47 @@ describe("DashRewards.recordFinishGuard", function()
 		expect(best2()).toBe(false)
 		expect(data.Minigames.DeskDash.Finishes).toBe(2)
 		expect(data.Minigames.DeskDash.BestTimeMs).toBe(60_000)
+	end)
+end)
+
+describe("DashRewards on the keys track", function()
+	local Keys = Tracks.ById.keys
+
+	it("pays the same stars but under its own SKUs", function()
+		local grant = DashRewards.runGrant("run-k", "Gold", Keys)
+		expect(grant.lines[1].sku).toBe("keys_finish")
+		expect(grant.lines[2].sku).toBe("keys_medal_gold")
+		expect(grant.lines[1].stars).toBe(DashRewards.runGrant("run-d", "Gold").lines[1].stars)
+	end)
+
+	it("first medals have their own grant ids and flags per track", function()
+		local data = TableUtil.deepCopy(Template) :: any
+		local desk = DashRewards.firstMedalGrants("Bronze")
+		local keys = DashRewards.firstMedalGrants("Bronze", Keys)
+		expect(desk[1].grant.grantId).toBe("medal:dash:bronze")
+		expect(keys[1].grant.grantId).toBe("medal:keys:bronze")
+		expect(DashRewards.firstMedalGuard("Bronze", Keys)(data)).toBe(true)
+		expect(data.Minigames.KeyDash.Medals.Bronze).toBe(true)
+		expect(data.Minigames.DeskDash.Medals.Bronze).toBe(false) -- the other track is untouched
+		expect(DashRewards.firstMedalGuard("Bronze", Keys)(data)).toBe(false) -- once per track
+		expect(DashRewards.firstMedalGuard("Bronze")(data)).toBe(true) -- desk still gets its own
+	end)
+
+	it("records finishes and the best time on the right track only", function()
+		local data = TableUtil.deepCopy(Template) :: any
+		local guard, isNewBest = DashRewards.recordFinishGuard(48_000, Keys)
+		expect(guard(data)).toBe(true)
+		expect(isNewBest()).toBe(true)
+		expect(data.Minigames.KeyDash.Finishes).toBe(1)
+		expect(data.Minigames.KeyDash.BestTimeMs).toBe(48_000)
+		expect(data.Minigames.DeskDash.Finishes).toBe(0)
+		expect(data.Minigames.DeskDash.BestTimeMs).toBe(0)
+	end)
+
+	it("medals follow each track's own limits", function()
+		expect(DashRewards.medalForTime(50_000, "keys")).toBe("Silver") -- gold <= 47 s on keys
+		expect(DashRewards.medalForTime(50_000, "desk")).toBe("Gold") -- gold <= 55 s on desk
+		expect(DashRewards.medalForTime(50_000)).toBe("Gold") -- default is desk
 	end)
 end)
 

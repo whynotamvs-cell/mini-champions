@@ -95,6 +95,7 @@ function TutorialService:Init()
 			TelemetryService:Onboarding(player, 7, "BoughtFirstUpgrade")
 			TelemetryService:Onboarding(player, 8, "TutorialComplete")
 			notify(player, "Tutorial.Complete")
+			notify(player, "Track.Unlocked") -- the second track opens with the end of the tutorial
 		end
 	end)
 end
