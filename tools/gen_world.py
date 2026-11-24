@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generates the gray-box Desk World as Rojo model files.
+"""Generates the Desk World (one closed square room: hub, two tracks, props) as Rojo model files.
 
     python3 tools/gen_world.py
 
@@ -12,7 +12,9 @@ Units are studs. Y is up; the track runs along +X from the hub.
 """
 
 import json
+import math
 import os
+import random
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "world")
@@ -70,6 +72,10 @@ COLORS = {
     "keys_start": [0.85, 0.38, 0.78],
     "cable": [0.16, 0.17, 0.22],
     "enter": [0.96, 0.58, 0.25],
+    "ceiling": [0.96, 0.92, 0.82],
+    "wall": [0.78, 0.60, 0.40],
+    "baseboard": [0.50, 0.36, 0.24],
+    "stripe": [0.95, 0.78, 0.40],
 }
 
 # Cover colours cycled over the book staircase.
@@ -139,28 +145,103 @@ def folder(name, children):
     return model(name, children, "Folder")
 
 
-# --- Desk Dash track ----------------------------------------------------------------
 
-def build_track():
-    geo = []  # walkable pieces
-    zones = []
-    spawns = []  # respawn points per checkpoint (index 0 = start)
+DESK_TOP_Y = 1.0
 
-    def piece(name, length, width, top, color, x0, z=0.0, thickness=2.0, material="SmoothPlastic"):
-        """Adds a block that starts at x0 along +X; returns its far edge."""
-        geo.append(part(name, (length, thickness, width), (x0 + length / 2, top, z), color, material=material))
-        return x0 + length
 
-    def decor(name, size, centre, color, material="SmoothPlastic"):
-        """Cosmetic detail: never collides, never touched, never hit by raycasts."""
-        geo.append(part(name, size, centre, color, center=True, collide=False, query=False, material=material))
+def prop_block(name, size, x, y0, z, color, material="SmoothPlastic", collide=True):
+    """A block standing on y0 (its bottom edge), centred on x/z."""
+    return part(name, size, (x, y0 + size[1] / 2, z), color, center=True, collide=collide, material=material)
 
-    def book_pages(name, x0, length, width, top, z=0.0, thickness=2.0):
-        """Cream page block visible on the front edge of a book."""
-        decor(name, (0.4, thickness - 0.6, width - 1.2), (x0 + length + 0.05, top - thickness / 2, z), COLORS["pages"])
 
-    def spawn_point(name, x, top, z=0.0):
-        spawns.append(
+def prop_cylinder(name, diameter, length, x, y0, z, color, material="SmoothPlastic", collide=True, upright=True):
+    """A cylinder. Upright: stands on y0 with `length` as its height. Otherwise it lies along X."""
+    height = length if upright else diameter
+    p = part(name, (length, diameter, diameter), (x, y0 + height / 2, z), color, center=True, collide=collide, material=material)
+    if upright:
+        p["properties"]["CFrame"]["CFrame"]["orientation"] = ROLL_90
+    p["properties"]["Shape"] = "Cylinder"
+    return p
+
+
+
+# --- The room ------------------------------------------------------------------------------
+#
+# One closed square room (a giant desk drawer): walls and a ceiling with lamps, the hub with the
+# club plots along the west wall, and both tracks winding through the middle as snakes. Every
+# free corner is filled with giant stationery. Axes: x east, z south, y up. Units are studs.
+#
+#   room inner area   x, z in [-200, 200], floor top y = 1, ceiling at y = 151
+#   hub               x < -100 (west), rug on the floor, spawn at (-150, 0)
+#   Desk Dash         north half (z < 0), start pad at (-70, -40)
+#   Keyboard Dash     south half (z > 0), start pad at (-70, 40)
+
+import math
+import random
+
+ROOM = 200  # half size of the inner room
+FLOOR_Y = 1.0
+WALL_H = 150
+CEILING_Y = FLOOR_Y + WALL_H
+
+# Playability limits (R15: JumpHeight 7.2, WalkSpeed 16). For two neighbouring pieces of a track,
+# plan-view distance + 1.5 * rise must stay within JUMP_BUDGET, and the rise within MAX_RISE.
+MAX_RISE = 3.0
+MAX_GAP = 7.5
+JUMP_BUDGET = 10.0
+EDGE = 4.0  # props keep this clear of walls
+
+HEADINGS = {"E": (1, 0), "W": (-1, 0), "N": (0, -1), "S": (0, 1)}
+# Board rotations: the Front face (where the SurfaceGui is) must look back at the runners.
+FACE_PLUS_X = [[0, 0, -1], [0, 1, 0], [1, 0, 0]]  # yaw -90
+FACE_MINUS_X = YAW_90  # yaw +90
+
+
+def rect_distance(a, b):
+    """Plan-view distance between two rectangles (x0, x1, z0, z1)."""
+    dx = max(a[0] - b[1], b[0] - a[1], 0)
+    dz = max(a[2] - b[3], b[2] - a[3], 0)
+    return math.hypot(dx, dz)
+
+
+def rects_overlap(a, b, margin=0.0):
+    return not (
+        a[1] + margin <= b[0] or b[1] + margin <= a[0] or a[3] + margin <= b[2] or b[3] + margin <= a[2]
+    )
+
+
+class TrackBuilder:
+    """Lays a track piece by piece along a heading, turning at pads, and checks every jump."""
+
+    def __init__(self, label):
+        self.label = label
+        self.geo = []
+        self.zones = []
+        self.spawns = []
+        self.path = []  # waypoints (x, top, z) of every piece, in running order
+        self.marks = {}  # zone index -> waypoint index
+        self.rects = []  # footprints of every piece (for the prop placer)
+        self.h = (1, 0)
+        self.cx = 0.0
+        self.cz = 0.0
+        self.last = None  # (rect, top, name)
+        self.pad_center = (0.0, 0.0)
+        self.pad_size = 0.0
+
+    # -- internals
+    def _check(self, name, rect, top):
+        if self.last is None:
+            return
+        prect, ptop, pname = self.last
+        gap = rect_distance(prect, rect)
+        rise = top - ptop
+        assert gap <= MAX_GAP, f"{self.label}: {pname} -> {name}: gap {gap:.1f} > {MAX_GAP}"
+        assert rise <= MAX_RISE, f"{self.label}: {pname} -> {name}: rise {rise:.1f} > {MAX_RISE}"
+        need = gap + 1.5 * max(rise, 0)
+        assert need <= JUMP_BUDGET, f"{self.label}: {pname} -> {name}: jump {need:.1f} > {JUMP_BUDGET}"
+
+    def _spawn(self, name, x, top, z):
+        self.spawns.append(
             {
                 "name": name,
                 "className": "Part",
@@ -176,271 +257,691 @@ def build_track():
             }
         )
 
-    # Start pad (blue), reached from the hub by stairs.
-    start_top = 10.0
-    x = piece("StartPad", 20, 20, start_top, COLORS["start"], 20)
-    zones.append(zone("StartZone", "Start", 0, 30, start_top, 0, 18, 18, height=6))
-    spawn_point("Spawn0", 30, start_top)
+    def _place(self, name, size_x, size_z, cx, cz, top, color, thickness, material):
+        self.geo.append(part(name, (size_x, thickness, size_z), (cx, top, cz), color, material=material))
+        rect = (cx - size_x / 2, cx + size_x / 2, cz - size_z / 2, cz + size_z / 2)
+        self._check(name, rect, top)
+        self.last = (rect, top, name)
+        self.rects.append(rect)
+        self.path.append((cx, top, cz))
+        return len(self.path) - 1
 
-    # Segment 1: book staircase and a long book-top walkway.
-    top = start_top
-    for i in range(6):
-        top += 2
-        x0 = x
-        x = piece(f"Book{i + 1}", 10, 16, top, COLORS[BOOK_COVERS[i]], x)
-        book_pages(f"Book{i + 1}Pages", x0, 10, 16, top)
-    walk0 = x
-    x = piece("BookWalkway", 60, 12, top, COLORS["book_purple"], x)
-    book_pages("BookWalkwayPages", walk0, 60, 12, top)
+    # -- public
+    def start_pad(self, center, heading, top, color, size=20):
+        self.h = HEADINGS[heading]
+        cx, cz = center
+        self._place("StartPad", size, size, cx, cz, top, color, 2.0, "SmoothPlastic")
+        self.zones.append(zone("StartZone", "Start", 0, cx, top, cz, size - 2, size - 2, height=6))
+        self._spawn("Spawn0", cx, top, cz)
+        self.marks[0] = len(self.path) - 1
+        self.pad_center = (cx, cz)
+        self.pad_size = size
+        self.cx = cx + self.h[0] * size / 2
+        self.cz = cz + self.h[1] * size / 2
 
-    def checkpoint(index, x0, top_y):
-        end = piece(f"Checkpoint{index}Pad", 16, 16, top_y, COLORS["checkpoint"], x0)
-        cx = x0 + 8
-        zones.append(zone(f"Checkpoint{index}", "Checkpoint", index, cx, top_y, 0, 14, 14))
-        spawn_point(f"Spawn{index}", cx, top_y)
-        return end
+    def piece(self, name, length, width, top, color, *, gap=0.0, lateral=0.0, thickness=2.0, material="SmoothPlastic"):
+        hx, hz = self.h
+        sx = self.cx + hx * gap
+        sz = self.cz + hz * gap
+        cx = sx + hx * length / 2 - hz * lateral
+        cz = sz + hz * length / 2 + hx * lateral
+        size_x, size_z = (length, width) if hx else (width, length)
+        self._place(name, size_x, size_z, cx, cz, top, color, thickness, material)
+        self.cx = sx + hx * length
+        self.cz = sz + hz * length
 
-    x = checkpoint(1, x, top)
+    def pad(self, index, top, color, *, size=16, gap=0.0, kind="Checkpoint", name=None, height=8):
+        hx, hz = self.h
+        label = name or f"Checkpoint{index}Pad"
+        self.piece(label, size, size, top, color, gap=gap)
+        cx = self.cx - hx * size / 2
+        cz = self.cz - hz * size / 2
+        if kind == "Checkpoint":
+            self.zones.append(zone(f"Checkpoint{index}", kind, index, cx, top, cz, size - 2, size - 2, height=height))
+            self._spawn(f"Spawn{index}", cx, top, cz)
+        else:
+            self.zones.append(zone("FinishZone", kind, index, cx, top, cz, size - 2, size - 2, height=height))
+        self.marks[index] = len(self.path) - 1
+        self.pad_center = (cx, cz)
+        self.pad_size = size
 
-    # Segment 2: pencil beams with gaps.
-    for i in range(4):
-        x += 6
-        p0 = x
-        x = piece(f"Pencil{i + 1}", 24, 3, top, COLORS["pencil"], x, material="Plastic")
-        # Painted band near the sharpened end and a pink eraser cap on the other.
-        decor(f"Pencil{i + 1}Band", (2, 2.1, 3.1), (p0 + 20, top - 1, 0), COLORS["pencil_stripe"])
-        decor(f"Pencil{i + 1}Cap", (1.5, 2.1, 3.1), (p0 + 0.75, top - 1, 0), COLORS["eraser"])
-    x += 6
-    x = checkpoint(2, x, top)
+    def turn(self, heading):
+        self.h = HEADINGS[heading]
+        px, pz = self.pad_center
+        self.cx = px + self.h[0] * self.pad_size / 2
+        self.cz = pz + self.h[1] * self.pad_size / 2
 
-    # Segment 3: ruler bridge, then eraser hops going up and down.
-    ruler0 = x
-    x = piece("RulerBridge", 90, 4, top, COLORS["ruler"], x, thickness=1.0, material="Plastic")
-    # Tick marks along one edge: long every 10, short every 5.
-    for tick in range(0, 91, 5):
-        long = tick % 10 == 0
-        decor(
-            f"RulerTick{tick}",
-            (0.3, 0.1, 1.4 if long else 0.8),
-            (ruler0 + tick, top + 0.05, -1.3 + (0 if long else 0.3)),
-            COLORS["ruler_tick"],
+    def board(self, top, face):
+        """Results board just past the finish pad (the track heading), facing the runners."""
+        px, pz = self.pad_center
+        hx, hz = self.h
+        bx = px + hx * (self.pad_size / 2 + 0.5)
+        bz = pz + hz * (self.pad_size / 2 + 0.5)
+        board = part("ResultsBoard", (22, 12, 1), (bx, top + 7, bz), COLORS["board"], center=True)
+        board["properties"]["CFrame"]["CFrame"]["orientation"] = face
+        self.geo.append(board)
+        self.rects.append((bx - 1, bx + 1, bz - 11, bz + 11))
+
+    def stairs(self, x_edge, z, top):
+        """Three steps up to the start pad, west of it (the pad starts at x_edge)."""
+        for n, (sx, h) in enumerate(((x_edge - 10, top * 0.25), (x_edge - 6, top * 0.5), (x_edge - 2, top * 0.75)), start=1):
+            self.geo.append(part(f"StartStair{n}", (4, h, 20), (sx, h, z), COLORS["hub"]))
+            self.rects.append((sx - 2, sx + 2, z - 10, z + 10))
+
+    def segment_lengths(self):
+        """Walking distance (plan view) between consecutive zones along the path."""
+        out = []
+        for i in range(5):
+            a, b = self.marks[i], self.marks[i + 1]
+            d = 0.0
+            for k in range(a, b):
+                x0, _, z0 = self.path[k]
+                x1, _, z1 = self.path[k + 1]
+                d += math.hypot(x1 - x0, z1 - z0)
+            out.append(d)
+        return out
+
+    def model(self, name, return_point):
+        path_json = json.dumps([[round(x, 1), round(y, 1), round(z, 1)] for x, y, z in self.path], separators=(",", ":"))
+        self.spawns.append(
+            {
+                "name": "ReturnPoint",
+                "className": "Part",
+                "properties": {
+                    "Anchored": True,
+                    "Size": [2, 1, 2],
+                    "CFrame": cframe(return_point[0], 4.5, return_point[1]),
+                    "Transparency": 1.0,
+                    "CanCollide": False,
+                    "CanTouch": False,
+                    "CanQuery": False,
+                },
+            }
         )
-    hop_tops = [top + 2, top + 4, top + 2, top, top + 2]
-    for i, hop_top in enumerate(hop_tops):
-        x += 7
-        x = piece(f"Eraser{i + 1}", 8, 8, hop_top, COLORS["eraser"], x, thickness=3.0)
-    x += 7
-    x = checkpoint(3, x, top + 2)
-    top += 2
+        node = model(
+            name,
+            [folder("Geometry", self.geo), folder("Zones", self.zones), folder("Spawns", self.spawns)],
+        )
+        # The walking path (x, top, z per piece) is kept as an attribute for tools and tests only.
+        node["properties"] = attributes({"Path": path_json})
+        return node
 
-    # Segment 4: zigzag sticky notes.
-    for i in range(6):
-        x += 4
-        x = piece(
+
+def build_desk_track():
+    """Desk Dash: books, pencils, erasers, a ruler and sticky notes, up to the golden finish."""
+    b = TrackBuilder("desk")
+    top = 10.0
+    b.stairs(-80, -40, top)
+    b.start_pad((-70, -40), "E", top, COLORS["start"])
+
+    # Segment 1: five books climbing, then a short walkway.
+    for i in range(5):
+        top += 2
+        b.piece(f"Book{i + 1}", 10, 16, top, COLORS[BOOK_COVERS[i]])
+    b.piece("BookWalkway", 14, 12, top, COLORS["book_purple"])
+    b.pad(1, top, COLORS["checkpoint"])
+
+    # Segment 2: three pencils with gaps, the middle one a little higher.
+    for i, rise in enumerate((0, 2, -2)):
+        top += rise
+        b.piece(f"Pencil{i + 1}", 22, 3, top, COLORS["pencil"], gap=6, material="Plastic")
+    b.pad(2, top, COLORS["checkpoint"], gap=6)
+
+    # Segment 3 (north): eraser hops, up and down.
+    b.turn("N")
+    for i, rise in enumerate((2, 2, -2, 0)):
+        top += rise
+        b.piece(f"Eraser{i + 1}", 8, 8, top, COLORS["eraser"], gap=7, thickness=3.0)
+    b.pad(3, top, COLORS["checkpoint"], gap=6)
+
+    # Segment 4 (west): a narrow ruler, then sticky notes in a zigzag.
+    b.turn("W")
+    b.piece("RulerBridge", 40, 4, top, COLORS["ruler"], thickness=1.0, material="Plastic")
+    for i in range(4):
+        b.piece(
             f"Note{i + 1}",
             10,
             10,
-            top,
+            top + (2 if i % 2 else 0),
             COLORS["note"] if i % 2 == 0 else COLORS["note_alt"],
-            x,
-            z=5.0 if i % 2 == 0 else -5.0,
+            gap=4,
+            lateral=5 if i % 2 == 0 else -5,
             thickness=1.0,
         )
-    x += 5
-    x = checkpoint(4, x, top)
+    b.pad(4, top, COLORS["checkpoint"], gap=4)
 
-    # Segment 5: final climb to the mug (finish).
-    for i in range(4):
+    # Segment 5: a climb of three steps (each a jump) to the golden finish.
+    for i in range(3):
         top += 3
-        x = piece(f"Climb{i + 1}", 10, 14, top, COLORS["book_alt"], x)
-    finish_x0 = x
-    x = piece("FinishPad", 20, 20, top, COLORS["finish"], x)
-    zones.append(zone("FinishZone", "Finish", 5, finish_x0 + 10, top, 0, 18, 18))
-
-    # Results board just past the finish pad, facing the runners. The client draws the table on
-    # its Front face (SurfaceGui); this part only carries it.
-    board = part("ResultsBoard", (22, 12, 1), (x + 0.5, top + 7, 0), COLORS["board"], center=True)
-    board["properties"]["CFrame"]["CFrame"]["orientation"] = YAW_90
-    geo.append(board)
-
-    track_length = x - 20
-    return geo, zones, spawns, track_length
-
-
-# --- Keyboard Dash track --------------------------------------------------------------------
-
-KEYS_Z = -140.0  # the track runs along +X at this z; the desk is widened to the north to hold it
+        b.piece(f"Climb{i + 1}", 10, 12, top, COLORS["book_alt"], gap=2.5)
+    b.pad(5, top, COLORS["finish"], size=20, gap=2.5, kind="Finish", name="FinishPad", height=8)
+    b.board(top, FACE_PLUS_X)
+    return b
 
 
 def build_keys_track():
-    """The second track: over a giant keyboard, along a cable and up the arrow keys.
+    """Keyboard Dash: keycaps, a cable, scroll keys, the arrow keys and the Enter key."""
+    b = TrackBuilder("keys")
+    top = 10.0
+    b.stairs(-80, 40, top)
+    b.start_pad((-70, 40), "E", top, COLORS["keys_start"])
 
-    Same rules as Desk Dash (zone attributes DashZone/Index, Spawn0..4, 4 checkpoints), built the same
-    way. Returns the walkable geometry, zones, spawns, the track length and the zone centres.
-    """
-    geo = []
-    zones = []
-    spawns = []
-    z0 = KEYS_Z
-
-    def piece(name, length, width, top, color, x0, z=z0, thickness=2.0, material="SmoothPlastic"):
-        geo.append(part(name, (length, thickness, width), (x0 + length / 2, top, z), color, material=material))
-        return x0 + length
-
-    def spawn_point(name, x, top, z=z0):
-        spawns.append(
-            {
-                "name": name,
-                "className": "Part",
-                "properties": {
-                    "Anchored": True,
-                    "Size": [2, 1, 2],
-                    "CFrame": cframe(x, top + 3, z),
-                    "Transparency": 1.0,
-                    "CanCollide": False,
-                    "CanTouch": False,
-                    "CanQuery": False,
-                },
-            }
-        )
-
-    # Start pad (magenta), reached by stairs from the desk.
-    start_top = 10.0
-    for n, (sx, sh) in enumerate(((12, 2.5), (16, 5), (19, 7.5)), start=1):
-        width = 4 if n < 3 else 3
-        geo.append(part(f"KeyStair{n}", (width, sh, 20), (sx, sh, z0), COLORS["hub"]))
-    x = piece("StartPad", 20, 20, start_top, COLORS["keys_start"], 20)
-    zones.append(zone("StartZone", "Start", 0, 30, start_top, z0, 18, 18, height=6))
-    spawn_point("Spawn0", 30, start_top)
-
-    def checkpoint(index, x0, top_y):
-        end = piece(f"Checkpoint{index}Pad", 16, 16, top_y, COLORS["checkpoint"], x0)
-        cx = x0 + 8
-        zones.append(zone(f"Checkpoint{index}", "Checkpoint", index, cx, top_y, z0, 14, 14))
-        spawn_point(f"Spawn{index}", cx, top_y)
-        return end
-
-    # Segment 1: a row of keycaps, each one a stud higher.
-    top = start_top
-    for i in range(8):
+    # Segment 1: keycaps, each one a stud higher.
+    for i in range(5):
         top += 1
-        x += 3
-        x = piece(f"Key{i + 1}", 10, 10, top, COLORS["keycap"] if i % 2 == 0 else COLORS["keycap_dark"], x, thickness=3.0)
-    x += 3
-    x = checkpoint(1, x, top)
+        b.piece(f"Key{i + 1}", 10, 10, top, COLORS["keycap"] if i % 2 == 0 else COLORS["keycap_dark"], gap=3, thickness=3.0)
+    b.pad(1, top, COLORS["checkpoint"], gap=3)
 
-    # Segment 2: three stretches of cable with gaps (narrow: 3 studs).
-    for i in range(3):
-        x += 6
-        x = piece(f"Cable{i + 1}", 36, 3, top, COLORS["cable"], x, thickness=1.5)
-    x += 6
-    x = checkpoint(2, x, top)
+    # Segment 2: cable stretches, three studs wide.
+    for i in range(2):
+        b.piece(f"Cable{i + 1}", 30, 3, top, COLORS["cable"], gap=6, thickness=1.5)
+    b.pad(2, top, COLORS["checkpoint"], gap=6)
 
-    # Segment 3: zigzag keys, alternating sides and heights.
-    for i in range(8):
-        x += 5
-        x = piece(
+    # Segment 3 (south): scroll keys in a zigzag with alternating heights.
+    b.turn("S")
+    for i in range(6):
+        b.piece(
             f"ZigKey{i + 1}",
             9,
             9,
             top + (2 if i % 2 else 0),
             COLORS["key_blue"] if i % 2 == 0 else COLORS["key_red"],
-            x,
-            z=z0 + (6 if i % 2 == 0 else -6),
+            gap=5,
+            lateral=6 if i % 2 == 0 else -6,
             thickness=3.0,
         )
-    x += 5
-    x = checkpoint(3, x, top)
+    b.pad(3, top, COLORS["checkpoint"], gap=5)
 
-    # Segment 4: arrow keys climbing up, three studs each.
+    # Segment 4 (west): the arrow keys climbing, three studs each.
+    b.turn("W")
     for i in range(4):
         top += 3
-        x += 4
-        x = piece(f"ArrowKey{i + 1}", 9, 9, top, COLORS["keycap_dark"] if i % 2 == 0 else COLORS["keycap"], x, thickness=3.0)
-    x += 4
-    x = checkpoint(4, x, top)
+        b.piece(f"ArrowKey{i + 1}", 9, 9, top, COLORS["keycap_dark"] if i % 2 == 0 else COLORS["keycap"], gap=3, thickness=3.0)
+    b.pad(4, top, COLORS["checkpoint"], gap=3)
 
-    # Segment 5: three wide steps up to the Enter key (finish).
+    # Segment 5: wide steps up to the Enter key.
     for i in range(3):
         top += 2
-        x += 3
-        x = piece(f"EnterStep{i + 1}", 10, 12, top, COLORS["key_green"], x)
-    x += 3
-    finish_x0 = x
-    x = piece("FinishPad", 20, 20, top, COLORS["enter"], x)
-    zones.append(zone("FinishZone", "Finish", 5, finish_x0 + 10, top, z0, 18, 18))
-
-    board = part("ResultsBoard", (22, 12, 1), (x + 0.5, top + 7, z0), COLORS["board"], center=True)
-    board["properties"]["CFrame"]["CFrame"]["orientation"] = YAW_90
-    geo.append(board)
-
-    spawns.append(
-        {
-            "name": "ReturnPoint",
-            "className": "Part",
-            "properties": {
-                "Anchored": True,
-                "Size": [2, 1, 2],
-                "CFrame": cframe(2, 4.5, z0),
-                "Transparency": 1.0,
-                "CanCollide": False,
-                "CanTouch": False,
-                "CanQuery": False,
-            },
-        }
-    )
-    return geo, zones, spawns, x - 20
+        b.piece(f"EnterStep{i + 1}", 10, 12, top, COLORS["key_green"], gap=3)
+    b.pad(5, top, COLORS["enter"], size=20, gap=3, kind="Finish", name="FinishPad", height=8)
+    b.board(top, FACE_PLUS_X)
+    return b
 
 
 # --- Hub and club plots ----------------------------------------------------------------
 
-PLOT_POSITIONS = [(-25, -40), (-55, -40), (-85, -40), (-25, 40), (-55, 40), (-85, 40)]
+# Plots along the west wall, turned so the front of every club faces east, into the hub.
+PLOT_POSITIONS = [(-ROOM + 20, z) for z in (-150, -110, -70, 70, 110, 150)]
 PLOT_TOP = 1.5
 
 
-def build_hub():
+def build_hub(desk, keys):
     children = [
-        # Desk top: hub floor and the ground under the track. Top surface at y = 1.
-        part("DeskTop", (820, 4, 270), (300, 1, -45), COLORS["desk"], material="WoodPlanks"),
-        # Stairs from the hub up to the start pad (tops 2.5, 5, 7.5).
-        part("StartStair1", (4, 2.5, 20), (12, 2.5, 0), COLORS["hub"], center=False),
-        part("StartStair2", (4, 5, 20), (16, 5, 0), COLORS["hub"]),
-        part("StartStair3", (4, 7.5, 20), (19, 7.5, 0), COLORS["hub"]),
+        # A soft rug makes the west end read as home.
+        prop_block("Rug", (ROOM - 104, 0.4, ROOM * 2 - 8), (-ROOM + 4 - 100) / 2, FLOOR_Y, 0, COLORS["mousepad"], material="Fabric", collide=False),
         {
             "name": "HubSpawn",
             "className": "SpawnLocation",
             "properties": {
                 "Anchored": True,
                 "Size": [8, 1, 8],
-                "CFrame": cframe(-5, 1.5, 0),
+                "CFrame": cframe(-150, 1.5, 0),
                 "Color": COLORS["hub"],
                 "Material": "SmoothPlastic",
                 "Neutral": True,
                 "Duration": 0,
             },
         },
-        {
-            # Where players are sent after a finish or a restart (not on the start pad).
-            "name": "ReturnPoint",
-            "className": "Part",
-            "properties": {
-                "Anchored": True,
-                "Size": [2, 1, 2],
-                "CFrame": cframe(2, 4.5, 0),
-                "Transparency": 1.0,
-                "CanCollide": False,
-                "CanTouch": False,
-                "CanQuery": False,
-            },
-        },
     ]
     plots = []
     for i, (px, pz) in enumerate(PLOT_POSITIONS, start=1):
-        plots.append(
-            part(f"Plot{i}", (24, 1, 24), (px, PLOT_TOP, pz), COLORS["plot"], attrs={"PlotIndex": i})
-        )
+        p = part(f"Plot{i}", (24, 1, 24), (px, PLOT_TOP, pz), COLORS["plot"], attrs={"PlotIndex": i})
+        p["properties"]["CFrame"]["CFrame"]["orientation"] = YAW_90
+        plots.append(p)
     children.append(folder("Plots", plots))
+
+    # Guide trails from the hub to the two start stairs, and a beacon above each start pad.
+    for name, color, z in (("DeskTrail", "start", -40), ("KeysTrail", "keys_start", 40)):
+        tiles = []
+        for i in range(8):
+            t = i / 7
+            tiles.append(
+                prop_block(
+                    f"Tile{i + 1}",
+                    (5, 0.3, 5),
+                    -118 + t * 22,
+                    FLOOR_Y,
+                    (z * 0.12) + t * (z - z * 0.12),
+                    COLORS[color],
+                    material="Neon",
+                    collide=False,
+                )
+            )
+        children.append(model(name, tiles))
+    for name, color, z in (("DeskBeacon", "start", -40), ("KeysBeacon", "keys_start", 40)):
+        children.append(
+            model(name, [prop_block("Pillar", (3, 40, 3), -63, 10, z - 7, COLORS[color], material="Neon", collide=False)])
+        )
     return children
+
+
+# --- Room shell: floor, walls, ceiling, lamps -----------------------------------------------------
+
+
+def build_room():
+    thick = 4
+    full = ROOM * 2 + thick * 2
+    out = [
+        part("Floor", (full, thick, full), (0, FLOOR_Y, 0), COLORS["desk"], material="WoodPlanks"),
+        part("Ceiling", (full, thick, full), (0, CEILING_Y + thick, 0), COLORS["ceiling"]),
+    ]
+    wall_y = FLOOR_Y + WALL_H / 2
+    out += [
+        prop_block("WallWest", (thick, WALL_H, full), -(ROOM + thick / 2), FLOOR_Y, 0, COLORS["wall"], material="Wood"),
+        prop_block("WallEast", (thick, WALL_H, full), ROOM + thick / 2, FLOOR_Y, 0, COLORS["wall"], material="Wood"),
+        prop_block("WallNorth", (full, WALL_H, thick), 0, FLOOR_Y, -(ROOM + thick / 2), COLORS["wall"], material="Wood"),
+        prop_block("WallSouth", (full, WALL_H, thick), 0, FLOOR_Y, ROOM + thick / 2, COLORS["wall"], material="Wood"),
+    ]
+    del wall_y
+    # Baseboards and a painted stripe along every wall (decor, never collides).
+    for name, size, x, z in (
+        ("West", (1.2, 6, ROOM * 2), -ROOM + 0.6, 0),
+        ("East", (1.2, 6, ROOM * 2), ROOM - 0.6, 0),
+        ("North", (ROOM * 2, 6, 1.2), 0, -ROOM + 0.6),
+        ("South", (ROOM * 2, 6, 1.2), 0, ROOM - 0.6),
+    ):
+        out.append(prop_block(f"Baseboard{name}", size, x, FLOOR_Y, z, COLORS["baseboard"], collide=False))
+        sx = (size[0], 5, size[2])
+        out.append(prop_block(f"Stripe{name}", sx, x, FLOOR_Y + 60, z, COLORS["stripe"], collide=False))
+    return out
+
+
+def build_ceiling_lamps():
+    """Nine hanging lamps; each carries a warm PointLight so the closed room is bright."""
+    out = []
+    n = 0
+    for lx in (-140, 0, 140):
+        for lz in (-140, 0, 140):
+            n += 1
+            bulb = prop_block("Bulb", (16, 2, 16), lx, CEILING_Y - 28, lz, COLORS["glow"], material="Neon", collide=False)
+            bulb["children"] = [
+                {
+                    "name": "Glow",
+                    "className": "PointLight",
+                    "properties": {"Brightness": 1.5, "Range": 200, "Color": [1.0, 0.88, 0.68], "Shadows": False},
+                }
+            ]
+            out.append(
+                model(
+                    f"CeilingLamp{n}",
+                    [
+                        prop_block("Cord", (1.2, 20, 1.2), lx, CEILING_Y - 20, lz, COLORS["dark"], collide=False),
+                        prop_block("ShadeBottom", (26, 5, 26), lx, CEILING_Y - 25, lz, COLORS["lamp"], collide=False),
+                        prop_block("ShadeTop", (16, 5, 16), lx, CEILING_Y - 20, lz, COLORS["lamp"], collide=False),
+                        bulb,
+                    ],
+                )
+            )
+    return out
+
+
+# --- Props ------------------------------------------------------------------------------------------
+
+
+def prop_mug(x, z):
+    y = FLOOR_Y
+    return (
+        model(
+            "Mug",
+            [
+                prop_cylinder("MugBody", 28, 32, x, y, z, COLORS["mug"]),
+                prop_cylinder("MugCoffee", 23, 0.6, x, y + 29.6, z, COLORS["coffee"], collide=False),
+                prop_block("MugHandleTop", (7, 3, 4), x + 16.5, y + 24, z, COLORS["mug"]),
+                prop_block("MugHandleSide", (3, 16, 4), x + 20, y + 11, z, COLORS["mug"]),
+                prop_block("MugHandleBottom", (7, 3, 4), x + 16.5, y + 8, z, COLORS["mug"]),
+            ],
+        ),
+        (24, 16),
+    )
+
+
+def prop_notebooks(x, z):
+    y = FLOOR_Y
+    parts = []
+    for i, color in enumerate(("book", "book_alt", "book_green", "book_purple")):
+        width = 62 - i * 3
+        parts.append(prop_block(f"Notebook{i + 1}", (width, 4, 44), x + i * 1.5, y + i * 4, z, COLORS[color]))
+        parts.append(prop_block(f"Pages{i + 1}", (0.4, 3, 40), x + i * 1.5 + width / 2, y + i * 4 + 0.5, z, COLORS["pages"], collide=False))
+    return model("Notebooks", parts), (33, 23)
+
+
+def prop_pads(x, z):
+    y = FLOOR_Y
+    parts = []
+    for i, (color, dx, dz) in enumerate((("note", 0, 0), ("note_alt", 26, 8), ("eraser", -24, 12))):
+        parts.append(prop_block(f"Pad{i + 1}", (22, 6, 22), x + dx, y, z + dz, COLORS[color]))
+        parts.append(prop_block(f"PadTop{i + 1}", (22, 0.2, 22), x + dx, y + 6, z + dz, COLORS["note"], collide=False))
+    return model("StickyPads", parts), (37, 23)
+
+
+def prop_tape(x, z):
+    y = FLOOR_Y
+    return (
+        model(
+            "TapeRoll",
+            [
+                prop_cylinder("TapeRing", 36, 16, x, y, z, COLORS["tape"], upright=False),
+                prop_cylinder("TapeHole", 14, 16.4, x, y + 11, z, COLORS["desk"], collide=False, upright=False),
+            ],
+        ),
+        (9, 19),
+    )
+
+
+def prop_stapler(x, z):
+    y = FLOOR_Y
+    return (
+        model(
+            "Stapler",
+            [
+                prop_block("StaplerBase", (38, 3, 12), x, y, z, COLORS["steel"], material="Metal"),
+                prop_block("StaplerBody", (36, 6, 11), x, y + 3, z, COLORS["stapler"]),
+                prop_block("StaplerHead", (14, 3, 11), x + 12, y + 9, z, COLORS["dark"]),
+            ],
+        ),
+        (20, 7),
+    )
+
+
+def prop_calculator(x, z):
+    y = FLOOR_Y
+    parts = [
+        prop_block("CalcBody", (36, 5, 50), x, y, z, COLORS["calc"]),
+        prop_block("CalcScreen", (30, 0.4, 10), x, y + 5, z - 14, COLORS["screen"], material="Neon", collide=False),
+    ]
+    palette = ("book", "pencil", "book_alt", "book_green")
+    for row in range(4):
+        for col in range(4):
+            parts.append(prop_block(f"Key{row}{col}", (6, 1, 6), x - 10.5 + col * 7, y + 5, z - 8 + row * 8 + 2, COLORS[palette[(row + col) % 4]], collide=False))
+    return model("Calculator", parts), (19, 26)
+
+
+def prop_case(x, z):
+    y = FLOOR_Y
+    return (
+        model(
+            "PencilCase",
+            [
+                prop_block("CaseBody", (76, 14, 28), x, y, z, COLORS["case"], material="Fabric"),
+                prop_block("CaseZip", (76, 0.5, 1.8), x, y + 14, z, COLORS["steel"], material="Metal", collide=False),
+                prop_block("CaseTab", (4, 1.2, 4), x + 30, y + 14, z, COLORS["gold"], collide=False),
+            ],
+        ),
+        (39, 15),
+    )
+
+
+def prop_lamp(x, z):
+    y = FLOOR_Y
+    bulb = prop_block("LampBulb", (14, 2, 14), x, y + 64, z, COLORS["glow"], material="Neon", collide=False)
+    bulb["children"] = [
+        {
+            "name": "LampGlow",
+            "className": "PointLight",
+            "properties": {"Brightness": 1.2, "Range": 110, "Color": [1.0, 0.86, 0.62], "Shadows": False},
+        }
+    ]
+    return (
+        model(
+            "ReadingLamp",
+            [
+                prop_cylinder("LampBase", 36, 3, x, y, z, COLORS["dark"]),
+                prop_block("LampArm", (3, 62, 3), x, y + 3, z, COLORS["dark"]),
+                prop_block("ShadeBottom", (34, 6, 34), x, y + 65, z, COLORS["lamp"]),
+                prop_block("ShadeMiddle", (26, 6, 26), x, y + 71, z, COLORS["lamp"]),
+                prop_block("ShadeTop", (16, 6, 16), x, y + 77, z, COLORS["lamp"]),
+                bulb,
+            ],
+        ),
+        (19, 19),
+    )
+
+
+def prop_pen(x, z):
+    y = FLOOR_Y
+    return (
+        model(
+            "Pen",
+            [
+                prop_cylinder("PenBarrel", 9, 78, x, y, z, COLORS["cup"], upright=False),
+                prop_cylinder("PenGrip", 9.4, 14, x - 36, y, z, COLORS["dark"], upright=False),
+                prop_cylinder("PenCap", 10, 18, x + 38, y, z, COLORS["silver"], material="Metal", upright=False),
+                prop_block("PenClip", (16, 1.2, 2), x + 42, y + 9.4, z, COLORS["steel"], material="Metal", collide=False),
+            ],
+        ),
+        (48, 6),
+    )
+
+
+def prop_erasers(x, z):
+    y = FLOOR_Y
+    parts = []
+    for i, (color, dx, dz, w) in enumerate((("eraser", 0, 0, 16), ("pages", 20, 6, 14), ("book_alt", 9, 22, 12))):
+        parts.append(prop_block(f"Eraser{i + 1}", (w, 9, 11), x + dx, y, z + dz, COLORS[color]))
+        parts.append(prop_block(f"Sleeve{i + 1}", (w / 2.5, 9.2, 11.2), x + dx, y, z + dz, COLORS["dark"], collide=False))
+    return model("Erasers", parts), (27, 22)
+
+
+def prop_tacks(x, z):
+    y = FLOOR_Y
+    colors = ("book", "pencil", "book_green", "book_purple")
+    parts = []
+    for i in range(4):
+        tx = x + (i % 2) * 18
+        tz = z + (i // 2) * 18
+        parts.append(prop_cylinder(f"TackHead{i + 1}", 12, 3, tx, y, tz, COLORS[colors[i]]))
+        parts.append(prop_cylinder(f"TackTop{i + 1}", 6, 4, tx, y + 3, tz, COLORS[colors[i]]))
+        parts.append(prop_cylinder(f"TackPin{i + 1}", 1.6, 6, tx, y + 7, tz, COLORS["steel"], material="Metal", collide=False))
+    return model("Thumbtacks", parts), (16, 16)
+
+
+def prop_ruler(x, z):
+    y = FLOOR_Y
+    parts = [prop_block("Ruler", (140, 1.2, 12), x, y, z, COLORS["ruler"], material="Plastic")]
+    for tick in range(0, 141, 20):
+        parts.append(prop_block(f"Tick{tick}", (0.6, 0.2, 5 if tick % 40 == 0 else 3), x - 70 + tick, y + 1.2, z - 3, COLORS["ruler_tick"], collide=False))
+    return model("Ruler", parts), (72, 7)
+
+
+def prop_crayons(x, z):
+    y = FLOOR_Y
+    parts = []
+    palette = ("book", "pencil", "book_alt", "book_green", "book_purple", "eraser")
+    for i in range(6):
+        parts.append(prop_cylinder(f"Crayon{i + 1}", 6, 34, x, y + i * 6.2, z + (i % 2) * 2, COLORS[palette[i]], upright=False))
+    return model("Crayons", parts), (18, 5)
+
+
+def prop_paperclip(x, z):
+    y = FLOOR_Y
+    return (
+        model(
+            "Paperclip",
+            [
+                prop_block("ClipTop", (24, 1.6, 1.6), x, y, z - 5, COLORS["steel"], material="Metal"),
+                prop_block("ClipBottom", (16, 1.6, 1.6), x + 3, y, z + 5, COLORS["steel"], material="Metal"),
+                prop_block("ClipLeft", (1.6, 1.6, 10), x - 12, y, z, COLORS["steel"], material="Metal"),
+                prop_block("ClipRight", (1.6, 1.6, 10), x + 11, y, z, COLORS["steel"], material="Metal"),
+                prop_block("ClipInner", (12, 1.6, 1.6), x - 2, y + 1.6, z, COLORS["steel"], material="Metal", collide=False),
+            ],
+        ),
+        (13, 7),
+    )
+
+
+def prop_sharpener(x, z):
+    y = FLOOR_Y
+    return (
+        model(
+            "Sharpener",
+            [
+                prop_block("SharpenerBody", (14, 8, 9), x, y, z, COLORS["key_blue"]),
+                prop_block("SharpenerBlade", (4, 0.4, 5), x + 3, y + 8, z, COLORS["steel"], material="Metal", collide=False),
+                prop_cylinder("SharpenerHole", 4, 0.4, x - 4, y + 8, z, COLORS["dark"], collide=False),
+            ],
+        ),
+        (8, 6),
+    )
+
+
+def prop_cubes(x, z):
+    y = FLOOR_Y
+    return (
+        model(
+            "Cubes",
+            [
+                prop_block("CubeRed", (8, 8, 8), x - 5, y, z, COLORS["key_red"]),
+                prop_block("CubeBlue", (8, 8, 8), x + 5, y, z + 1, COLORS["key_blue"]),
+                prop_block("CubeGreen", (8, 8, 8), x, y + 8, z, COLORS["key_green"]),
+            ],
+        ),
+        (10, 6),
+    )
+
+
+def prop_booklets(x, z):
+    y = FLOOR_Y
+    return (
+        model(
+            "Booklets",
+            [
+                prop_block("BookletBottom", (24, 3, 17), x, y, z, COLORS["book_alt"]),
+                prop_block("BookletMiddle", (22, 3, 16), x + 1, y + 3, z, COLORS["book"]),
+                prop_block("BookletTop", (20, 3, 15), x - 1, y + 6, z, COLORS["book_green"]),
+                prop_block("BookletPages", (0.3, 8, 14), x + 12.2, y + 0.5, z, COLORS["pages"], collide=False),
+            ],
+        ),
+        (13, 9),
+    )
+
+
+def prop_coins(x, z):
+    y = FLOOR_Y
+    parts = []
+    for i in range(4):
+        parts.append(prop_cylinder(f"Coin{i + 1}", 10, 1.4, x + (i % 2) * 0.8, y + i * 1.4, z, COLORS["gold"], material="Metal"))
+    return model("Coins", parts), (6, 6)
+
+
+PROP_CATALOG = [
+    # (factory, most of this kind in the room)
+    (prop_ruler, 3),
+    (prop_notebooks, 6),
+    (prop_pads, 6),
+    (prop_case, 5),
+    (prop_pen, 5),
+    (prop_calculator, 5),
+    (prop_erasers, 6),
+    (prop_lamp, 4),
+    (prop_mug, 5),
+    (prop_tape, 5),
+    (prop_stapler, 5),
+    (prop_crayons, 8),
+    (prop_tacks, 12),
+    (prop_booklets, 12),
+    (prop_paperclip, 14),
+    (prop_cubes, 12),
+    (prop_sharpener, 10),
+    (prop_coins, 12),
+]
+
+
+SMALL_PROPS = {"prop_booklets", "prop_paperclip", "prop_cubes", "prop_sharpener", "prop_coins", "prop_crayons", "prop_tacks"}
+
+
+def build_scenery(forbidden):
+    """Fills the free floor with props (seeded: the same room every time). The floor is scanned in a
+    shuffled grid; at every spot the first prop that fits gets placed, so big gaps get notebooks and
+    pencil cases and small gaps get thumbtacks. `forbidden` lists the rectangles (tracks, plots, hub)
+    the props must stay clear of."""
+    rng = random.Random(20261123)
+    placed = []
+    out = []
+    counter = {}
+    step = 6
+    spots = [(x, z) for x in range(-ROOM + 12, ROOM - 12, step) for z in range(-ROOM + 12, ROOM - 12, step)]
+
+    def try_place(factory, x, z):
+        node, (hx, hz) = factory(x, z)
+        rect = (x - hx, x + hx, z - hz, z + hz)
+        if rect[0] < -ROOM + EDGE or rect[1] > ROOM - EDGE or rect[2] < -ROOM + EDGE or rect[3] > ROOM - EDGE:
+            return False
+        if any(rects_overlap(rect, f, 11) for f in forbidden):
+            return False
+        if any(rects_overlap(rect, q, 2) for q in placed):
+            return False
+        placed.append(rect)
+        name = factory.__name__
+        counter[name] = counter.get(name, 0) + 1
+        node["name"] = f"{node['name']}{counter[name]}"
+        out.append(node)
+        return True
+
+    # Pass 1: the big props, one kind after the other, each on a fresh shuffle of the floor.
+    for factory, limit in PROP_CATALOG:
+        if factory.__name__ in SMALL_PROPS:
+            continue
+        order = spots[:]
+        rng.shuffle(order)
+        for x, z in order:
+            if counter.get(factory.__name__, 0) >= limit:
+                break
+            try_place(factory, x, z)
+    # Pass 2: small props fill every gap that is left.
+    order = spots[:]
+    rng.shuffle(order)
+    small = [(f, n) for f, n in PROP_CATALOG if f.__name__ in SMALL_PROPS]
+    for x, z in order:
+        rng.shuffle(small)
+        for factory, limit in small:
+            if counter.get(factory.__name__, 0) < limit and try_place(factory, x, z):
+                break
+    print("  props placed:", {k.replace("prop_", ""): v for k, v in sorted(counter.items())})
+    return out, placed
+
+
+def build_wall_decor(forbidden):
+    """Bookshelf rows along the north and south walls, a pencil rack on the east wall."""
+    rng = random.Random(7)
+    out = []
+    book_palette = ("book", "book_alt", "book_green", "book_purple", "pencil", "eraser", "key_red", "key_blue")
+    for wall, z, label in (("North", -ROOM + 11, "N"), ("South", ROOM - 11, "S")):
+        books = []
+        x = -ROOM + 10
+        n = 0
+        while x < ROOM - 24:
+            w = rng.choice((8, 10, 12, 14))
+            h = rng.randint(30, 62)
+            rect = (x, x + w, z - 10, z + 10)
+            if not any(rects_overlap(rect, f, 6) for f in forbidden):
+                n += 1
+                color = COLORS[book_palette[(n + rng.randint(0, 3)) % len(book_palette)]]
+                books.append(prop_block(f"Book{n}", (w, h, 20), x + w / 2, FLOOR_Y, z, color))
+                books.append(prop_block(f"Spine{n}", (w * 0.6, 3, 0.4), x + w / 2, FLOOR_Y + h * 0.6, z + (-10.2 if label == "S" else 10.2), COLORS["pages"], collide=False))
+            x += w + 0.5
+        out.append(model(f"Bookshelf{wall}", books))
+    pencils = []
+    for i in range(18):
+        z = -ROOM + 16 + i * 21
+        rect = (ROOM - 20, ROOM - 4, z - 4, z + 4)
+        if any(rects_overlap(rect, f, 6) for f in forbidden):
+            continue
+        color = COLORS[("pencil", "book", "book_alt", "book_green")[i % 4]]
+        h = 70 + (i * 13) % 40
+        pencils.append(prop_block(f"RackPencil{i + 1}", (7, h, 7), ROOM - 12, FLOOR_Y, z, color))
+        pencils.append(prop_block(f"RackTip{i + 1}", (4.5, 7, 4.5), ROOM - 12, FLOOR_Y + h, z, COLORS["wood"], collide=False))
+    out.append(model("PencilRack", pencils))
+    return out
 
 
 def build_upgrades():
@@ -570,210 +1071,43 @@ def build_upgrades():
     )
 
 
-# --- Scenery and bounds -------------------------------------------------------------------
-
-DESK_TOP_Y = 1.0  # top surface of the desk
 
 
-def prop_block(name, size, x, y0, z, color, material="SmoothPlastic", collide=True):
-    """A block standing on y0 (its bottom edge), centred on x/z."""
-    return part(name, size, (x, y0 + size[1] / 2, z), color, center=True, collide=collide, material=material)
-
-
-def prop_cylinder(name, diameter, length, x, y0, z, color, material="SmoothPlastic", collide=True, upright=True):
-    """A cylinder. Upright: stands on y0 with `length` as its height. Otherwise it lies along X."""
-    height = length if upright else diameter
-    p = part(name, (length, diameter, diameter), (x, y0 + height / 2, z), color, center=True, collide=collide, material=material)
-    if upright:
-        p["properties"]["CFrame"]["CFrame"]["orientation"] = ROLL_90
-    p["properties"]["Shape"] = "Cylinder"
-    return p
-
-
-def build_scenery():
-    """Giant everyday objects around the track so the desk does not feel empty.
-
-    Everything sits at |z| >= 28 (or behind the hub), clear of the track (|z| <= 12), the plots and
-    the stairs. Props are solid, so players can climb on them; none is needed for the game.
-    """
-    y = DESK_TOP_Y
-    out = []
-
-    # Mouse pad under the hub: a dark soft floor that makes the start area read as home.
-    out.append(prop_block("MousePad", (172, 0.4, 170), -24, y, 0, COLORS["mousepad"], material="Fabric", collide=False))
-
-    # Coffee mug (back row).
-    mug = [
-        prop_cylinder("MugBody", 28, 32, 120, y, -58, COLORS["mug"]),
-        prop_cylinder("MugCoffee", 23, 0.6, 120, y + 29.6, -58, COLORS["coffee"], collide=False),
-        prop_block("MugHandleTop", (7, 3, 4), 136.5, y + 24, -58, COLORS["mug"]),
-        prop_block("MugHandleSide", (3, 16, 4), 140, y + 11, -58, COLORS["mug"]),
-        prop_block("MugHandleBottom", (7, 3, 4), 136.5, y + 8, -58, COLORS["mug"]),
-    ]
-    out.append(model("Mug", mug))
-
-    # Notebook stack with page edges.
-    notebooks = []
-    for i, color in enumerate(("book", "book_alt", "book_green", "book_purple")):
-        width = 62 - i * 3
-        notebooks.append(prop_block(f"Notebook{i + 1}", (width, 4, 44), 250 + i * 1.5, y + i * 4, 56, COLORS[color]))
-        notebooks.append(
-            prop_block(f"Pages{i + 1}", (0.4, 3, 40), 250 + i * 1.5 + width / 2, y + i * 4 + 0.5, 56, COLORS["pages"], collide=False)
-        )
-    out.append(model("Notebooks", notebooks))
-
-    # Sticky note pads.
-    pads = []
-    for i, (color, dx, dz) in enumerate((("note", 0, 0), ("note_alt", 30, 8), ("eraser", -26, 12))):
-        pads.append(prop_block(f"Pad{i + 1}", (22, 6, 22), 335 + dx, y, 62 + dz, COLORS[color]))
-        pads.append(prop_block(f"PadTop{i + 1}", (22, 0.2, 22), 335 + dx, y + 6, 62 + dz, COLORS["note"], collide=False))
-    out.append(model("StickyPads", pads))
-
-    # Tape roll lying on its side.
-    tape = [
-        prop_cylinder("TapeRing", 36, 16, 405, y, -58, COLORS["tape"], upright=False),
-        prop_cylinder("TapeHole", 14, 16.4, 405, y + 11, -58, COLORS["desk"], collide=False, upright=False),
-    ]
-    out.append(model("TapeRoll", tape))
-
-    # Stapler.
-    stapler = [
-        prop_block("StaplerBase", (38, 3, 12), 470, y, 58, COLORS["steel"], material="Metal"),
-        prop_block("StaplerBody", (36, 6, 11), 470, y + 3, 58, COLORS["stapler"]),
-        prop_block("StaplerHead", (14, 3, 11), 482, y + 9, 58, COLORS["dark"]),
-    ]
-    out.append(model("Stapler", stapler))
-
-    # Calculator with a screen and a grid of keys.
-    calc = [
-        prop_block("CalcBody", (36, 5, 50), 530, y, -56, COLORS["calc"]),
-        prop_block("CalcScreen", (30, 0.4, 10), 530, y + 5, -70, COLORS["screen"], material="Neon", collide=False),
-    ]
-    palette = ("book", "pencil", "book_alt", "book_green")
-    for row in range(4):
-        for col in range(4):
-            calc.append(
-                prop_block(
-                    f"Key{row}{col}",
-                    (6, 1, 6),
-                    530 - 10.5 + col * 7,
-                    y + 5,
-                    -62 + row * 8 + 2,
-                    COLORS[palette[(row + col) % 4]],
-                    collide=False,
-                )
-            )
-    out.append(model("Calculator", calc))
-
-    # Zipped pencil case.
-    case = [
-        prop_block("CaseBody", (76, 14, 28), 600, y, 58, COLORS["case"], material="Fabric"),
-        prop_block("CaseZip", (76, 0.5, 1.8), 600, y + 14, 58, COLORS["steel"], material="Metal", collide=False),
-        prop_block("CaseTab", (4, 1.2, 4), 630, y + 14, 58, COLORS["gold"], collide=False),
-    ]
-    out.append(model("PencilCase", case))
-
-    # Big reading lamp in the back with a real warm glow.
-    bulb = prop_block("LampBulb", (14, 2, 14), 300, y + 64, -78, COLORS["glow"], material="Neon", collide=False)
-    bulb["children"] = [
-        {
-            "name": "LampGlow",
-            "className": "PointLight",
-            "properties": {"Brightness": 1.6, "Range": 150, "Color": [1.0, 0.86, 0.62], "Shadows": False},
-        }
-    ]
-    lamp = [
-        prop_cylinder("LampBase", 36, 3, 300, y, -78, COLORS["dark"]),
-        prop_block("LampArm", (3, 62, 3), 300, y + 3, -78, COLORS["dark"]),
-        prop_block("ShadeBottom", (34, 6, 34), 300, y + 65, -78, COLORS["lamp"]),
-        prop_block("ShadeMiddle", (26, 6, 26), 300, y + 71, -78, COLORS["lamp"]),
-        prop_block("ShadeTop", (16, 6, 16), 300, y + 77, -78, COLORS["lamp"]),
-        bulb,
-    ]
-    out.append(model("ReadingLamp", lamp))
-
-    # Rulers lying along the front edge, tick marks every 20 studs.
-    for n, (x0, color) in enumerate(((60, "ruler"), (330, "pencil")), start=1):
-        ruler = [prop_block(f"Ruler{n}", (240, 1.2, 12), x0 + 120, y, 82, COLORS[color], material="Plastic")]
-        for tick in range(0, 241, 20):
-            ruler.append(
-                prop_block(
-                    f"Tick{n}_{tick}", (0.6, 0.2, 5 if tick % 40 == 0 else 3), x0 + tick, y + 1.2, 79, COLORS["ruler_tick"], collide=False
-                )
-            )
-        out.append(model(f"Ruler{n}", ruler))
-
-    # Hub props: a giant pen, erasers and thumbtacks around the start area (plots sit at |z| 28..52).
-    pen = [
-        prop_cylinder("PenBarrel", 9, 78, -40, y, 72, COLORS["cup"], upright=False),
-        prop_cylinder("PenGrip", 9.4, 14, -75, y, 72, COLORS["dark"], upright=False),
-        prop_cylinder("PenCap", 10, 18, -1, y, 72, COLORS["silver"], material="Metal", upright=False),
-        prop_block("PenClip", (16, 1.2, 2), 4, y + 9.4, 72, COLORS["steel"], material="Metal", collide=False),
-    ]
-    out.append(model("Pen", pen))
-    erasers = []
-    for i, (color, dx, dz, w) in enumerate((("eraser", 0, 0, 16), ("pages", 20, 6, 14), ("book_alt", 9, 22, 12))):
-        erasers.append(prop_block(f"HubEraser{i + 1}", (w, 9, 11), -70 + dx, y, -68 + dz, COLORS[color]))
-        erasers.append(prop_block(f"HubSleeve{i + 1}", (w / 2.5, 9.2, 11.2), -70 + dx, y, -68 + dz, COLORS["dark"], collide=False))
-    out.append(model("HubErasers", erasers))
-    tacks = []
-    for i, (color, x, z) in enumerate((("book", -20, -70), ("pencil", -5, -78), ("book_green", 15, -66), ("book_purple", 35, -76))):
-        tacks.append(prop_cylinder(f"TackHead{i + 1}", 12, 3, x, y, z, COLORS[color]))
-        tacks.append(prop_cylinder(f"TackTop{i + 1}", 6, 4, x, y + 3, z, COLORS[color]))
-        tacks.append(prop_cylinder(f"TackPin{i + 1}", 1.6, 6, x, y + 7, z, COLORS["steel"], material="Metal", collide=False))
-    out.append(model("Thumbtacks", tacks))
-
-    # Guide to the Keyboard Dash start: a trail of magenta tiles along the desk, and a tall glowing
-    # beacon over each start pad so both tracks can be found from the hub.
-    trail = []
-    for i in range(14):
-        trail.append(prop_block(f"Tile{i + 1}", (6, 0.3, 6), 6, y, -16 - i * 9, COLORS["keys_start"], material="Neon", collide=False))
-    out.append(model("KeysTrail", trail))
-    for name, x, z, color in (("DeskBeacon", 30, 16, "start"), ("KeysBeacon", 30, -126, "keys_start")):
-        out.append(model(name, [prop_block("Pillar", (3, 36, 3), x, 10, z, COLORS[color], material="Neon", collide=False)]))
-
-    return out
-
-
-def build_bounds():
-    """Invisible walls round the desk so nobody walks off it; the east end lies past the finish."""
-
-    def wall(name, size, x, z):
-        return part(name, size, (x, 100, z), [1, 1, 1], center=True, collide=True, transparency=1.0, query=False)
-
-    return [
-        wall("WallWest", (2, 200, 274), -111, -45),
-        wall("WallEast", (2, 200, 274), 711, -45),
-        wall("WallNorth", (824, 200, 2), 300, -181),
-        wall("WallSouth", (824, 200, 2), 300, 91),
-    ]
+def track_report(builder, forbidden_label):
+    segs = builder.segment_lengths()
+    total = sum(segs)
+    straight = total / 16.0
+    print(f"{forbidden_label}: {len(builder.geo)} pieces, walking length {total:.0f} studs ({straight:.1f} s at 16 st/s)")
+    print(f"  segments (studs): {[round(s) for s in segs]}")
+    print(f"  segment minimums @55% of walking time, ms (rounded to 500): {[int(round(s / 16 * 0.55 * 1000 / 500) * 500) for s in segs]}")
+    print(f"  suggested limits: gold {straight * 1.5:.0f} s, silver {straight * 1.9:.0f} s, minimum {straight * 0.9:.0f} s")
 
 
 def main():
-    geo, zones, spawns, length = build_track()
-    key_geo, key_zones, key_spawns, key_length = build_keys_track()
+    desk = build_desk_track()
+    keys = build_keys_track()
+
+    # Both tracks must stay inside their half of the room, clear of the west hub.
+    for b, (zmin, zmax) in ((desk, (-ROOM + 4, -12)), (keys, (12, ROOM - 4))):
+        for x0, x1, z0, z1 in b.rects:
+            assert -112 <= x0 and x1 <= ROOM - 4, f"{b.label}: piece out of the track area in x: {x0:.0f}..{x1:.0f}"
+            assert zmin <= z0 and z1 <= zmax, f"{b.label}: piece out of its half in z: {z0:.0f}..{z1:.0f}"
+
+    forbidden = list(desk.rects) + list(keys.rects)
+    forbidden += [(px - 12, px + 12, pz - 12, pz + 12) for px, pz in PLOT_POSITIONS]
+    forbidden += [(-185, -100, -90, 90)]  # hub: spawn, trails, rug centre
+    forbidden += [(-ROOM, ROOM, -ROOM, -ROOM + 22), (-ROOM, ROOM, ROOM - 22, ROOM), (ROOM - 24, ROOM, -ROOM, ROOM)]
+    props, placed = build_scenery(forbidden)
+    decor = build_wall_decor(list(desk.rects) + list(keys.rects) + [(px - 12, px + 12, pz - 12, pz + 12) for px, pz in PLOT_POSITIONS])
+
     world = {
         "className": "Model",
-        "children": build_hub()
-        + [
-            model(
-                "DeskDash",
-                [
-                    folder("Geometry", geo),
-                    folder("Zones", zones),
-                    folder("Spawns", spawns),
-                ],
-            ),
-            model(
-                "KeyDash",
-                [
-                    folder("Geometry", key_geo),
-                    folder("Zones", key_zones),
-                    folder("Spawns", key_spawns),
-                ],
-            ),
-            folder("Scenery", build_scenery()),
-            folder("Bounds", build_bounds()),
+        "children": [
+            folder("Room", build_room() + build_ceiling_lamps()),
+            *build_hub(desk, keys),
+            desk.model("DeskDash", (-96, -40)),
+            keys.model("KeyDash", (-96, 40)),
+            folder("Scenery", props + decor),
         ],
     }
     os.makedirs(OUT, exist_ok=True)
@@ -785,8 +1119,11 @@ def main():
     with open(os.path.join(OUT, "ClubUpgrades.model.json"), "w") as f:
         json.dump(upgrades, f, indent=2)
         f.write("\n")
-    print(f"track length ~{length:.0f} studs, {len(geo)} pieces, {len(zones)} zones")
-    print(f"keys track length ~{key_length:.0f} studs, {len(key_geo)} pieces, {len(key_zones)} zones")
+
+    track_report(desk, "Desk Dash")
+    track_report(keys, "Keyboard Dash")
+    count = len(json.dumps(world).split('"className"')) - 1
+    print(f"room {ROOM * 2} x {ROOM * 2}, {len(props)} props + {len(decor)} wall decor groups, {count} instances in total")
 
 
 if __name__ == "__main__":

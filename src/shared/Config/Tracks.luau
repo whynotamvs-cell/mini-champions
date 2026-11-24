@@ -21,8 +21,8 @@ export type Track = {
 	NameKey: string,
 	RequiresTutorial: boolean,
 	CheckpointCount: number,
-	-- Minimum time per segment: start->cp1, cp1->cp2, ... cp4->finish (anti-cheat, ~55% of walking
-	-- time at WalkSpeed 16). Re-tune together with the medal limits after developer runs.
+	-- Minimum time per segment: start->cp1, cp1->cp2, ... cp4->finish (anti-cheat, ~55% of the walking
+	-- time at WalkSpeed 16 over the walking distance printed by tools/gen_world.py). Re-tune together with the medal limits after developer runs.
 	SegmentMinMs: { number },
 	-- A root part below this height during a run = fell off the track (desk top root is ~4).
 	FallResetY: number,
@@ -69,7 +69,7 @@ local desk = build({
 	Progression = "DeskDash",
 	NameKey = "Track.DeskName",
 	RequiresTutorial = false,
-	SegmentMinMs = { 5_000, 5_000, 6_000, 3_500, 2_500 },
+	SegmentMinMs = { 3_000, 3_500, 3_000, 4_500, 2_000 },
 })
 
 local keys = build({
@@ -80,7 +80,7 @@ local keys = build({
 	Progression = "KeyDash",
 	NameKey = "Track.KeysName",
 	RequiresTutorial = true,
-	SegmentMinMs = { 4_500, 5_000, 4_500, 2_500, 2_000 },
+	SegmentMinMs = { 3_000, 3_000, 4_500, 2_500, 2_000 },
 })
 
 local Tracks = table.freeze({

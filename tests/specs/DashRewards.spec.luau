@@ -96,9 +96,9 @@ describe("DashRewards on the keys track", function()
 	end)
 
 	it("medals follow each track's own limits", function()
-		expect(DashRewards.medalForTime(50_000, "keys")).toBe("Silver") -- gold <= 47 s on keys
-		expect(DashRewards.medalForTime(50_000, "desk")).toBe("Gold") -- gold <= 55 s on desk
-		expect(DashRewards.medalForTime(50_000)).toBe("Gold") -- default is desk
+		expect(DashRewards.medalForTime(42_000, "keys")).toBe("Silver") -- gold <= 41 s on keys
+		expect(DashRewards.medalForTime(42_000, "desk")).toBe("Gold") -- gold <= 43 s on desk
+		expect(DashRewards.medalForTime(42_000)).toBe("Gold") -- default is desk
 	end)
 end)
 
