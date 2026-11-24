@@ -21,6 +21,7 @@ local CONTROLLER_ORDER: { string } = {
 	"SettingsController",
 	"EmoteController",
 	"FxController",
+	"MusicController",
 }
 
 local function loadControllers(): { Controller }
