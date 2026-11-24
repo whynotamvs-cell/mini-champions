@@ -3,7 +3,7 @@
 Семейная Roblox-игра: игроки крошечные, спортивные площадки построены на огромных предметах письменного стола.
 MVP — Obstacle Dash («Desk Dash») + собственный клуб + валюта Stars + сохранение прогресса.
 
-Статус: **этап 0** — документация и окружение. Игровые системы ещё не реализованы.
+Статус: **этап 1** — вертикальный срез на заглушках (ветка `stage-1/vertical-slice`), ждёт ручной проверки в Studio.
 
 ## Документы
 
@@ -46,12 +46,22 @@ rojo serve             # сервер синхронизации на localhost:
 ## Повседневные команды
 
 ```bash
-selene src                                  # линт
-stylua --check src                          # проверка форматирования
-stylua src                                  # форматирование
-rojo sourcemap --watch -o sourcemap.json    # для Luau LSP (VS Code делает это сам)
+selene src tests/specs                      # линт
+stylua --check src tests                    # проверка форматирования (stylua src tests — исправить)
+./tools/typecheck.sh                        # строгая проверка типов (luau-lsp analyze)
+lune run tests/lune/run.luau                # юнит-тесты + проверка локализации, без Studio
+python3 tools/gen_world.py                  # перегенерировать серую геометрию мира
 mkdir -p build && rojo build -o build/MiniChampions.rbxl   # сборка place-файла
 ```
+
+## Тесты
+
+- **Без Studio:** `lune run tests/lune/run.luau` — все `tests/specs/*.spec.luau` (чистая логика: формулы, экономика, валидаторы, награды, покупки, забег, миграции) и проверка `UI.csv`.
+- **В Studio (Jest-Lua):** нужен флаг `FFlagEnableLoadModule` в `ClientAppSettings.json` Studio (см. документацию Jest-Lua). Затем в Play, в командной строке на стороне сервера: `require(game.ServerStorage.Tests.RunTests)()`.
+
+## Данные в Studio
+
+По умолчанию Studio использует `ProfileStore.Mock` — ничего не сохраняется между запусками. Для проверки сохранений (TEST_PLAN, S-01…S-10) — только в тестовом experience: включить `Config.Game.Studio.UseRealDataStore = true` в `src/shared/Config/Game.luau` (не коммитить) и Game Settings → Security → Enable Studio Access to API Services.
 
 ## Структура
 
@@ -60,6 +70,8 @@ src/server/        → ServerScriptService.Server
 src/client/        → StarterPlayer.StarterPlayerScripts.Client
 src/shared/        → ReplicatedStorage.Shared
 src/localization/  → LocalizationService (UI.csv → LocalizationTable)
+world/             → Workspace.DeskWorld, ServerStorage.ClubUpgrades (генерирует tools/gen_world.py)
+tests/specs/       → ServerStorage.Tests (спецификации, общие для Lune и Jest-Lua)
 DevPackages/       → ReplicatedStorage.DevPackages (Wally, не в git)
 ```
 

@@ -1,1 +1,45 @@
 Key,Source,Context,Example,en,ru
+Error.LoadFailed,Could not load your progress. Please try again.,Kick message when the profile cannot be loaded,,Could not load your progress. Please try again.,Не удалось загрузить прогресс. Попробуй ещё раз.
+Error.SessionElsewhere,Your game is open on another server.,Kick message when another server took the session,,Your game is open on another server.,Игра открыта на другом сервере.
+Error.UpdateRequired,The game was updated. Please rejoin.,Kick message when data is newer than this server's code,,The game was updated. Please rejoin.,"Игра обновилась. Перезайди, пожалуйста."
+Error.PurchaseFailed,Could not buy that. Try again.,Toast when a purchase was refused,,Could not buy that. Try again.,Не получилось купить. Попробуй ещё раз.
+UI.Loading,Loading…,Loading screen,,Loading…,Загрузка…
+UI.LoadingSlow,Still loading… hang on!,Loading takes longer than expected,,Still loading… hang on!,Всё ещё загружаем… подожди!
+UI.Close,Close,Close button,,Close,Закрыть
+HUD.Level,Level {level},Player level in the HUD,,Level {level},Уровень {level}
+HUD.Club,Club,Button that opens the club menu,,Club,Клуб
+Dash.Go,Go!,Shown when the countdown ends,,Go!,Вперёд!
+Dash.Checkpoint,Checkpoint {index}/{total},Checkpoint counter during a run,,Checkpoint {index}/{total},Чекпоинт {index}/{total}
+Dash.MissingCheckpoint,You missed checkpoint {index}!,Finish touched without all checkpoints,,You missed checkpoint {index}!,Пропущен чекпоинт {index}!
+Dash.Restart,Restart,Button that cancels the current run,,Restart,Заново
+Dash.Cancelled,Stay on the start pad to begin!,Player stepped off the start pad during the countdown,,Stay on the start pad to begin!,"Стой на старте, чтобы начать!"
+Dash.Abandoned,Run cancelled,Run was cancelled,,Run cancelled,Забег отменён
+Dash.Timeout,Time is up!,Run timed out,,Time is up!,Время вышло!
+Dash.Result.Title,Finish!,Result screen title,,Finish!,Финиш!
+Dash.Result.Time,Time: {time},Run time on the result screen,,Time: {time},Время: {time}
+Dash.Result.Best,Best: {time},Personal best on the result screen,,Best: {time},Рекорд: {time}
+Dash.Result.NewBest,New record!,Shown when the run is a new personal best,,New record!,Новый рекорд!
+Dash.Result.Rejected,This run didn't count. Try again!,Run failed server validation,,This run didn't count. Try again!,Этот забег не засчитан. Попробуй ещё раз!
+Dash.Medal.Gold,Gold,Medal name,,Gold,Золото
+Dash.Medal.Silver,Silver,Medal name,,Silver,Серебро
+Dash.Medal.Bronze,Bronze,Medal name,,Bronze,Бронза
+Club.Title,Your Club,Club menu title,,Your Club,Твой клуб
+Club.Level,Club level {level},Club level in the club menu,,Club level {level},Уровень клуба {level}
+Club.Next,Next upgrade,Label above the next upgrade,,Next upgrade,Следующее улучшение
+Club.Buy,Build,Buy button,,Build,Построить
+Club.NotEnough,Need more Stars,Not enough currency for the next upgrade,,Need more Stars,Нужно больше звёзд
+Club.AllBuilt,Everything is built!,Every upgrade bought,,Everything is built!,Всё построено!
+Club.ComingSoon,More upgrades coming soon!,Next upgrade is not available yet,,More upgrades coming soon!,Скоро будут новые улучшения!
+Club.Built,Built: {name}!,Toast after a purchase,,Built: {name}!,Построено: {name}!
+Club.Upgrade.sticky_banner.Name,Sticky Note Banner,Upgrade name,,Sticky Note Banner,Баннер из стикеров
+Club.Upgrade.pencil_fence.Name,Pencil Fence,Upgrade name,,Pencil Fence,Забор из карандашей
+Club.Upgrade.eraser_benches.Name,Eraser Benches,Upgrade name,,Eraser Benches,Скамейки-ластики
+Club.Upgrade.book_stand.Name,Book Stack Stand,Upgrade name,,Book Stack Stand,Трибуна из книг
+Club.Upgrade.ruler_scoreboard.Name,Ruler Scoreboard,Upgrade name,,Ruler Scoreboard,Табло-линейка
+Club.Upgrade.paperclip_trophies.Name,Paperclip Trophy Rack,Upgrade name,,Paperclip Trophy Rack,Полка трофеев из скрепок
+Club.Upgrade.lamp_floodlight.Name,Desk Lamp Floodlight,Upgrade name,,Desk Lamp Floodlight,Прожектор-лампа
+Club.Upgrade.pencil_cup_tower.Name,Pencil Cup Tower,Upgrade name,,Pencil Cup Tower,Башня из стакана для карандашей
+Tutorial.GoToStart,Run to the blue start pad!,First hint after joining,,Run to the blue start pad!,Беги к синей стартовой площадке!
+Tutorial.FinishBonus,Tutorial bonus: +{stars},Toast with the tutorial bonus after the first finish,,Tutorial bonus: +{stars},Бонус за обучение: +{stars}
+Tutorial.OpenClub,You have enough Stars! Open your Club and build something.,Hint after the first finish,,You have enough Stars! Open your Club and build something.,Звёзд хватает! Открой клуб и построй что-нибудь.
+Tutorial.Complete,Great job! Keep racing to grow your club.,Toast when the tutorial is complete,,Great job! Keep racing to grow your club.,"Отлично! Бегай ещё, чтобы развивать клуб."

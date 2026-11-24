@@ -17,6 +17,14 @@
         "$path": "src/server"
       }
     },
+    "ServerStorage": {
+      "Tests": {
+        "$path": "tests/specs"
+      },
+      "ClubUpgrades": {
+        "$path": "world/ClubUpgrades.model.json"
+      }
+    },
     "StarterPlayer": {
       "StarterPlayerScripts": {
         "Client": {
@@ -30,6 +38,17 @@
     "Players": {
       "$properties": {
         "CharacterAutoLoads": true
+      }
+    },
+    "Workspace": {
+      "DeskWorld": {
+        "$path": "world/DeskWorld.model.json"
+      }
+    },
+    "TextChatService": {
+      "$properties": {
+        "CreateDefaultTextChannels": false,
+        "CreateDefaultCommands": false
       }
     }
   }

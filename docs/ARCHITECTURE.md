@@ -21,7 +21,8 @@
 | **Luau LSP** | Типы и подсказки в VS Code | Использовать | Расширение VS Code + `rojo sourcemap --watch` |
 | **Wally** | Пакетный менеджер | Только dev | Jest-Lua. ProfileStore — vendored (один файл, проще аудит) |
 | **Jest-Lua** | Тесты | Использовать | Запуск внутри Studio через тест-раннер (см. TEST_PLAN) |
-| **Lune** | Luau вне Roblox | Опционально (D6) | Может гонять тесты чистой логики (экономика, валидаторы, миграции) без Studio и в CI |
+| **Lune** | Luau вне Roblox | Использовать (D6) | `lune run tests/lune/run.luau` гоняет `tests/specs` без Studio через виртуальное дерево инстансов и совместимый с Jest shim; плюс проверка локализации |
+| **luau-lsp CLI** | Строгая проверка типов | Использовать | `tools/typecheck.sh` — тот же анализатор, что в VS Code; определения Roblox API скачиваются под закреплённую версию |
 | Knit / Matter / Replica | Фреймворки | Не использовать в MVP | Лишняя сложность для объёма MVP |
 
 ### Файлы конфигурации (создаются на этапе 0)
@@ -160,7 +161,7 @@ for _, s in services do task.spawn(s.Start, s) end
 | Сервис | Ответственность | Публичный API (серверный) |
 |---|---|---|
 | `PlayerDataService` | Загрузка/сохранение, session lock, миграции, валидация, снимок для клиента | `IsReady(p)`, `Get(p)` (только чтение), `Update(p, fn)`, `SaveNow(p)`, сигнал `Loaded` |
-| `CurrencyService` | Единственный, кто меняет `Stars` | `Add(p, amount, reason)`, `TrySpend(p, amount, reason) -> boolean` |
+| `CurrencyService` → `Logic/CurrencyLogic` | Единственный код, который меняет `Stars`. Реализован как чистый модуль, вызываемый внутри `PlayerDataService:Update`, чтобы списание и то, на что потрачено, менялись одной атомарной операцией | `credit(data, amount) -> added`, `debit(data, amount) -> boolean` |
 | `RewardService` | Идемпотентные выдачи по `grantId` | `Grant(p, source, grantId, stars, xp)` |
 | `ProgressionService` | XP и уровни, награда за уровень | `AddXP(p, amount, reason)` |
 | `TutorialService` | Шаги обучения, продвигаются серверными событиями | `OnEvent(p, eventName)` |
@@ -168,7 +169,8 @@ for _, s in services do task.spawn(s.Start, s) end
 | `MinigameService` | Общий жизненный цикл, один активный забег на игрока | `GetActiveRun(p)` |
 | `ObstacleDash` | Логика Desk Dash | см. раздел 8 |
 | `EmoteService` | Проверка и рассылка эмоций | — |
-| `ChatPolicyService` | Проверка, что чат выключен | — |
+| `ChatPolicyService` | Проверка, что чат выключен; удаляет любой появившийся `TextChannel` | — |
+| `CollisionService` | Группа столкновений «Players» для всех частей персонажей (D12) | — |
 | `TelemetryService` | События аналитики | `Onboarding(p, step)`, `Economy(...)`, `Progression(...)`, `Custom(...)` |
 
 `Update(p, fn)`: вызывает `fn(data)` синхронно, затем валидацию; если `fn` выбросил ошибку или валидация не прошла — изменения откатываются (работаем с копией и подменяем только при успехе), клиенту отправляется обновлённый снимок.
@@ -186,6 +188,7 @@ for _, s in services do task.spawn(s.Start, s) end
 | `UpdateSettings` | C→S | `{ MusicVolume, SfxVolume, Language, ReducedMotion }` | типы, диапазоны, перечисление языков, лишние ключи отбрасываются | 2/с |
 | `TutorialAck` | C→S | `step: number` | только для шагов-подсказок «прочитал», шаг == текущий | 2/с |
 | `RequestRestart` | C→S | — | игрок в активном забеге | 1/с |
+| `RequestSnapshot` | C→S | — | профиль Ready; клиент просит первый снимок, когда его обработчики уже подключены | 1/с |
 | `DataSnapshot` | S→C | снимок данных клиента | — | — |
 | `DashEvent` | S→C | `{ kind, ... }` (countdown, start, checkpoint, finish, abandon) | — | — |
 | `EmoteShown` | S→C | `userId, emoteId` | — | — |
@@ -217,7 +220,7 @@ end)
 
 | Слой | Где | Что |
 |---|---|---|
-| 1 | Studio → `TextChatService` | `ChatVersion = TextChatService`; `CreateDefaultTextChannels = false` — нет каналов, значит сообщения некуда отправить и неоткуда получить; `CreateDefaultCommands = false` |
+| 1 | `default.project.json` → `TextChatService` | `CreateDefaultTextChannels = false` — нет каналов, значит сообщения некуда отправить и неоткуда получить; `CreateDefaultCommands = false`. По creator-docs (21.11.2026) оба свойства доступны скриптам, поэтому их выставляет Rojo. `ChatVersion` устарел и не трогается |
 | 2 | Studio → дочерние конфигурации | `ChatWindowConfiguration.Enabled = false`, `ChatInputBarConfiguration.Enabled = false`, `BubbleChatConfiguration.Enabled = false`, `ChannelTabsConfiguration.Enabled = false` |
 | 3 | `ChatController` (клиент) | При старте повторно выставляет `Enabled = false` у конфигураций окна и строки ввода (страховка, если свойство сбросили в Studio) |
 | 4 | `ChatPolicyService` (сервер) | При старте проверяет: `CreateDefaultTextChannels == false`, в `TextChatService` нет `TextChannel`. Нарушение → `warn` + телеметрия `chat_policy_violation`. В тестовом experience — `error`, чтобы заметить сразу |
@@ -262,7 +265,8 @@ Finished ──валидация провалена──► Rejected  (без 
 ### 8.2. Определение касаний
 
 - Чекпоинты и финиш — невидимые серверные зоны (`Part`, `CanCollide = false`, `CanTouch = true`). Касание обрабатывается на **сервере** по `HumanoidRootPart` персонажа.
-- Альтернатива/дополнение: опрос позиции `HumanoidRootPart` раз в 0,1 с и проверка попадания в зону через `GetPartBoundsInBox` — устойчивее к пропуску `Touched` при высокой скорости. Выбор — на этапе 1 по результатам теста в Studio.
+- Альтернатива/дополнение: опрос позиции `HumanoidRootPart` раз в 0,1 с и проверка попадания в зону (зоны не повёрнуты, поэтому достаточно проверки точки в прямоугольнике, без `GetPartBoundsInBox`) — устойчивее к пропуску `Touched` при высокой скорости. Выбор (D13) — на этапе 1 по результатам теста в Studio; оба способа реализованы, переключатель `Config.Dash.CheckpointDetection` (`"Poll"` по умолчанию / `"Touched"`).
+- Геометрия трассы-заглушки генерируется `tools/gen_world.py` в `world/DeskWorld.model.json` (Rojo → `Workspace.DeskWorld`). Правки — в скрипте, затем перегенерация; ручные правки в Studio Rojo перезапишет.
 
 ### 8.3. Античит (без ложных наказаний)
 
