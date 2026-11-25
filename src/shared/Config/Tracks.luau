@@ -69,7 +69,7 @@ local desk = build({
 	Progression = "DeskDash",
 	NameKey = "Track.DeskName",
 	RequiresTutorial = false,
-	SegmentMinMs = { 3_000, 3_500, 3_000, 4_500, 2_000 },
+	SegmentMinMs = { 3_000, 3_500, 2_500, 4_500, 2_500 },
 })
 
 local keys = build({
@@ -80,7 +80,7 @@ local keys = build({
 	Progression = "KeyDash",
 	NameKey = "Track.KeysName",
 	RequiresTutorial = true,
-	SegmentMinMs = { 3_000, 3_000, 4_500, 2_500, 2_000 },
+	SegmentMinMs = { 3_000, 4_000, 4_000, 2_000, 2_000 },
 })
 
 local Tracks = table.freeze({

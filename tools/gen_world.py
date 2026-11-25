@@ -185,10 +185,12 @@ WALL_H = 150
 CEILING_Y = FLOOR_Y + WALL_H
 
 # Playability limits (R15: JumpHeight 7.2, WalkSpeed 16). For two neighbouring pieces of a track,
-# plan-view distance + 1.5 * rise must stay within JUMP_BUDGET, and the rise within MAX_RISE.
-MAX_RISE = 3.0
-MAX_GAP = 7.5
-JUMP_BUDGET = 10.0
+# plan-view distance + 1.5 * rise must stay within JUMP_BUDGET, and the rise within MAX_RISE. A level
+# jump of 8 studs is near the physical limit (16 studs/s * 0.54 s air time = 8.7), so the hardest
+# jumps need a clean run-up and a late takeoff; most are easier.
+MAX_RISE = 3.5
+MAX_GAP = 7.8
+JUMP_BUDGET = 11.0
 EDGE = 4.0  # props keep this clear of walls
 
 HEADINGS = {"E": (1, 0), "W": (-1, 0), "N": (0, -1), "S": (0, 1)}
@@ -202,6 +204,18 @@ def rect_distance(a, b):
     dx = max(a[0] - b[1], b[0] - a[1], 0)
     dz = max(a[2] - b[3], b[2] - a[3], 0)
     return math.hypot(dx, dz)
+
+
+LATERAL_MARGIN = 0.8
+LAND_MARGIN = 0.6
+
+
+def shrink(rect, along, across, horizontal):
+    """A rectangle (x0, x1, z0, z1) pulled in by `along` on the heading axis and `across` on the other."""
+    dx, dz = (along, across) if horizontal else (across, along)
+    x0, x1, z0, z1 = rect
+    cx, cz = (x0 + x1) / 2, (z0 + z1) / 2
+    return (min(x0 + dx, cx), max(x1 - dx, cx), min(z0 + dz, cz), max(z1 - dz, cz))
 
 
 def rects_overlap(a, b, margin=0.0):
@@ -237,7 +251,11 @@ class TrackBuilder:
         if self.last is None:
             return
         prect, ptop, pname = self.last
-        gap = rect_distance(prect, rect)
+        # The character's centre must take off from inside the old piece and land inside the new one,
+        # so across the heading both pieces count as LATERAL_MARGIN narrower on each side, and the
+        # landing piece LAND_MARGIN shorter along the heading (a real jump cannot land on the very edge).
+        horizontal = self.h[0] != 0
+        gap = rect_distance(shrink(prect, 0.0, LATERAL_MARGIN, horizontal), shrink(rect, LAND_MARGIN, LATERAL_MARGIN, horizontal))
         rise = top - ptop
         assert gap <= MAX_GAP, f"{self.label}: {pname} -> {name}: gap {gap:.1f} > {MAX_GAP}"
         assert rise <= MAX_RISE, f"{self.label}: {pname} -> {name}: rise {rise:.1f} > {MAX_RISE}"
@@ -465,47 +483,47 @@ def build_desk_track():
     b.stairs(-80, -40, top)
     b.start_pad((-70, -40), "E", top, COLORS["start"])
 
-    # Segment 1: five books climbing, then a short walkway.
+    # Segment 1: five narrow books climbing with small gaps, then a short walkway after a longer jump.
     for i in range(5):
         top += 2
-        b.piece(f"Book{i + 1}", 10, 16, top, COLORS[BOOK_COVERS[i]])
-    b.piece("BookWalkway", 14, 12, top, COLORS["book_purple"])
-    b.pad(1, top, COLORS["checkpoint"])
+        b.piece(f"Book{i + 1}", 9, 12, top, COLORS[BOOK_COVERS[i]], gap=2)
+    b.piece("BookWalkway", 10, 8, top, COLORS["book_purple"], gap=5)
+    b.pad(1, top, COLORS["checkpoint"], gap=3)
 
-    # Segment 2: three pencils with gaps, the middle one a little higher.
+    # Segment 2: three thin pencils, wide gaps, heights up and down.
     for i, rise in enumerate((0, 2, -2)):
         top += rise
-        b.piece(f"Pencil{i + 1}", 22, 3, top, COLORS["pencil"], gap=6, material="Plastic")
-    b.pad(2, top, COLORS["checkpoint"], gap=6)
+        b.piece(f"Pencil{i + 1}", 20, 2.6, top, COLORS["pencil"], gap=7, material="Plastic")
+    b.pad(2, top, COLORS["checkpoint"], gap=7)
 
-    # Segment 3 (north): eraser hops, up and down.
+    # Segment 3 (north): small eraser hops over wide gaps, rising and dropping.
     b.turn("N")
-    for i, rise in enumerate((2, 2, -2, 0)):
+    for i, rise in enumerate((2, 2, -3, 2)):
         top += rise
-        b.piece(f"Eraser{i + 1}", 8, 8, top, COLORS["eraser"], gap=7, thickness=3.0)
+        b.piece(f"Eraser{i + 1}", 6, 6, top, COLORS["eraser"], gap=7, thickness=3.0)
     b.pad(3, top, COLORS["checkpoint"], gap=6)
 
-    # Segment 4 (west): a narrow ruler, then sticky notes in a zigzag.
+    # Segment 4 (west): a thin ruler, then sticky notes in a zigzag that also changes height.
     b.turn("W")
-    b.piece("RulerBridge", 40, 4, top, COLORS["ruler"], thickness=1.0, material="Plastic")
-    for i in range(4):
+    b.piece("RulerBridge", 36, 3, top, COLORS["ruler"], thickness=1.0, material="Plastic")
+    for i in range(5):
         b.piece(
             f"Note{i + 1}",
-            10,
-            10,
+            7,
+            7,
             top + (2 if i % 2 else 0),
             COLORS["note"] if i % 2 == 0 else COLORS["note_alt"],
-            gap=4,
-            lateral=5 if i % 2 == 0 else -5,
+            gap=6,
+            lateral=3.5 if i % 2 == 0 else -3.5,
             thickness=1.0,
         )
-    b.pad(4, top, COLORS["checkpoint"], gap=4)
+    b.pad(4, top, COLORS["checkpoint"], gap=5)
 
-    # Segment 5: a climb of three steps (each a jump) to the golden finish.
-    for i in range(3):
-        top += 3
-        b.piece(f"Climb{i + 1}", 10, 12, top, COLORS["book_alt"], gap=2.5)
-    b.pad(5, top, COLORS["finish"], size=20, gap=2.5, kind="Finish", name="FinishPad", height=8)
+    # Segment 5: a climb of four steps (each a jump) to the golden finish.
+    for i in range(4):
+        top += 3.5
+        b.piece(f"Climb{i + 1}", 9, 9, top, COLORS["book_alt"], gap=3.5)
+    b.pad(5, top, COLORS["finish"], size=20, gap=3.5, kind="Finish", name="FinishPad", height=8)
     b.board(top, FACE_PLUS_X)
     return b
 
@@ -517,44 +535,45 @@ def build_keys_track():
     b.stairs(-80, 40, top)
     b.start_pad((-70, 40), "E", top, COLORS["keys_start"])
 
-    # Segment 1: keycaps, each one a stud higher.
-    for i in range(5):
-        top += 1
-        b.piece(f"Key{i + 1}", 10, 10, top, COLORS["keycap"] if i % 2 == 0 else COLORS["keycap_dark"], gap=3, thickness=3.0)
-    b.pad(1, top, COLORS["checkpoint"], gap=3)
+    # Segment 1: small keycaps, higher by one or two studs each, with real gaps.
+    for i, rise in enumerate((1, 2, 1, 2, 1)):
+        top += rise
+        b.piece(f"Key{i + 1}", 8, 8, top, COLORS["keycap"] if i % 2 == 0 else COLORS["keycap_dark"], gap=4, thickness=3.0)
+    b.pad(1, top, COLORS["checkpoint"], gap=4)
 
-    # Segment 2: cable stretches, three studs wide.
-    for i in range(2):
-        b.piece(f"Cable{i + 1}", 30, 3, top, COLORS["cable"], gap=6, thickness=1.5)
-    b.pad(2, top, COLORS["checkpoint"], gap=6)
+    # Segment 2: three stretches of thin cable over wide gaps, not all at the same height.
+    for i, rise in enumerate((0, 1.5, -1.5)):
+        top += rise
+        b.piece(f"Cable{i + 1}", 22, 2.5, top, COLORS["cable"], gap=7, thickness=1.5)
+    b.pad(2, top, COLORS["checkpoint"], gap=7)
 
-    # Segment 3 (south): scroll keys in a zigzag with alternating heights.
+    # Segment 3 (south): scroll keys in a wide zigzag, alternating heights.
     b.turn("S")
     for i in range(6):
         b.piece(
             f"ZigKey{i + 1}",
-            9,
-            9,
+            7,
+            7,
             top + (2 if i % 2 else 0),
             COLORS["key_blue"] if i % 2 == 0 else COLORS["key_red"],
-            gap=5,
-            lateral=6 if i % 2 == 0 else -6,
+            gap=6,
+            lateral=3.5 if i % 2 == 0 else -3.5,
             thickness=3.0,
         )
-    b.pad(3, top, COLORS["checkpoint"], gap=5)
+    b.pad(3, top, COLORS["checkpoint"], gap=6)
 
-    # Segment 4 (west): the arrow keys climbing, three studs each.
+    # Segment 4 (west): the arrow keys climbing, three and a half studs each.
     b.turn("W")
     for i in range(4):
-        top += 3
-        b.piece(f"ArrowKey{i + 1}", 9, 9, top, COLORS["keycap_dark"] if i % 2 == 0 else COLORS["keycap"], gap=3, thickness=3.0)
-    b.pad(4, top, COLORS["checkpoint"], gap=3)
+        top += 3.5
+        b.piece(f"ArrowKey{i + 1}", 7, 7, top, COLORS["keycap_dark"] if i % 2 == 0 else COLORS["keycap"], gap=3.5, thickness=3.0)
+    b.pad(4, top, COLORS["checkpoint"], gap=3.5)
 
-    # Segment 5: wide steps up to the Enter key.
+    # Segment 5: steps up to the Enter key.
     for i in range(3):
-        top += 2
-        b.piece(f"EnterStep{i + 1}", 10, 12, top, COLORS["key_green"], gap=3)
-    b.pad(5, top, COLORS["enter"], size=20, gap=3, kind="Finish", name="FinishPad", height=8)
+        top += 2.5
+        b.piece(f"EnterStep{i + 1}", 9, 9, top, COLORS["key_green"], gap=4)
+    b.pad(5, top, COLORS["enter"], size=20, gap=4, kind="Finish", name="FinishPad", height=8)
     b.board(top, FACE_PLUS_X)
     return b
 
