@@ -83,6 +83,8 @@ local function onDashEvent(event: DashController.DashEvent)
 		fovKick()
 	elseif kind == "checkpoint" then
 		burst(CHECKPOINT_COLOR, 24, NumberRange.new(10, 22), 0.9, 1.4)
+	elseif kind == "hazard" then
+		burst(Color3.fromRGB(255, 90, 90), 30, NumberRange.new(10, 24), 0.8, 1.3)
 	elseif kind == "finish" and event.valid == true then
 		local color = MEDAL_COLORS[tostring(event.medal)] or MEDAL_COLORS.Bronze
 		burst(color, 70, NumberRange.new(16, 34), 1.6, 1.8)

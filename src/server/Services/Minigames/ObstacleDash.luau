@@ -11,6 +11,7 @@ local Workspace = game:GetService("Workspace")
 
 local Dash = require(ReplicatedStorage.Shared.Config.Dash)
 local Tracks = require(ReplicatedStorage.Shared.Config.Tracks)
+local HazardLogic = require(ReplicatedStorage.Shared.Utilities.HazardLogic)
 local PlayerDataTypes = require(ReplicatedStorage.Shared.Types.PlayerData)
 local Signal = require(ReplicatedStorage.Shared.Utilities.Signal)
 
@@ -30,6 +31,17 @@ type Zone = {
 	part: BasePart,
 }
 
+-- A timed obstacle (laser or spinner bar). Its parameters are attributes on the part; the part itself
+-- is only visual and the hit test is evaluated here from the server time.
+type Hazard = {
+	kind: string,
+	part: BasePart,
+	period: number,
+	onSec: number,
+	phase: number,
+	speed: number,
+}
+
 -- The world objects of one track, found by name under Workspace.DeskWorld.
 type TrackWorld = {
 	track: Tracks.Track,
@@ -38,6 +50,7 @@ type TrackWorld = {
 	checkpointZones: { [number]: Zone },
 	spawns: { [number]: BasePart },
 	returnPoint: BasePart?,
+	hazards: { Hazard },
 }
 
 type PlayerState = {
@@ -271,6 +284,27 @@ local function isUnlocked(player: Player, track: Tracks.Track): boolean
 	return data ~= nil and data.Tutorial.Completed
 end
 
+local function hazardHits(world: TrackWorld, position: Vector3): boolean
+	local t = Workspace:GetServerTimeNow()
+	for _, hazard in world.hazards do
+		local c, s = hazard.part.Position, hazard.part.Size
+		if hazard.kind == "Laser" then
+			if
+				HazardLogic.laserOn(t, hazard.period, hazard.onSec, hazard.phase)
+				and HazardLogic.inBox(position.X, position.Y, position.Z, c.X, c.Y, c.Z, s.X, s.Y, s.Z)
+			then
+				return true
+			end
+		elseif hazard.kind == "Spinner" then
+			local angle = HazardLogic.spinnerAngle(t, hazard.speed, hazard.phase)
+			if HazardLogic.inBar(position.X, position.Y, position.Z, c.X, c.Y, c.Z, s.X, s.Y, s.Z, angle) then
+				return true
+			end
+		end
+	end
+	return false
+end
+
 local function poll(player: Player, dtSec: number)
 	local root = rootOf(player)
 	if root == nil then
@@ -321,6 +355,11 @@ local function poll(player: Player, dtSec: number)
 				end
 				if position.Y < run.track.FallResetY then
 					teleportToCheckpoint(player)
+					return
+				end
+				if os.clock() > state.teleportGraceUntil and hazardHits(world, position) then
+					teleportToCheckpoint(player)
+					send(player, run.track.Id, { kind = "hazard" })
 					return
 				end
 				if Dash.CheckpointDetection == "Poll" then
@@ -386,6 +425,24 @@ local function collectTrack(deskWorld: Instance, track: Tracks.Track): TrackWorl
 	local point = spawnFolder:FindFirstChild("ReturnPoint") or deskWorld:FindFirstChild("ReturnPoint")
 	local returnPoint = if point and point:IsA("BasePart") then point else spawns[0]
 
+	local hazards: { Hazard } = {}
+	local hazardFolder = model:FindFirstChild("Hazards")
+	if hazardFolder then
+		for _, hazardPart in hazardFolder:GetChildren() do
+			local kind = hazardPart:GetAttribute("HazardKind")
+			if hazardPart:IsA("BasePart") and (kind == "Laser" or kind == "Spinner") then
+				table.insert(hazards, {
+					kind = kind :: string,
+					part = hazardPart,
+					period = tonumber(hazardPart:GetAttribute("Period")) or 0,
+					onSec = tonumber(hazardPart:GetAttribute("OnSec")) or 0,
+					phase = tonumber(hazardPart:GetAttribute("Phase")) or 0,
+					speed = tonumber(hazardPart:GetAttribute("Speed")) or 0,
+				})
+			end
+		end
+	end
+
 	assert(startZone and finishZone, `[ObstacleDash] {track.Id}: Start/Finish zones missing`)
 	for i = 1, track.CheckpointCount do
 		assert(checkpointZones[i], `[ObstacleDash] {track.Id}: Checkpoint{i} zone missing`)
@@ -398,6 +455,7 @@ local function collectTrack(deskWorld: Instance, track: Tracks.Track): TrackWorl
 		checkpointZones = checkpointZones,
 		spawns = spawns,
 		returnPoint = returnPoint,
+		hazards = hazards,
 	}
 end
 

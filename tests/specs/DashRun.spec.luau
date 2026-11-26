@@ -69,7 +69,7 @@ describe("DashRun finish and reward", function()
 		local run = running()
 		local t = passAll(run, 12_000)
 		expect(DashRun.reachFinish(run, t + 10_000)).toBe("valid")
-		expect(run.timeMs).toBe(58_000)
+		expect(run.timeMs).toBe(Desk.CheckpointCount * 12_000 + 10_000)
 		expect(DashRun.markRewarded(run)).toBe(true)
 		expect(DashRun.markRewarded(run)).toBe(false)
 		expect(DashRun.reachFinish(run, t + 11_000)).toBe("ignored")
@@ -77,9 +77,13 @@ describe("DashRun finish and reward", function()
 
 	it("rejects a run faster than MinValidTimeMs (TEST_PLAN X-08)", function()
 		local run = running()
-		-- Every segment is above its own minimum, but the whole run (4 x 5 s + 5 s) is below MinValidTimeMs.
-		local t = passAll(run, 5_000)
-		expect(DashRun.reachFinish(run, t + 5_000)).toBe("rejected")
+		-- Every segment is just above its own minimum, but the whole run is below MinValidTimeMs.
+		local t = COUNTDOWN_MS
+		for i = 1, Desk.CheckpointCount do
+			t += Desk.SegmentMinMs[i] + 500
+			DashRun.reachCheckpoint(run, i, t)
+		end
+		expect(DashRun.reachFinish(run, t + Desk.SegmentMinMs[#Desk.SegmentMinMs] + 500)).toBe("rejected")
 		expect(run.rejectReason).toBe("too_fast")
 		expect(DashRun.markRewarded(run)).toBe(false)
 	end)

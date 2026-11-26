@@ -181,7 +181,7 @@ import random
 
 ROOM = 200  # half size of the inner room
 FLOOR_Y = 1.0
-WALL_H = 150
+WALL_H = 260
 CEILING_Y = FLOOR_Y + WALL_H
 
 # Playability limits (R15: JumpHeight 7.2, WalkSpeed 16). For two neighbouring pieces of a track,
@@ -191,6 +191,7 @@ CEILING_Y = FLOOR_Y + WALL_H
 MAX_RISE = 3.5
 MAX_GAP = 7.8
 JUMP_BUDGET = 11.0
+SUPPORT_MAX_TOP = 60.0  # higher pieces float (no stilts), a sky course above the desk
 EDGE = 4.0  # props keep this clear of walls
 
 HEADINGS = {"E": (1, 0), "W": (-1, 0), "N": (0, -1), "S": (0, 1)}
@@ -236,6 +237,7 @@ class TrackBuilder:
         self.geo = []
         self.zones = []
         self.spawns = []
+        self.hazards = []  # timed obstacles: Hazards folder, parameters in attributes
         self.path = []  # waypoints (x, top, z) of every piece, in running order
         self.marks = {}  # zone index -> waypoint index
         self.rects = []  # footprints of every piece (for the prop placer)
@@ -276,7 +278,7 @@ class TrackBuilder:
 
         # Support column: a stack / stilt under the platform, so nothing floats in the air.
         height = top - thick - FLOOR_Y
-        if height > 1:
+        if height > 1 and top < SUPPORT_MAX_TOP:
             if self.label == "keys":
                 col = COLORS["keycap_dark"] if base in ("Key", "ZigKey", "ArrowKey") else shade(COLORS["dark"], 1.2)
             else:
@@ -420,6 +422,60 @@ class TrackBuilder:
         self.cx = px + self.h[0] * self.pad_size / 2
         self.cz = pz + self.h[1] * self.pad_size / 2
 
+    def landing(self, top, color, *, size=14, gap=0.0, name="Landing"):
+        """A rest pad at a corner: not a checkpoint, only room to turn."""
+        hx, hz = self.h
+        self.piece(name, size, size, top, color, gap=gap)
+        self.pad_center = (self.cx - hx * size / 2, self.cz - hz * size / 2)
+        self.pad_size = size
+
+    def laser(self, top, *, period=3.0, on=1.2, phase=0.0, height=2.6, along=0.0):
+        """A pulsing laser beam across the last piece (the whole width, so it cannot be walked around).
+        Jump over it or cross while it is off. The server tests the hit, the client animates it."""
+        rect, _, pname = self.last
+        cx, cz = (rect[0] + rect[1]) / 2, (rect[2] + rect[3]) / 2
+        wx, wz = rect[1] - rect[0], rect[3] - rect[2]
+        hx, hz = self.h
+        cx += hx * along
+        cz += hz * along
+        # across the heading: the beam is as wide as the piece plus a little
+        size = (0.7, height, wz + 1.0) if hx else (wx + 1.0, height, 0.7)
+        self.hazards.append(
+            part(
+                f"Laser{len(self.hazards) + 1}",
+                size,
+                (cx, top + 0.6 + height / 2, cz),
+                [1.0, 0.15, 0.2],
+                center=True,
+                collide=False,
+                query=False,
+                material="Neon",
+                attrs={"HazardKind": "Laser", "Period": period, "OnSec": on, "Phase": phase},
+            )
+        )
+        # emitters on both ends of the beam (decor)
+        for sign in (-1, 1):
+            ex = cx + (0 if hx else sign * (wx / 2 + 0.9))
+            ez = cz + (sign * (wz / 2 + 0.9) if hx else 0)
+            self.geo.append(part(f"{pname}_Emitter{len(self.hazards)}_{sign}", (1.2, height + 1.2, 1.2), (ex, top + 0.6 + height / 2, ez), COLORS["dark"], center=True, collide=False, query=False))
+
+    def spinner(self, top, *, length, speed=1.4, phase=0.0, height=2.0, width=1.2):
+        """A sweeping bar turning above the centre of the last piece: jump it or time it."""
+        rect, _, _ = self.last
+        cx, cz = (rect[0] + rect[1]) / 2, (rect[2] + rect[3]) / 2
+        self.hazards.append(
+            part(
+                f"Spinner{len(self.hazards) + 1}",
+                (length, height, width),
+                (cx, top + 0.6 + height / 2, cz),
+                [0.95, 0.35, 0.25],
+                center=True,
+                collide=False,
+                query=False,
+                attrs={"HazardKind": "Spinner", "Speed": speed, "Phase": phase},
+            )
+        )
+
     def board(self, top, face):
         """Results board just past the finish pad (the track heading), facing the runners."""
         px, pz = self.pad_center
@@ -440,7 +496,7 @@ class TrackBuilder:
     def segment_lengths(self):
         """Walking distance (plan view) between consecutive zones along the path."""
         out = []
-        for i in range(5):
+        for i in range(len(self.marks) - 1):
             a, b = self.marks[i], self.marks[i + 1]
             d = 0.0
             for k in range(a, b):
@@ -469,7 +525,7 @@ class TrackBuilder:
         )
         node = model(
             name,
-            [folder("Geometry", self.geo), folder("Zones", self.zones), folder("Spawns", self.spawns)],
+            [folder("Geometry", self.geo), folder("Zones", self.zones), folder("Spawns", self.spawns), folder("Hazards", self.hazards)],
         )
         # The walking path (x, top, z per piece) is kept as an attribute for tools and tests only.
         node["properties"] = attributes({"Path": path_json})
@@ -519,11 +575,51 @@ def build_desk_track():
         )
     b.pad(4, top, COLORS["checkpoint"], gap=5)
 
-    # Segment 5: a climb of four steps (each a jump) to the golden finish.
+    # Segment 5: a climb of four steps (each a jump), a laser across the last one.
     for i in range(4):
         top += 3.5
         b.piece(f"Climb{i + 1}", 9, 9, top, COLORS["book_alt"], gap=3.5)
-    b.pad(5, top, COLORS["finish"], size=20, gap=3.5, kind="Finish", name="FinishPad", height=8)
+    b.laser(top, period=3.2, on=1.2, phase=0.0)
+    b.pad(5, top, COLORS["checkpoint"], gap=3.5)
+
+    # Segment 6 (north): the laser gallery. Narrow shelves, each with its own pulsing beam.
+    b.turn("N")
+    for i in range(3):
+        top += 1.5 if i % 2 else 0
+        b.piece(f"Pencil{4 + i}", 12, 3.2, top, COLORS["pencil"], gap=5, material="Plastic")
+        b.laser(top, period=3.0, on=1.1, phase=0.6 * i)
+    b.pad(6, top, COLORS["checkpoint"], gap=5)
+
+    # Segment 7 (east): the sky bridge. Small islands over the void with sweeping bars and beams.
+    b.turn("E")
+    for i in range(14):
+        top += 1.0 if i % 3 == 2 else 0.0
+        color = COLORS["note"] if i % 2 == 0 else COLORS["note_alt"]
+        b.piece(f"Note{6 + i}", 9, 8, top, color, gap=6, lateral=(2.0 if i % 2 else -2.0), thickness=1.0)
+        if i % 4 == 1:
+            b.spinner(top, length=7.5, speed=1.6 if i % 8 == 1 else -1.6, phase=0.7 * i)
+        elif i % 4 == 3:
+            b.laser(top, period=2.8, on=1.0, phase=0.5 * i)
+    b.pad(7, top, COLORS["checkpoint"], gap=6)
+
+    # Segment 8 (south, then up in a square spiral): the tower, to the golden finish on top.
+    b.turn("S")
+    cp = 7
+    for loop in range(2):
+        for side in range(4):
+            for i in range(4):
+                top += 3.5
+                b.piece(f"Climb{5 + loop * 16 + side * 4 + i}", 9, 9, top, COLORS[("book_alt", "book", "book_green", "book_purple")[side]], gap=3.5, thickness=1.5)
+                if i == 2 and (loop + side) % 2 == 0:
+                    b.laser(top, period=3.4, on=1.2, phase=0.8 * side)
+            if not (loop == 1 and side == 3):
+                if side in (1, 3) or (loop == 1 and side == 1):
+                    cp += 1
+                    b.pad(cp, top, COLORS["checkpoint"], size=14, gap=3.5)
+                else:
+                    b.landing(top, COLORS["hub"], size=12, gap=3.5)
+                b.turn(("W", "N", "E", "S")[side])
+    b.pad(cp + 1, top, COLORS["finish"], size=20, gap=3.5, kind="Finish", name="FinishPad", height=8)
     b.board(top, FACE_PLUS_X)
     return b
 
@@ -569,11 +665,50 @@ def build_keys_track():
         b.piece(f"ArrowKey{i + 1}", 7, 7, top, COLORS["keycap_dark"] if i % 2 == 0 else COLORS["keycap"], gap=3.5, thickness=3.0)
     b.pad(4, top, COLORS["checkpoint"], gap=3.5)
 
-    # Segment 5: steps up to the Enter key.
+    # Segment 5 (west): steps up to the Enter key, a laser across the last one.
     for i in range(3):
         top += 2.5
         b.piece(f"EnterStep{i + 1}", 9, 9, top, COLORS["key_green"], gap=4)
-    b.pad(5, top, COLORS["enter"], size=20, gap=4, kind="Finish", name="FinishPad", height=8)
+    b.laser(top, period=3.2, on=1.2, phase=0.4)
+    b.pad(5, top, COLORS["checkpoint"], gap=4)
+
+    # Segment 6 (north, over the start): cable gallery. Thin cables, each with a pulsing beam.
+    b.turn("N")
+    for i in range(5):
+        top += 1.5 if i % 2 else 0
+        b.piece(f"Cable{4 + i}", 12, 2.5, top, COLORS["cable"], gap=5, thickness=1.5)
+        b.laser(top, period=3.0, on=1.1, phase=0.6 * i)
+    b.pad(6, top, COLORS["checkpoint"], gap=5)
+
+    # Segment 7 (east): the function row. Small keycap islands with sweeping bars and beams.
+    b.turn("E")
+    for i in range(11):
+        top += 1.0 if i % 3 == 2 else 0.0
+        b.piece(f"ZigKey{7 + i}", 8, 8, top, COLORS["key_blue"] if i % 2 == 0 else COLORS["key_red"], gap=6, lateral=(2.0 if i % 2 else -2.0), thickness=2.0)
+        if i % 4 == 1:
+            b.spinner(top, length=7.0, speed=1.6 if i % 8 == 1 else -1.6, phase=0.7 * i)
+        elif i % 4 == 3:
+            b.laser(top, period=2.8, on=1.0, phase=0.5 * i)
+    b.pad(7, top, COLORS["checkpoint"], gap=6)
+
+    # Segment 8 (south, then up in a square spiral): the tower, to the Enter key on top.
+    b.turn("S")
+    cp = 7
+    for loop in range(2):
+        for side in range(4):
+            for i in range(4):
+                top += 3.5
+                b.piece(f"ArrowKey{5 + loop * 16 + side * 4 + i}", 8, 8, top, COLORS[("keycap_dark", "keycap", "key_green", "key_blue")[side]], gap=3.5, thickness=2.0)
+                if i == 2 and (loop + side) % 2 == 0:
+                    b.laser(top, period=3.4, on=1.2, phase=0.8 * side)
+            if not (loop == 1 and side == 3):
+                if side in (1, 3) or (loop == 1 and side == 1):
+                    cp += 1
+                    b.pad(cp, top, COLORS["checkpoint"], size=14, gap=3.5)
+                else:
+                    b.landing(top, COLORS["keycap_dark"], size=12, gap=3.5)
+                b.turn(("W", "N", "E", "S")[side])
+    b.pad(cp + 1, top, COLORS["enter"], size=20, gap=3.5, kind="Finish", name="FinishPad", height=8)
     b.board(top, FACE_PLUS_X)
     return b
 
