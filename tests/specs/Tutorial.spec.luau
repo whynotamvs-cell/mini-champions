@@ -43,7 +43,7 @@ describe("Stage 1 vertical slice in pure logic (TEST_PLAN F-02)", function()
 	it("join -> start -> Bronze finish = 100 Stars -> buy #1 -> tutorial done = 65 Stars, level 2", function()
 		local data = TableUtil.deepCopy(Template)
 		TutorialLogic.advance(data, Steps.ReachedDashStart)
-		finishRun(data, "run-1", 80_000) -- Bronze
+		finishRun(data, "run-1", 200_000) -- Bronze
 		expect(data.Stars).toBe(100)
 		expect(data.Tutorial.Step).toBe(Steps.FinishedFirstRun)
 
@@ -59,9 +59,9 @@ describe("Stage 1 vertical slice in pure logic (TEST_PLAN F-02)", function()
 
 	it("tutorial bonuses never pay twice, even after RecentGrants is cleared", function()
 		local data = TableUtil.deepCopy(Template)
-		finishRun(data, "run-1", 80_000)
+		finishRun(data, "run-1", 200_000)
 		data.RecentGrants = {}
-		finishRun(data, "run-2", 80_000)
+		finishRun(data, "run-2", 200_000)
 		-- second run: 20 for the finish only (first Bronze and tutorial bonus are one-time)
 		expect(data.Stars).toBe(120)
 		RewardLogic.apply(data, TutorialLogic.completeGrant(), TutorialLogic.completeGuard)

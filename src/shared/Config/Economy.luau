@@ -4,16 +4,16 @@
 -- Medal limits and anti-cheat minimums per track, in ms (ECONOMY.md 2.2). Gold <= GoldMaxMs,
 -- Silver <= SilverMaxMs, anything faster than MinValidTimeMs is rejected.
 local DeskTiming = table.freeze({
-	GoldMaxMs = 49_000,
-	SilverMaxMs = 62_000,
-	MinValidTimeMs = 27_000,
-	TimeoutSec = 180,
+	GoldMaxMs = 140_000,
+	SilverMaxMs = 175_000,
+	MinValidTimeMs = 75_000,
+	TimeoutSec = 480,
 })
 local KeysTiming = table.freeze({
-	GoldMaxMs = 46_000,
-	SilverMaxMs = 60_000,
-	MinValidTimeMs = 25_000,
-	TimeoutSec = 180,
+	GoldMaxMs = 130_000,
+	SilverMaxMs = 165_000,
+	MinValidTimeMs = 70_000,
+	TimeoutSec = 480,
 })
 
 local Economy = table.freeze({

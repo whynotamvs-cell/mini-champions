@@ -19,7 +19,7 @@ describe("Validate", function()
 		data.Stars = 500
 		data.XP = 1234
 		data.Club.UpgradesOwned = 3
-		data.Minigames.DeskDash.BestTimeMs = 61_000
+		data.Minigames.DeskDash.BestTimeMs = 150_000
 		data.RecentGrants = { "dash:abc", "medal:dash:gold" }
 		local before = TableUtil.deepCopy(data)
 		expect(#Validate.issues(data)).toBe(0)
