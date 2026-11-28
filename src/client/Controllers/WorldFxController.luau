@@ -43,7 +43,7 @@ local function dressLogoSign(part: BasePart)
 	local gui = Instance.new("SurfaceGui")
 	gui.Face = Enum.NormalId.Front
 	gui.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
-	gui.PixelsPerStud = 40
+	gui.PixelsPerStud = 10
 	gui.LightInfluence = 0
 	gui.Brightness = 1.4
 	gui.Parent = part
@@ -65,7 +65,7 @@ local function dressLogoSign(part: BasePart)
 	corner.Parent = back
 	local rim = Instance.new("UIStroke")
 	rim.Color = Color3.fromRGB(255, 220, 90)
-	rim.Thickness = 10
+	rim.Thickness = 4
 	rim.Parent = back
 	local title = Instance.new("TextLabel")
 	title.BackgroundTransparency = 1
@@ -79,7 +79,7 @@ local function dressLogoSign(part: BasePart)
 	title.Parent = back
 	local stroke = Instance.new("UIStroke")
 	stroke.Color = Color3.fromRGB(18, 20, 50)
-	stroke.Thickness = 8
+	stroke.Thickness = 4
 	stroke.Parent = title
 	local subtitle = Instance.new("TextLabel")
 	subtitle.BackgroundTransparency = 1
@@ -93,7 +93,7 @@ local function dressLogoSign(part: BasePart)
 	subtitle.Parent = back
 	local subStroke = Instance.new("UIStroke")
 	subStroke.Color = Color3.fromRGB(18, 20, 50)
-	subStroke.Thickness = 5
+	subStroke.Thickness = 3
 	subStroke.Parent = subtitle
 	table.insert(titleLabels, title)
 	table.insert(subtitleLabels, subtitle)
