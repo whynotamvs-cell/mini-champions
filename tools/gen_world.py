@@ -460,22 +460,31 @@ class TrackBuilder:
             ez = cz + (sign * (wz / 2 + 0.9) if hx else 0)
             self.geo.append(part(f"{pname}_Emitter{len(self.hazards)}_{sign}", (1.2, height + 1.2, 1.2), (ex, top + 0.6 + height / 2, ez), COLORS["dark"], center=True, collide=False, query=False))
 
-    def spinner(self, top, *, length, speed=1.4, phase=0.0, height=2.0, width=1.2):
-        """A sweeping bar turning above the centre of the last piece: jump it or time it."""
+    def spinner(self, top, *, length, speed=1.4, phase=0.0, height=0.7, width=0.5, hit_height=2.0, hit_width=1.0):
+        """A sweeping bar turning above the centre of the last piece: jump it or time it. The bar is thin and
+        glows (neon + a point light); the server tests the hit against the larger HitHeight/HitWidth, so
+        a thin bar still catches a runner's body."""
         rect, _, _ = self.last
         cx, cz = (rect[0] + rect[1]) / 2, (rect[2] + rect[3]) / 2
-        self.hazards.append(
-            part(
-                f"Spinner{len(self.hazards) + 1}",
-                (length, height, width),
-                (cx, top + 0.6 + height / 2, cz),
-                [0.95, 0.35, 0.25],
-                center=True,
-                collide=False,
-                query=False,
-                attrs={"HazardKind": "Spinner", "Speed": speed, "Phase": phase},
-            )
+        bar = part(
+            f"Spinner{len(self.hazards) + 1}",
+            (length, height, width),
+            (cx, top + 0.6 + hit_height / 2, cz),
+            [1.0, 0.3, 0.2],
+            center=True,
+            collide=False,
+            query=False,
+            material="Neon",
+            attrs={"HazardKind": "Spinner", "Speed": speed, "Phase": phase, "HitHeight": hit_height, "HitWidth": hit_width},
         )
+        bar["children"] = [
+            {
+                "name": "Glow",
+                "className": "PointLight",
+                "properties": {"Brightness": 2.5, "Range": 12, "Color": [1.0, 0.45, 0.3], "Shadows": False},
+            }
+        ]
+        self.hazards.append(bar)
 
     def arch(self, cx, cz, top, name, color, *, half=9.0, height=15.0, trim=None, checker=False, glow=True):
         """A gateway over a pad: two pillars and a beam across the heading, neon trim underneath, and

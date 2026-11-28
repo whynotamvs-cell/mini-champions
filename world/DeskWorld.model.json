@@ -28131,8 +28131,8 @@
                 "Anchored": true,
                 "Size": [
                   7.5,
-                  2.0,
-                  1.2
+                  0.7,
+                  0.5
                 ],
                 "CFrame": {
                   "CFrame": {
@@ -28161,11 +28161,11 @@
                   }
                 },
                 "Color": [
-                  0.95,
-                  0.35,
-                  0.25
+                  1.0,
+                  0.3,
+                  0.2
                 ],
-                "Material": "SmoothPlastic",
+                "Material": "Neon",
                 "TopSurface": "Smooth",
                 "BottomSurface": "Smooth",
                 "CanCollide": false,
@@ -28182,10 +28182,32 @@
                     },
                     "Phase": {
                       "Float64": 0.7
+                    },
+                    "HitHeight": {
+                      "Float64": 2.0
+                    },
+                    "HitWidth": {
+                      "Float64": 1.0
                     }
                   }
                 }
-              }
+              },
+              "children": [
+                {
+                  "name": "Glow",
+                  "className": "PointLight",
+                  "properties": {
+                    "Brightness": 2.5,
+                    "Range": 12,
+                    "Color": [
+                      1.0,
+                      0.45,
+                      0.3
+                    ],
+                    "Shadows": false
+                  }
+                }
+              ]
             },
             {
               "name": "Laser6",
@@ -28260,8 +28282,8 @@
                 "Anchored": true,
                 "Size": [
                   7.5,
-                  2.0,
-                  1.2
+                  0.7,
+                  0.5
                 ],
                 "CFrame": {
                   "CFrame": {
@@ -28290,11 +28312,11 @@
                   }
                 },
                 "Color": [
-                  0.95,
-                  0.35,
-                  0.25
+                  1.0,
+                  0.3,
+                  0.2
                 ],
-                "Material": "SmoothPlastic",
+                "Material": "Neon",
                 "TopSurface": "Smooth",
                 "BottomSurface": "Smooth",
                 "CanCollide": false,
@@ -28311,10 +28333,32 @@
                     },
                     "Phase": {
                       "Float64": 3.5
+                    },
+                    "HitHeight": {
+                      "Float64": 2.0
+                    },
+                    "HitWidth": {
+                      "Float64": 1.0
                     }
                   }
                 }
-              }
+              },
+              "children": [
+                {
+                  "name": "Glow",
+                  "className": "PointLight",
+                  "properties": {
+                    "Brightness": 2.5,
+                    "Range": 12,
+                    "Color": [
+                      1.0,
+                      0.45,
+                      0.3
+                    ],
+                    "Shadows": false
+                  }
+                }
+              ]
             },
             {
               "name": "Laser8",
@@ -28389,8 +28433,8 @@
                 "Anchored": true,
                 "Size": [
                   7.5,
-                  2.0,
-                  1.2
+                  0.7,
+                  0.5
                 ],
                 "CFrame": {
                   "CFrame": {
@@ -28419,11 +28463,11 @@
                   }
                 },
                 "Color": [
-                  0.95,
-                  0.35,
-                  0.25
+                  1.0,
+                  0.3,
+                  0.2
                 ],
-                "Material": "SmoothPlastic",
+                "Material": "Neon",
                 "TopSurface": "Smooth",
                 "BottomSurface": "Smooth",
                 "CanCollide": false,
@@ -28440,10 +28484,32 @@
                     },
                     "Phase": {
                       "Float64": 6.3
+                    },
+                    "HitHeight": {
+                      "Float64": 2.0
+                    },
+                    "HitWidth": {
+                      "Float64": 1.0
                     }
                   }
                 }
-              }
+              },
+              "children": [
+                {
+                  "name": "Glow",
+                  "className": "PointLight",
+                  "properties": {
+                    "Brightness": 2.5,
+                    "Range": 12,
+                    "Color": [
+                      1.0,
+                      0.45,
+                      0.3
+                    ],
+                    "Shadows": false
+                  }
+                }
+              ]
             },
             {
               "name": "Laser10",
@@ -28518,8 +28584,8 @@
                 "Anchored": true,
                 "Size": [
                   7.5,
-                  2.0,
-                  1.2
+                  0.7,
+                  0.5
                 ],
                 "CFrame": {
                   "CFrame": {
@@ -28548,11 +28614,11 @@
                   }
                 },
                 "Color": [
-                  0.95,
-                  0.35,
-                  0.25
+                  1.0,
+                  0.3,
+                  0.2
                 ],
-                "Material": "SmoothPlastic",
+                "Material": "Neon",
                 "TopSurface": "Smooth",
                 "BottomSurface": "Smooth",
                 "CanCollide": false,
@@ -28569,10 +28635,32 @@
                     },
                     "Phase": {
                       "Float64": 9.1
+                    },
+                    "HitHeight": {
+                      "Float64": 2.0
+                    },
+                    "HitWidth": {
+                      "Float64": 1.0
                     }
                   }
                 }
-              }
+              },
+              "children": [
+                {
+                  "name": "Glow",
+                  "className": "PointLight",
+                  "properties": {
+                    "Brightness": 2.5,
+                    "Range": 12,
+                    "Color": [
+                      1.0,
+                      0.45,
+                      0.3
+                    ],
+                    "Shadows": false
+                  }
+                }
+              ]
             },
             {
               "name": "Laser12",
@@ -52409,8 +52497,8 @@
                 "Anchored": true,
                 "Size": [
                   7.0,
-                  2.0,
-                  1.2
+                  0.7,
+                  0.5
                 ],
                 "CFrame": {
                   "CFrame": {
@@ -52439,11 +52527,11 @@
                   }
                 },
                 "Color": [
-                  0.95,
-                  0.35,
-                  0.25
+                  1.0,
+                  0.3,
+                  0.2
                 ],
-                "Material": "SmoothPlastic",
+                "Material": "Neon",
                 "TopSurface": "Smooth",
                 "BottomSurface": "Smooth",
                 "CanCollide": false,
@@ -52460,10 +52548,32 @@
                     },
                     "Phase": {
                       "Float64": 0.7
+                    },
+                    "HitHeight": {
+                      "Float64": 2.0
+                    },
+                    "HitWidth": {
+                      "Float64": 1.0
                     }
                   }
                 }
-              }
+              },
+              "children": [
+                {
+                  "name": "Glow",
+                  "className": "PointLight",
+                  "properties": {
+                    "Brightness": 2.5,
+                    "Range": 12,
+                    "Color": [
+                      1.0,
+                      0.45,
+                      0.3
+                    ],
+                    "Shadows": false
+                  }
+                }
+              ]
             },
             {
               "name": "Laser8",
@@ -52538,8 +52648,8 @@
                 "Anchored": true,
                 "Size": [
                   7.0,
-                  2.0,
-                  1.2
+                  0.7,
+                  0.5
                 ],
                 "CFrame": {
                   "CFrame": {
@@ -52568,11 +52678,11 @@
                   }
                 },
                 "Color": [
-                  0.95,
-                  0.35,
-                  0.25
+                  1.0,
+                  0.3,
+                  0.2
                 ],
-                "Material": "SmoothPlastic",
+                "Material": "Neon",
                 "TopSurface": "Smooth",
                 "BottomSurface": "Smooth",
                 "CanCollide": false,
@@ -52589,10 +52699,32 @@
                     },
                     "Phase": {
                       "Float64": 3.5
+                    },
+                    "HitHeight": {
+                      "Float64": 2.0
+                    },
+                    "HitWidth": {
+                      "Float64": 1.0
                     }
                   }
                 }
-              }
+              },
+              "children": [
+                {
+                  "name": "Glow",
+                  "className": "PointLight",
+                  "properties": {
+                    "Brightness": 2.5,
+                    "Range": 12,
+                    "Color": [
+                      1.0,
+                      0.45,
+                      0.3
+                    ],
+                    "Shadows": false
+                  }
+                }
+              ]
             },
             {
               "name": "Laser10",
@@ -52667,8 +52799,8 @@
                 "Anchored": true,
                 "Size": [
                   7.0,
-                  2.0,
-                  1.2
+                  0.7,
+                  0.5
                 ],
                 "CFrame": {
                   "CFrame": {
@@ -52697,11 +52829,11 @@
                   }
                 },
                 "Color": [
-                  0.95,
-                  0.35,
-                  0.25
+                  1.0,
+                  0.3,
+                  0.2
                 ],
-                "Material": "SmoothPlastic",
+                "Material": "Neon",
                 "TopSurface": "Smooth",
                 "BottomSurface": "Smooth",
                 "CanCollide": false,
@@ -52718,10 +52850,32 @@
                     },
                     "Phase": {
                       "Float64": 6.3
+                    },
+                    "HitHeight": {
+                      "Float64": 2.0
+                    },
+                    "HitWidth": {
+                      "Float64": 1.0
                     }
                   }
                 }
-              }
+              },
+              "children": [
+                {
+                  "name": "Glow",
+                  "className": "PointLight",
+                  "properties": {
+                    "Brightness": 2.5,
+                    "Range": 12,
+                    "Color": [
+                      1.0,
+                      0.45,
+                      0.3
+                    ],
+                    "Shadows": false
+                  }
+                }
+              ]
             },
             {
               "name": "Laser12",
