@@ -27,6 +27,14 @@ function Snapshot.build(data: PlayerDataTypes.PlayerData): PlayerDataTypes.Clien
 			BestTimeMs = keys.BestTimeMs,
 			Medals = { Bronze = keys.Medals.Bronze, Silver = keys.Medals.Silver, Gold = keys.Medals.Gold },
 		},
+		Shop = {
+			SkipTokens = data.Shop.SkipTokens,
+			SpringBoots = data.Shop.SpringBoots,
+			SpringOn = data.Shop.SpringOn,
+			Owned = table.clone(data.Shop.Owned),
+			Trail = data.Shop.Trail,
+			Finish = data.Shop.Finish,
+		},
 		Settings = {
 			MusicVolume = data.Settings.MusicVolume,
 			SfxVolume = data.Settings.SfxVolume,

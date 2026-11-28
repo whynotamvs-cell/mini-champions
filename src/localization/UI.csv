@@ -81,3 +81,28 @@ Track.Unlocked,New track open: Keyboard Dash!,Toast when the tutorial ends and t
 HUD.Records,Records,Button that opens the records screen,,Records,Рекорды
 Records.Title,Your records,Records screen title,,Your records,Твои рекорды
 Records.None,No record yet,Shown when a track has no finish yet,,No record yet,Пока нет рекорда
+Shop.Button,Shop,Button that opens the shop,,Shop,Магазин
+Shop.Title,Shop,Shop screen title,,Shop,Магазин
+Shop.Note,Skips and Spring Boots never count for medals or records.,Shop note about paid help,,Skips and Spring Boots never count for medals or records.,Пропуски и пружинка не дают медалей и рекордов.
+Shop.Buy,Buy,Shop button to buy an item,,Buy,Купить
+Shop.Soon,Soon,Shop button for an item that is not for sale yet,,Soon,Скоро
+Shop.Equip,Equip,Shop button to put on a cosmetic,,Equip,Надеть
+Shop.Equipped,On,Shop button for a cosmetic that is on (tap to take it off),,On,Надето
+Shop.Spring.On,Boots on,Spring Boots toggle when on,,Boots on,Включены
+Shop.Spring.Off,Boots off,Spring Boots toggle when off,,Boots off,Выключены
+Shop.Skip.Button,Skip ({count}),"Skip stage button during a run, with skips left",,Skip ({count}),Пропуск ({count})
+Shop.Skip.NoRun,Start a run to use a skip.,Toast when a skip is used outside a run,,Start a run to use a skip.,"Начни забег, чтобы пропустить этап."
+Shop.Skip.None,You have no skips. Get one in the shop!,Toast when there are no skips left,,You have no skips. Get one in the shop!,Пропусков нет. Возьми в магазине!
+Shop.Skip.Used,Skipped! This run won't earn a medal.,Toast after a skip,,Skipped! This run won't earn a medal.,Этап пропущен! За этот забег не будет медали.
+Shop.Spring.Assisted,Spring Boots are on: this run won't earn a medal.,Toast when a run starts with Spring Boots on,,Spring Boots are on: this run won't earn a medal.,Пружинка включена: за этот забег не будет медали.
+Shop.Item.skip.Name,Skip stage (you have {count}),Shop item: skip to the next checkpoint,,Skip stage (you have {count}),Пропуск этапа (у тебя {count})
+Shop.Item.spring.Name,Spring Boots (high jump),Shop item: Game Pass with a high jump,,Spring Boots (high jump),Пружинка (высокий прыжок)
+Shop.Item.stars_small.Name,{stars} Stars,Shop item: small Stars pack,,{stars} Stars,{stars} звёзд
+Shop.Item.stars_medium.Name,{stars} Stars,Shop item: medium Stars pack,,{stars} Stars,{stars} звёзд
+Shop.Item.stars_large.Name,{stars} Stars,Shop item: large Stars pack,,{stars} Stars,{stars} звёзд
+Shop.Item.trail_rainbow.Name,Rainbow trail,Shop item: cosmetic trail,,Rainbow trail,Радужный след
+Shop.Item.trail_stars.Name,Golden trail,Shop item: cosmetic trail,,Golden trail,Золотой след
+Shop.Item.trail_fire.Name,Fire trail,Shop item: cosmetic trail,,Fire trail,Огненный след
+Shop.Item.finish_gold.Name,Golden finish effect,Shop item: cosmetic finish effect,,Golden finish effect,Золотой эффект финиша
+Shop.Item.finish_rainbow.Name,Sparkle finish effect,Shop item: cosmetic finish effect,,Sparkle finish effect,Искристый эффект финиша
+Dash.Result.Assisted,"You used help, so this run doesn't count for medals or records.",Run finished with a skip or Spring Boots,,"You used help, so this run doesn't count for medals or records.","Ты использовал помощь, поэтому забег не идёт в медали и рекорды."

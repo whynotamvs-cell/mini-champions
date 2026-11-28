@@ -8,6 +8,8 @@ local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local Workspace = game:GetService("Workspace")
 
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Shop = require(ReplicatedStorage.Shared.Config.Shop)
 local Juice = require(script.Parent.Parent.UI.Juice)
 local DashController = require(script.Parent.DashController)
 local DataController = require(script.Parent.DataController)
@@ -89,6 +91,17 @@ local function onDashEvent(event: DashController.DashEvent)
 		local color = MEDAL_COLORS[tostring(event.medal)] or MEDAL_COLORS.Bronze
 		burst(color, 70, NumberRange.new(16, 34), 1.6, 1.8)
 		burst(Color3.new(1, 1, 1), 30, NumberRange.new(8, 20), 1.2, 1.1)
+		-- The finish effect the player bought and equipped (cosmetic only).
+		local snapshot = DataController:Get()
+		local item = snapshot and Shop.ById[snapshot.Shop.Finish]
+		if item and item.Kind == "Finish" and item.Color then
+			local c = item.Color
+			burst(Color3.fromRGB(c[1], c[2], c[3]), 80, NumberRange.new(20, 40), 1.8, 2.2)
+			if item.Id == "finish_rainbow" then
+				burst(Color3.fromRGB(255, 120, 200), 40, NumberRange.new(14, 30), 1.6, 1.6)
+				burst(Color3.fromRGB(140, 255, 160), 40, NumberRange.new(14, 30), 1.6, 1.6)
+			end
+		end
 	end
 end
 

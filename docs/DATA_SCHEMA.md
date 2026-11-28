@@ -54,7 +54,7 @@
 
 Суффикс `_v1` у хранилища меняется **только** при несовместимой смене всей модели хранения. Обычные изменения схемы делаются миграциями внутри того же хранилища.
 
-## 4. Схема данных v2
+## 4. Схема данных v3
 
 ```luau
 export type TrackRecord = {
@@ -67,7 +67,16 @@ export type TrackRecord = {
 	},
 }
 
-export type PlayerDataV2 = {
+export type ShopData = {
+	SkipTokens: number,      -- купленные, ещё не потраченные пропуски (0..99)
+	SpringBoots: boolean,    -- есть Game Pass «пружинка» (проверяется у Roblox при входе)
+	SpringOn: boolean,       -- игрок включил пружинку (только если SpringBoots)
+	Owned: { [string]: boolean }, -- id косметики -> куплена (следы, эффекты финиша)
+	Trail: string,           -- надетый след, "" = нет (должен быть в Owned)
+	Finish: string,          -- надетый эффект финиша, "" = нет
+}
+
+export type PlayerDataV3 = {
 	SchemaVersion: number, -- = 2
 
 	-- Валюта и прогресс
@@ -116,8 +125,8 @@ export type PlayerDataV2 = {
 ### Шаблон (значения по умолчанию)
 
 ```luau
-local TEMPLATE: PlayerDataV2 = {
-	SchemaVersion = 2,
+local TEMPLATE: PlayerDataV3 = {
+	SchemaVersion = 3,
 	Stars = 0,
 	LifetimeStars = 0,
 	XP = 0,
@@ -135,6 +144,7 @@ local TEMPLATE: PlayerDataV2 = {
 			Medals = { Bronze = false, Silver = false, Gold = false },
 		},
 	},
+	Shop = { SkipTokens = 0, SpringBoots = false, SpringOn = false, Owned = {}, Trail = "", Finish = "" },
 	RecentGrants = {},
 	Settings = { MusicVolume = 0.6, SfxVolume = 0.8, Language = "auto", ReducedMotion = false },
 	Meta = { FirstJoinUnix = 0, LastJoinUnix = 0, SessionCount = 0 },
@@ -229,6 +239,8 @@ local MIGRATIONS = {
 	-- [fromVersion] = function(data) ... return data end  -- приводит к fromVersion + 1
 	-- v1 -> v2 (вторая трасса): добавляет пустую запись KeyDash, остальные данные не трогает.
 	[1] = function(data) if data.Minigames.KeyDash == nil then data.Minigames.KeyDash = { Finishes = 0, BestTimeMs = 0, Medals = { Bronze = false, Silver = false, Gold = false } } end return data end,
+	-- v2 -> v3 (магазин): пустой `Shop`, остальные данные не трогает.
+	[2] = function(data) if data.Shop == nil then data.Shop = { SkipTokens = 0, SpringBoots = false, SpringOn = false, Owned = {}, Trail = "", Finish = "" } end return data end,
 }
 ```
 
@@ -238,8 +250,9 @@ local MIGRATIONS = {
 |---|---|---|
 | 1 | Начальная схема (этап 1) | — |
 | 2 | `Minigames.KeyDash` — рекорд и медали второй трассы | `[1]`: добавляет пустую запись; тест — `tests/specs/Migrations.spec.luau` («Migration 1 -> 2») |
+| 3 | `Shop` — пропуски, пружинка, косметика | `[2]`: добавляет пустой `Shop`; тест — `Migrations.spec.luau` («Migration 2 -> 3»); валидация — `Validate.spec`/`ShopLogic.spec` |
 
-Сервер старой версии (v1), загрузивший профиль v2, **не изменяет и не сохраняет** его: игрок кикается с сообщением об обновлении (правило 3 ниже). Поэтому при выкладке v2 сначала обновляются серверы.
+Сервер старой версии (v1 или v2), загрузивший профиль v3, **не изменяет и не сохраняет** его: игрок кикается с сообщением об обновлении (правило 3 ниже). Поэтому при выкладке v2 сначала обновляются серверы.
 
 Правила:
 1. Миграции только вперёд, по одной версии за шаг, чистые функции, без `yield`.
