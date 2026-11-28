@@ -94,7 +94,7 @@ local function build(canvas: Frame): Ui
 		local back = Instance.new("Frame")
 		back.Size = UDim2.new(1, -24, 0, ROW_HEIGHT - 8)
 		back.Position = UDim2.fromOffset(12, top)
-		back.BackgroundColor3 = Color3.fromRGB(240, 233, 215)
+		back.BackgroundColor3 = Theme.PanelDark
 		back.BorderSizePixel = 0
 		back.ZIndex = 32
 		back.Parent = frame

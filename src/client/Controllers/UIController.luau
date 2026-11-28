@@ -3,6 +3,7 @@
 -- Base layout 844x390 (landscape phone); UIScale follows the short side of the screen.
 
 local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 
@@ -64,29 +65,141 @@ local function updateScale()
 	canvas.Size = UDim2.fromOffset(area.X / s, area.Y / s)
 end
 
+-- Loading screen: bright gradient, bouncing logo, drifting stars, a shimmering bar and a rotating tip.
+local TIP_COUNT = 5
+local TIP_SECONDS = 3.2
+local loadingDecor: { GuiObject } = {}
+
+local function gradientOn(parent: Instance, rotation: number, colors: { Color3 })
+	local g = Instance.new("UIGradient")
+	g.Rotation = rotation
+	local keys = {}
+	for i, c in colors do
+		table.insert(keys, ColorSequenceKeypoint.new((i - 1) / (#colors - 1), c))
+	end
+	g.Color = ColorSequence.new(keys)
+	g.Parent = parent
+	return g
+end
+
 local function buildLoading()
 	local frame = Instance.new("Frame")
 	frame.Name = "Loading"
 	frame.Size = UDim2.fromScale(1, 1)
-	frame.BackgroundColor3 = Theme.Shade
+	frame.BackgroundColor3 = Color3.new(1, 1, 1)
 	frame.ZIndex = 100
+	frame.ClipsDescendants = true
 	frame.Parent = canvas
-	loadingLabel = Components.label({
-		Size = UDim2.fromOffset(400, 48),
-		Position = UDim2.fromScale(0.5, 0.5),
+	gradientOn(frame, 35, { Color3.fromRGB(255, 160, 40), Color3.fromRGB(235, 70, 130), Color3.fromRGB(90, 70, 200) })
+	loadingDecor = {}
+
+	-- Drifting stars in the background.
+	local stars: { { gui: TextLabel, speed: number, phase: number, baseX: number } } = {}
+	for i = 1, 14 do
+		local star = Instance.new("TextLabel")
+		star.BackgroundTransparency = 1
+		star.Text = Components.STAR
+		star.Font = Theme.Font
+		star.AutoLocalize = false
+		star.TextColor3 = Color3.fromRGB(255, 240, 150)
+		star.TextTransparency = 0.45
+		star.TextSize = 18 + (i * 7) % 34
+		star.Size = UDim2.fromOffset(60, 60)
+		star.Rotation = (i * 37) % 60 - 30
+		star.ZIndex = 101
+		star.Parent = frame
+		table.insert(loadingDecor, star)
+		table.insert(stars, { gui = star, speed = 12 + (i * 5) % 22, phase = i * 1.7, baseX = ((i * 61) % 100) / 100 })
+	end
+
+	local logo = Components.label({
+		Size = UDim2.fromOffset(620, 96),
+		Position = UDim2.fromScale(0.5, 0.3),
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		TextColor3 = Theme.TextLight,
-		ZIndex = 101,
-		MaxTextSize = 36,
+		TextColor3 = Color3.new(1, 1, 1),
+		ZIndex = 103,
+		MaxTextSize = 84,
 		Parent = frame,
 	})
+	logo.Name = "Logo"
+	logo.TextStrokeTransparency = 1
+	local logoStroke = Instance.new("UIStroke")
+	logoStroke.Color = Theme.TextStroke
+	logoStroke.Thickness = 6
+	logoStroke.Parent = logo
+	gradientOn(logo, 90, { Color3.fromRGB(255, 250, 170), Color3.fromRGB(255, 190, 40), Color3.fromRGB(255, 120, 30) })
+	local logoScale = Instance.new("UIScale")
+	logoScale.Parent = logo
+	table.insert(loadingDecor, logo)
+
+	local tagline = Components.label({
+		Name = "Tagline",
+		Size = UDim2.fromOffset(520, 34),
+		Position = UDim2.fromScale(0.5, 0.46),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		ZIndex = 103,
+		MaxTextSize = 26,
+		Parent = frame,
+	})
+	table.insert(loadingDecor, tagline)
+
+	loadingLabel = Components.label({
+		Size = UDim2.fromOffset(400, 40),
+		Position = UDim2.fromScale(0.5, 0.64),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		TextColor3 = Theme.TextLight,
+		ZIndex = 103,
+		MaxTextSize = 30,
+		Parent = frame,
+	})
+
+	-- Indeterminate bar: a bright block sliding back and forth in a dark pill.
+	local track = Instance.new("Frame")
+	track.Name = "BarTrack"
+	track.Size = UDim2.fromOffset(360, 22)
+	track.Position = UDim2.fromScale(0.5, 0.74)
+	track.AnchorPoint = Vector2.new(0.5, 0.5)
+	track.BackgroundColor3 = Theme.PanelDark
+	track.ClipsDescendants = true
+	track.ZIndex = 103
+	track.Parent = frame
+	local trackCorner = Instance.new("UICorner")
+	trackCorner.CornerRadius = UDim.new(1, 0)
+	trackCorner.Parent = track
+	local trackStroke = Instance.new("UIStroke")
+	trackStroke.Color = Theme.Outline
+	trackStroke.Thickness = 3
+	trackStroke.Parent = track
+	local block = Instance.new("Frame")
+	block.Size = UDim2.fromOffset(130, 22)
+	block.BackgroundColor3 = Theme.Accent
+	block.ZIndex = 104
+	block.Parent = track
+	local blockCorner = Instance.new("UICorner")
+	blockCorner.CornerRadius = UDim.new(1, 0)
+	blockCorner.Parent = block
+	gradientOn(block, 90, { Color3.fromRGB(255, 255, 255), Color3.fromRGB(190, 190, 190) })
+	table.insert(loadingDecor, track)
+
+	local tip = Components.label({
+		Name = "Tip",
+		Size = UDim2.fromOffset(560, 34),
+		Position = UDim2.fromScale(0.5, 0.88),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		ZIndex = 103,
+		MaxTextSize = 22,
+		TextWrapped = true,
+		Parent = frame,
+	})
+	table.insert(loadingDecor, tip)
+
 	-- Shown only when the server reports that the profile could not be loaded.
 	loadingTitle = Components.label({
 		Size = UDim2.fromOffset(460, 44),
 		Position = UDim2.fromScale(0.5, 0.28),
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		TextColor3 = Theme.Accent,
-		ZIndex = 101,
+		TextColor3 = Theme.AccentDark,
+		ZIndex = 103,
 		MaxTextSize = 34,
 		Visible = false,
 		Parent = frame,
@@ -95,17 +208,57 @@ local function buildLoading()
 		Size = UDim2.fromOffset(460, 56),
 		Position = UDim2.fromScale(0.5, 0.76),
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		TextColor3 = Theme.Muted,
+		TextColor3 = Theme.TextLight,
 		TextWrapped = true,
-		ZIndex = 101,
+		ZIndex = 103,
 		MaxTextSize = 22,
 		Visible = false,
 		Parent = frame,
 	})
 	loading = frame
+
+	local startedAt = os.clock()
+	local tipIndex = 0
+	local function nextTip()
+		tipIndex = tipIndex % TIP_COUNT + 1
+		tip.Text = L(`Loading.Tip.{tipIndex}`)
+	end
+	nextTip()
+	task.spawn(function()
+		local lastTip = os.clock()
+		while loading == frame and frame.Parent do
+			local t = os.clock() - startedAt
+			local pulse = 1 + 0.045 * math.sin(t * 3)
+			logoScale.Scale = pulse
+			logo.Rotation = 2.2 * math.sin(t * 1.6)
+			local cycle = (t * 0.55) % 2
+			local pos = if cycle < 1 then cycle else 2 - cycle
+			block.Position = UDim2.fromOffset(pos * (360 - 130), 0)
+			for _, star in stars do
+				local y = ((t * star.speed + star.phase * 40) % 520) / 520
+				star.gui.Position = UDim2.fromScale(star.baseX, 1 - y)
+				star.gui.Rotation += 0.4
+			end
+			if os.clock() - lastTip > TIP_SECONDS then
+				lastTip = os.clock()
+				nextTip()
+			end
+			RunService.RenderStepped:Wait()
+		end
+	end)
 end
 
 local function refreshTexts()
+	if loading then
+		local logo = loading:FindFirstChild("Logo")
+		if logo and logo:IsA("TextLabel") then
+			logo.Text = L("Game.Title")
+		end
+		local tagline = loading:FindFirstChild("Tagline")
+		if tagline and tagline:IsA("TextLabel") then
+			tagline.Text = L("Loading.Tagline")
+		end
+	end
 	if loadingLabel then
 		loadingLabel.Text = L(loadError or loadingKey)
 		loadingLabel.TextWrapped = true
@@ -125,6 +278,9 @@ local function showLoadError(key: string)
 		return
 	end
 	loadError = key
+	for _, decor in loadingDecor do
+		decor.Visible = false
+	end
 	for _, label in { loadingTitle, loadingHint } do
 		if label then
 			label.Visible = true
@@ -132,6 +288,7 @@ local function showLoadError(key: string)
 	end
 	if loadingLabel then
 		loadingLabel.Size = UDim2.fromOffset(460, 90)
+		loadingLabel.Position = UDim2.fromScale(0.5, 0.5)
 		loadingLabel.TextColor3 = Theme.TextLight
 	end
 	refreshTexts()

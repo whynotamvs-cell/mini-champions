@@ -6,17 +6,24 @@ local Juice = require(script.Parent.Juice)
 
 local Components = {}
 
+-- Chunky "popular Roblox game" look: rounded font, saturated colours, thick dark outlines,
+-- glossy gradient buttons, deep blue panels with a gold rim, white text with a dark stroke.
 Components.Theme = table.freeze({
-	Font = Enum.Font.GothamBold,
-	Text = Color3.fromRGB(35, 35, 40),
+	Font = Enum.Font.FredokaOne,
+	Text = Color3.fromRGB(255, 255, 255),
 	TextLight = Color3.fromRGB(255, 255, 255),
-	Panel = Color3.fromRGB(250, 246, 236),
-	PanelStroke = Color3.fromRGB(90, 70, 50),
-	Accent = Color3.fromRGB(255, 196, 64),
-	AccentDark = Color3.fromRGB(150, 105, 20),
-	Good = Color3.fromRGB(80, 170, 95),
-	Muted = Color3.fromRGB(160, 160, 165),
-	Shade = Color3.fromRGB(20, 20, 25),
+	TextStroke = Color3.fromRGB(18, 20, 50),
+	Panel = Color3.fromRGB(40, 52, 108),
+	PanelDark = Color3.fromRGB(22, 28, 68),
+	PanelStroke = Color3.fromRGB(255, 205, 70),
+	Outline = Color3.fromRGB(18, 20, 50),
+	Accent = Color3.fromRGB(255, 176, 36),
+	AccentDark = Color3.fromRGB(255, 226, 120),
+	Good = Color3.fromRGB(64, 200, 104),
+	Bad = Color3.fromRGB(235, 70, 80),
+	Blue = Color3.fromRGB(58, 150, 255),
+	Muted = Color3.fromRGB(112, 120, 160),
+	Shade = Color3.fromRGB(16, 18, 40),
 	MinTextSize = 14,
 	MinButton = 48,
 })
@@ -55,6 +62,8 @@ function Components.label(props: { [string]: any }): TextLabel
 	label.BackgroundTransparency = 1
 	label.Font = Theme.Font
 	label.TextColor3 = Theme.Text
+	label.TextStrokeColor3 = Theme.TextStroke
+	label.TextStrokeTransparency = 0.25
 	label.TextScaled = true
 	label.AutoLocalize = false
 	label.Text = ""
@@ -68,6 +77,8 @@ function Components.button(props: { [string]: any }, onActivated: () -> ()): Tex
 	button.BackgroundColor3 = Theme.Accent
 	button.Font = Theme.Font
 	button.TextColor3 = Theme.Text
+	button.TextStrokeColor3 = Theme.TextStroke
+	button.TextStrokeTransparency = 0.2
 	button.TextScaled = true
 	button.AutoLocalize = false
 	button.AutoButtonColor = true
@@ -86,10 +97,32 @@ function Components.button(props: { [string]: any }, onActivated: () -> ()): Tex
 	min.MinSize = Vector2.new(Theme.MinButton, Theme.MinButton)
 	min.Parent = button
 	local stroke = Instance.new("UIStroke")
-	stroke.Color = Theme.AccentDark
-	stroke.Thickness = 2
+	stroke.Color = Theme.Outline
+	stroke.Thickness = 3
 	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	stroke.Parent = button
+	-- The gradient multiplies the button colour: lighter on top, darker at the bottom edge.
+	local gradient = Instance.new("UIGradient")
+	gradient.Name = "Shine"
+	gradient.Rotation = 90
+	gradient.Color = ColorSequence.new({
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+		ColorSequenceKeypoint.new(0.55, Color3.fromRGB(235, 235, 235)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(165, 165, 175)),
+	})
+	gradient.Parent = button
+	-- A soft highlight across the top: the glossy "candy" look.
+	local gloss = Instance.new("Frame")
+	gloss.Name = "Gloss"
+	gloss.BackgroundColor3 = Color3.new(1, 1, 1)
+	gloss.BackgroundTransparency = 0.88
+	gloss.BorderSizePixel = 0
+	gloss.Size = UDim2.new(1, -10, 0.38, 0)
+	gloss.Position = UDim2.fromOffset(5, 3)
+	gloss.Active = false
+	gloss.ZIndex = button.ZIndex
+	gloss.Parent = button
+	corner(gloss, 8)
 	button.Activated:Connect(function()
 		Juice.pop(button, 0.92, 0.2) -- press feedback
 		onActivated()
@@ -102,11 +135,20 @@ function Components.panel(props: { [string]: any }): Frame
 	frame.BackgroundColor3 = Theme.Panel
 	frame.BorderSizePixel = 0
 	apply(frame, props)
-	corner(frame, 14)
+	corner(frame, 16)
 	local stroke = Instance.new("UIStroke")
 	stroke.Color = Theme.PanelStroke
-	stroke.Thickness = 2
+	stroke.Thickness = 3
 	stroke.Parent = frame
+	-- Deep blue, a little lighter at the top.
+	local gradient = Instance.new("UIGradient")
+	gradient.Name = "Depth"
+	gradient.Rotation = 90
+	gradient.Color = ColorSequence.new({
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(190, 195, 225)),
+	})
+	gradient.Parent = frame
 	return frame
 end
 
@@ -114,6 +156,7 @@ function Components.setEnabled(button: TextButton, enabled: boolean)
 	button.Active = enabled
 	button.AutoButtonColor = enabled
 	button.BackgroundColor3 = if enabled then Theme.Accent else Theme.Muted
+	button.TextTransparency = if enabled then 0 else 0.25
 end
 
 return Components

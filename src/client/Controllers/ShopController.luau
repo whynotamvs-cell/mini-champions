@@ -124,7 +124,7 @@ local function buildRow(list: ScrollingFrame, item: Shop.Item, order: number)
 		Name = item.Id,
 		Size = UDim2.new(1, -8, 0, ROW_HEIGHT),
 		LayoutOrder = order,
-		BackgroundColor3 = Color3.fromRGB(255, 252, 244),
+		BackgroundColor3 = Components.Theme.PanelDark,
 		ZIndex = 41,
 		Parent = list,
 	})
