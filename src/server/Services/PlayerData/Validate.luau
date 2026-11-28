@@ -5,6 +5,7 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Economy = require(ReplicatedStorage.Shared.Config.Economy)
+local Pets = require(ReplicatedStorage.Shared.Config.Pets)
 local Shop = require(ReplicatedStorage.Shared.Config.Shop)
 local Tracks = require(ReplicatedStorage.Shared.Config.Tracks)
 local TableUtil = require(ReplicatedStorage.Shared.Utilities.TableUtil)
@@ -93,6 +94,28 @@ local function run(data: any, repair: boolean): { string }
 	local club = ensureTable(ctx, data, "Club", Template.Club, "Club")
 	if type(club) == "table" then
 		integer(ctx, club, "UpgradesOwned", 0, MAX_UPGRADES, "Club.UpgradesOwned")
+	end
+
+	local pets = ensureTable(ctx, data, "Pets", Template.Pets, "Pets")
+	if type(pets) == "table" then
+		local owned = ensureTable(ctx, pets, "Owned", Template.Pets.Owned, "Pets.Owned")
+		if type(owned) == "table" then
+			for key, value in owned do
+				if type(key) ~= "string" or Pets.ById[key] == nil or value ~= true then
+					table.insert(ctx.issues, `Pets.Owned[{tostring(key)}]: not an owned pet`)
+					if repair then
+						owned[key] = nil
+					end
+				end
+			end
+			local equipped = pets.Equipped
+			if equipped ~= "" and (type(equipped) ~= "string" or owned[equipped] ~= true) then
+				table.insert(ctx.issues, "Pets.Equipped: not an owned pet")
+				if repair then
+					pets.Equipped = ""
+				end
+			end
+		end
 	end
 
 	local shop = ensureTable(ctx, data, "Shop", Template.Shop, "Shop")

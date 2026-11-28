@@ -190,7 +190,8 @@ local function reward(player: Player, run: DashRun.Run)
 
 	local recordGuard, isNewBest = DashRewards.recordFinishGuard(timeMs, track)
 	local starsTotal = 0
-	local runResult = RewardService:Grant(player, DashRewards.runGrant(run.runId, medal, track), recordGuard)
+	local petId = if before and before.Pets.Equipped ~= "" then before.Pets.Equipped else nil
+	local runResult = RewardService:Grant(player, DashRewards.runGrant(run.runId, medal, track, petId), recordGuard)
 	if runResult then
 		starsTotal += runResult.starsAdded + runResult.levelUpStars
 	end

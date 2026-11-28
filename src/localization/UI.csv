@@ -118,3 +118,17 @@ Banner.Finish,FINISH!,Banner at the finish line,,FINISH!,ФИНИШ!
 Banner.NewRecord,NEW RECORD!,Banner for a new personal best,,NEW RECORD!,НОВЫЙ РЕКОРД!
 Banner.Zap,Ouch! Back to the checkpoint,Banner after a laser or spinner hit,,Ouch! Back to the checkpoint,Ой! Назад на чекпоинт
 Banner.Welcome,"Welcome, champion!",Banner when the game starts,,"Welcome, champion!","Добро пожаловать, чемпион!"
+Pets.Button,Pets,Button that opens the pets screen,,Pets,Питомцы
+Pets.Title,Pets,Pets screen title,,Pets,Питомцы
+Pets.Note,A pet follows you and adds bonus Stars after every run.,Pets screen note,,A pet follows you and adds bonus Stars after every run.,Питомец бегает за тобой и добавляет звёзды после каждого забега.
+Pets.Row,{name} +{bonus}% Stars,Pet row: name and Stars bonus,,{name} +{bonus}% Stars,{name} +{bonus}% звёзд
+Pets.Equip,Equip,Button to put a pet on,,Equip,Надеть
+Pets.Equipped,On,Button for the pet that is on (tap to take it off),,On,Надет
+Pets.Bought,New pet: {name}!,Toast after buying a pet,,New pet: {name}!,Новый питомец: {name}!
+Pets.NoStars,Not enough Stars for this pet yet.,Toast when a pet costs more than the balance,,Not enough Stars for this pet yet.,Пока не хватает звёзд на этого питомца.
+Pets.Item.paperclip_bug.Name,Paperclip Bug,Pet name,,Paperclip Bug,Жучок-скрепка
+Pets.Item.eraser_bunny.Name,Eraser Bunny,Pet name,,Eraser Bunny,Ластик-зайчик
+Pets.Item.pencil_pup.Name,Pencil Pup,Pet name,,Pencil Pup,Карандаш-щенок
+Pets.Item.sticky_cat.Name,Sticky Cat,Pet name,,Sticky Cat,Стикер-котик
+Pets.Item.stapler_dino.Name,Stapler Dino,Pet name,,Stapler Dino,Степлер-динозавр
+Pets.Item.compass_dragon.Name,Compass Dragon,Pet name,,Compass Dragon,Циркуль-дракон

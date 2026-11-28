@@ -18,6 +18,7 @@ local SERVICE_ORDER: { string } = {
 	"MinigameService",
 	"TutorialService",
 	"MonetizationService",
+	"PetService",
 	"BoardService",
 	"SettingsService",
 	"EmoteService",

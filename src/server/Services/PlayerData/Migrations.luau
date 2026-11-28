@@ -5,7 +5,7 @@
 export type Migration = (data: any) -> any
 export type Status = "ok" | "newer" | "error"
 
-local CURRENT_VERSION = 3
+local CURRENT_VERSION = 4
 
 local MIGRATIONS: { [number]: Migration } = {
 	-- v1 -> v2 (second track): a record for Keyboard Dash. Existing data is never touched.
@@ -34,6 +34,13 @@ local MIGRATIONS: { [number]: Migration } = {
 				Trail = "",
 				Finish = "",
 			}
+		end
+		return data
+	end,
+	-- v3 -> v4 (pets): no pets owned yet; existing data is never touched.
+	[3] = function(data: any): any
+		if data.Pets == nil then
+			data.Pets = { Owned = {}, Equipped = "" }
 		end
 		return data
 	end,
