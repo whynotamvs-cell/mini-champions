@@ -1,11 +1,11 @@
 --!strict
--- Default profile, schema v3 (docs/DATA_SCHEMA.md 4). Changing it requires a migration.
+-- Default profile, schema v4 (docs/DATA_SCHEMA.md 4). Changing it requires a migration.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local PlayerDataTypes = require(ReplicatedStorage.Shared.Types.PlayerData)
 
-local TEMPLATE: PlayerDataTypes.PlayerDataV3 = {
-	SchemaVersion = 3,
+local TEMPLATE: PlayerDataTypes.PlayerDataV4 = {
+	SchemaVersion = 4,
 	Stars = 0,
 	LifetimeStars = 0,
 	XP = 0,
@@ -24,6 +24,7 @@ local TEMPLATE: PlayerDataTypes.PlayerDataV3 = {
 		},
 	},
 	Shop = { SkipTokens = 0, SpringBoots = false, SpringOn = false, Owned = {}, Trail = "", Finish = "" },
+	Pets = { Owned = {}, Equipped = "" },
 	RecentGrants = {},
 	Settings = { MusicVolume = 0.6, SfxVolume = 0.8, Language = "auto", ReducedMotion = false },
 	Meta = { FirstJoinUnix = 0, LastJoinUnix = 0, SessionCount = 0 },

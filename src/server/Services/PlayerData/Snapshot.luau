@@ -27,6 +27,7 @@ function Snapshot.build(data: PlayerDataTypes.PlayerData): PlayerDataTypes.Clien
 			BestTimeMs = keys.BestTimeMs,
 			Medals = { Bronze = keys.Medals.Bronze, Silver = keys.Medals.Silver, Gold = keys.Medals.Gold },
 		},
+		Pets = { Owned = table.clone(data.Pets.Owned), Equipped = data.Pets.Equipped },
 		Shop = {
 			SkipTokens = data.Shop.SkipTokens,
 			SpringBoots = data.Shop.SpringBoots,

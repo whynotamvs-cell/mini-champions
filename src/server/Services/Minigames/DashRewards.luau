@@ -4,6 +4,7 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Economy = require(ReplicatedStorage.Shared.Config.Economy)
+local Pets = require(ReplicatedStorage.Shared.Config.Pets)
 local Tracks = require(ReplicatedStorage.Shared.Config.Tracks)
 local Formulas = require(ReplicatedStorage.Shared.Utilities.Formulas)
 local PlayerDataTypes = require(ReplicatedStorage.Shared.Types.PlayerData)
@@ -26,7 +27,9 @@ local MEDAL_RANK: { [string]: number } = { Bronze = 1, Silver = 2, Gold = 3 }
 local TIERS: { Medal } = { "Bronze" :: Medal, "Silver" :: Medal, "Gold" :: Medal }
 
 -- The per-run grant: finish + medal bonus (repeats every run).
-function DashRewards.runGrant(runId: string, medal: Medal, track: Tracks.Track?): Grant
+-- An equipped pet adds a bonus line (a percentage of the Stars above), so the bonus is part of the
+-- same idempotent grant.
+function DashRewards.runGrant(runId: string, medal: Medal, track: Tracks.Track?, petId: string?): Grant
 	local d = Economy.Dash
 	local prefix = trackOrDefault(track).SkuPrefix
 	local lines = { { sku = `{prefix}_finish`, stars = d.FinishStars } }
@@ -37,6 +40,14 @@ function DashRewards.runGrant(runId: string, medal: Medal, track: Tracks.Track?)
 	elseif medal == "Gold" then
 		table.insert(lines, { sku = `{prefix}_medal_gold`, stars = d.GoldBonusStars })
 		xp += d.GoldBonusXP
+	end
+	local base = 0
+	for _, line in lines do
+		base += line.stars
+	end
+	local bonus = Pets.bonusStars(petId, base)
+	if bonus > 0 then
+		table.insert(lines, { sku = "pet_bonus", stars = bonus })
 	end
 	return { source = "DashRun", grantId = `dash:{runId}`, lines = lines, xp = xp }
 end

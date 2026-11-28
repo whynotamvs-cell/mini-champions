@@ -185,6 +185,8 @@ for _, s in services do task.spawn(s.Start, s) end
 |---|---|---|---|---|
 | `PurchaseUpgrade` | C→S (RemoteFunction) | `index: number` | целое, 1..8, `== UpgradesOwned + 1`, профиль Ready | 2/с |
 | `SendEmote` | C→S | `emoteId: string` | строка ≤ 32, есть в `Config.Emotes` | 1 / 2 с |
+| `PurchasePet` | C→S (Function) | `petId: string` | перечисление id питомцев; цена и баланс — на сервере; ответ `{ ok, reason? }` | 2 / с |
+| `EquipPet` | C→S | `petId: string` | id питомца или `none`; надеть можно только купленного | 3 / 2 с |
 | `UseSkip` | C→S | — | без аргументов; сервер проверяет забег (Running) и токены | 1 / 2 с |
 | `SetSpring` | C→S | `on: boolean` | булево; включить может только владелец Game Pass | 2 / с |
 | `EquipCosmetic` | C→S | `id: string` | перечисление id следов/эффектов + `none_trail`/`none_finish`; надеть можно только купленное | 3 / 2 с |

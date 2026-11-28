@@ -1,5 +1,5 @@
 --!strict
--- Player data types. Schema v3, see docs/DATA_SCHEMA.md 4.
+-- Player data types. Schema v4, see docs/DATA_SCHEMA.md 4.
 
 export type Medal = "Bronze" | "Silver" | "Gold"
 export type Language = "auto" | "en" | "ru"
@@ -25,7 +25,13 @@ export type ShopData = {
 	Finish: string, -- equipped finish effect item id, "" for none
 }
 
-export type PlayerDataV3 = {
+-- Owned pets (Profile.Data.Pets, docs/DATA_SCHEMA.md 4).
+export type PetsData = {
+	Owned: { [string]: boolean },
+	Equipped: string, -- "" for none
+}
+
+export type PlayerDataV4 = {
 	SchemaVersion: number,
 	Stars: number,
 	LifetimeStars: number,
@@ -42,6 +48,7 @@ export type PlayerDataV3 = {
 		KeyDash: TrackRecord,
 	},
 	Shop: ShopData,
+	Pets: PetsData,
 	RecentGrants: { string },
 	Settings: {
 		MusicVolume: number,
@@ -56,7 +63,7 @@ export type PlayerDataV3 = {
 	},
 }
 
-export type PlayerData = PlayerDataV3
+export type PlayerData = PlayerDataV4
 
 -- What the client receives (docs/ARCHITECTURE.md 6.3). Display only; the server never reads it back.
 export type ClientSnapshot = {
@@ -69,6 +76,7 @@ export type ClientSnapshot = {
 	Tutorial: { Step: number, Completed: boolean },
 	DeskDash: { BestTimeMs: number, Medals: { Bronze: boolean, Silver: boolean, Gold: boolean } },
 	KeyDash: { BestTimeMs: number, Medals: { Bronze: boolean, Silver: boolean, Gold: boolean } },
+	Pets: { Owned: { [string]: boolean }, Equipped: string },
 	Shop: {
 		SkipTokens: number,
 		SpringBoots: boolean,
