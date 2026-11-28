@@ -416,10 +416,6 @@ class TrackBuilder:
         self.marks[index] = len(self.path) - 1
         self.pad_center = (cx, cz)
         self.pad_size = size
-        if kind == "Checkpoint":
-            self.arch(cx, cz, top, f"CheckpointArch{index}", color, half=size / 2 - 1, height=11, trim=COLORS["checkpoint"])
-        else:
-            self.arch(cx, cz, top, "FinishArch", COLORS["finish"], half=size / 2 - 1, height=17, trim=COLORS["glow"], checker=True)
 
     def turn(self, heading):
         self.h = HEADINGS[heading]
