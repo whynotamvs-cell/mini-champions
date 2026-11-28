@@ -112,7 +112,7 @@ Loading.Tip.1,Tip: jump over a laser while it blinks!,Loading tip,,Tip: jump ove
 Loading.Tip.2,Tip: checkpoints save your progress.,Loading tip,,Tip: checkpoints save your progress.,Совет: чекпоинты сохраняют твой прогресс.
 Loading.Tip.3,Tip: spend Stars to build your club.,Loading tip,,Tip: spend Stars to build your club.,Совет: трать звёзды на свой клуб.
 Loading.Tip.4,Tip: earn a medal on every track!,Loading tip,,Tip: earn a medal on every track!,Совет: получи медаль на каждой трассе!
-Loading.Tip.5,Tip: press C to open your club.,Loading tip,,Tip: press C to open your club.,Совет: нажми C, чтобы открыть клуб.
+Loading.Tip.5,Tip: press C to open your club.,Loading tip,,Tip: press C to open your club.,"Совет: нажми C, чтобы открыть клуб."
 Banner.Checkpoint,Checkpoint {index}/{total},Banner when a checkpoint is reached,,Checkpoint {index}/{total},Чекпоинт {index}/{total}
 Banner.Finish,FINISH!,Banner at the finish line,,FINISH!,ФИНИШ!
 Banner.NewRecord,NEW RECORD!,Banner for a new personal best,,NEW RECORD!,НОВЫЙ РЕКОРД!
