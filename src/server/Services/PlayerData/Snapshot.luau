@@ -41,6 +41,7 @@ function Snapshot.build(data: PlayerDataTypes.PlayerData): PlayerDataTypes.Clien
 			SfxVolume = data.Settings.SfxVolume,
 			Language = data.Settings.Language,
 			ReducedMotion = data.Settings.ReducedMotion,
+			ShowPets = data.Settings.ShowPets,
 		},
 	}
 end

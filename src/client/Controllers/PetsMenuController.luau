@@ -3,10 +3,12 @@
 -- ("buy X", "equip X"); the server checks ownership and the balance (docs/ECONOMY.md 10).
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 
 local Pets = require(ReplicatedStorage.Shared.Config.Pets)
 local Components = require(script.Parent.Parent.UI.Components)
 local Juice = require(script.Parent.Parent.UI.Juice)
+local PetModel = require(script.Parent.Parent.UI.PetModel)
 local Net = require(script.Parent.Parent.Net)
 local DataController = require(script.Parent.DataController)
 local LocalizationController = require(script.Parent.LocalizationController)
@@ -30,6 +32,7 @@ local ROW_HEIGHT = 54
 local ui: Ui? = nil
 local rows: { [string]: { name: TextLabel, action: TextButton } } = {}
 local pending = false
+local previews: { PetModel.Built } = {}
 
 local function snapshot()
 	return DataController:Get()
@@ -102,23 +105,30 @@ local function buildRow(list: ScrollingFrame, pet: Pets.Pet, order: number)
 		ZIndex = 41,
 		Parent = list,
 	})
-	-- A colour chip so a pet is recognisable at a glance.
-	local chip = Instance.new("Frame")
-	chip.Size = UDim2.fromOffset(34, 34)
-	chip.Position = UDim2.fromOffset(10, 10)
-	chip.BackgroundColor3 = Color3.fromRGB(pet.Color[1], pet.Color[2], pet.Color[3])
-	chip.ZIndex = 42
-	chip.Parent = frame
-	local round = Instance.new("UICorner")
-	round.CornerRadius = UDim.new(1, 0)
-	round.Parent = chip
-	local ring = Instance.new("UIStroke")
-	ring.Color = Components.Theme.Outline
-	ring.Thickness = 3
-	ring.Parent = chip
+	-- A small 3D preview that turns slowly, so a pet is recognisable before buying it.
+	local viewport = Instance.new("ViewportFrame")
+	viewport.Size = UDim2.fromOffset(58, 46)
+	viewport.Position = UDim2.fromOffset(6, 4)
+	viewport.BackgroundColor3 = Components.Theme.Panel
+	viewport.BackgroundTransparency = 0.3
+	viewport.Ambient = Color3.fromRGB(150, 150, 160)
+	viewport.LightColor = Color3.fromRGB(255, 255, 255)
+	viewport.LightDirection = Vector3.new(-0.4, -0.7, 0.5)
+	viewport.ZIndex = 42
+	viewport.Parent = frame
+	local vpCorner = Instance.new("UICorner")
+	vpCorner.CornerRadius = UDim.new(0, 10)
+	vpCorner.Parent = viewport
+	local built = PetModel.build(pet, viewport)
+	local camera = Instance.new("Camera")
+	camera.FieldOfView = 45
+	camera.CFrame = CFrame.lookAt(Vector3.new(0, 0.7, -3.8), Vector3.new(0, 0.3, 0))
+	camera.Parent = viewport
+	viewport.CurrentCamera = camera
+	table.insert(previews, built)
 	local name = Components.label({
-		Size = UDim2.new(1, -210, 1, -10),
-		Position = UDim2.fromOffset(52, 5),
+		Size = UDim2.new(1, -220, 1, -10),
+		Position = UDim2.fromOffset(72, 5),
 		TextXAlignment = Enum.TextXAlignment.Left,
 		MaxTextSize = 22,
 		ZIndex = 42,
@@ -143,9 +153,9 @@ end
 local function build(canvas: Frame): Ui
 	local open = Components.button({
 		Name = "PetsButton",
-		Size = UDim2.fromOffset(120, 52),
-		Position = UDim2.new(0, 12, 1, -72),
-		AnchorPoint = Vector2.new(0, 1),
+		Size = UDim2.fromOffset(104, 48),
+		Position = UDim2.new(1, -124, 0, 8),
+		AnchorPoint = Vector2.new(1, 0),
 		BackgroundColor3 = Components.Theme.Blue,
 		ZIndex = 20,
 		Parent = canvas,
@@ -214,6 +224,22 @@ end
 function PetsMenuController:Start()
 	ui = build(UIController:GetCanvas())
 	render()
+	-- Turn the previews, only while the screen is open.
+	RunService.RenderStepped:Connect(function()
+		local u = ui
+		if u == nil or not u.frame.Visible then
+			return
+		end
+		local t = os.clock()
+		for _, built in previews do
+			PetModel.place(
+				built,
+				CFrame.Angles(0, math.sin(t * 1.2) * 0.9 + t * 0.4, 0),
+				t,
+				{ moving = true, air = false, joy = false }
+			)
+		end
+	end)
 end
 
 function PetsMenuController:Toggle()

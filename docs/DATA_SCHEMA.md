@@ -54,7 +54,7 @@
 
 Суффикс `_v1` у хранилища меняется **только** при несовместимой смене всей модели хранения. Обычные изменения схемы делаются миграциями внутри того же хранилища.
 
-## 4. Схема данных v4
+## 4. Схема данных v5
 
 ```luau
 export type TrackRecord = {
@@ -116,6 +116,7 @@ export type PlayerDataV4 = {
 		SfxVolume: number,     -- 0..1
 		Language: string,      -- "auto" | "en" | "ru"
 		ReducedMotion: boolean,
+		ShowPets: boolean,     -- показывать питомцев других игроков (по умолчанию true)
 	},
 
 	-- Служебное
@@ -130,8 +131,8 @@ export type PlayerDataV4 = {
 ### Шаблон (значения по умолчанию)
 
 ```luau
-local TEMPLATE: PlayerDataV4 = {
-	SchemaVersion = 4,
+local TEMPLATE: PlayerDataV5 = {
+	SchemaVersion = 5,
 	Stars = 0,
 	LifetimeStars = 0,
 	XP = 0,
@@ -152,7 +153,7 @@ local TEMPLATE: PlayerDataV4 = {
 	Shop = { SkipTokens = 0, SpringBoots = false, SpringOn = false, Owned = {}, Trail = "", Finish = "" },
 	Pets = { Owned = {}, Equipped = "" },
 	RecentGrants = {},
-	Settings = { MusicVolume = 0.6, SfxVolume = 0.8, Language = "auto", ReducedMotion = false },
+	Settings = { MusicVolume = 0.6, SfxVolume = 0.8, Language = "auto", ReducedMotion = false, ShowPets = true },
 	Meta = { FirstJoinUnix = 0, LastJoinUnix = 0, SessionCount = 0 },
 }
 ```
@@ -258,10 +259,11 @@ local MIGRATIONS = {
 |---|---|---|
 | 1 | Начальная схема (этап 1) | — |
 | 2 | `Minigames.KeyDash` — рекорд и медали второй трассы | `[1]`: добавляет пустую запись; тест — `tests/specs/Migrations.spec.luau` («Migration 1 -> 2») |
+| 5 | `Settings.ShowPets` — показывать питомцев других игроков | `[4]`: ставит `true`, если поля нет; тест — `Migrations.spec.luau` («Migration 4 -> 5»), `SettingsLogic.spec.luau` |
 | 4 | `Pets` — купленные и надетый питомец | `[3]`: добавляет пустой `Pets`; тест — `Migrations.spec.luau` («Migration 3 -> 4»), `PetLogic.spec.luau` |
 | 3 | `Shop` — пропуски, пружинка, косметика | `[2]`: добавляет пустой `Shop`; тест — `Migrations.spec.luau` («Migration 2 -> 3»); валидация — `Validate.spec`/`ShopLogic.spec` |
 
-Сервер старой версии (v1–v3), загрузивший профиль v4, **не изменяет и не сохраняет** его: игрок кикается с сообщением об обновлении (правило 3 ниже). Поэтому при выкладке v2 сначала обновляются серверы.
+Сервер старой версии (v1–v4), загрузивший профиль v5, **не изменяет и не сохраняет** его: игрок кикается с сообщением об обновлении (правило 3 ниже). Поэтому при выкладке v2 сначала обновляются серверы.
 
 Правила:
 1. Миграции только вперёд, по одной версии за шаг, чистые функции, без `yield`.

@@ -155,9 +155,10 @@ end
 local function build(canvas: Frame): Ui
 	local open = Components.button({
 		Name = "ShopButton",
-		Size = UDim2.fromOffset(120, 52),
-		Position = UDim2.new(0, 12, 1, -12),
-		AnchorPoint = Vector2.new(0, 1),
+		-- Top right: the bottom corners belong to the phone thumbstick and the jump button.
+		Size = UDim2.fromOffset(104, 48),
+		Position = UDim2.new(1, -12, 0, 8),
+		AnchorPoint = Vector2.new(1, 0),
 		ZIndex = 20,
 		Parent = canvas,
 	}, function()
@@ -166,8 +167,8 @@ local function build(canvas: Frame): Ui
 	local skip = Components.button({
 		Name = "SkipButton",
 		Size = UDim2.fromOffset(170, 52),
-		Position = UDim2.new(0, 140, 1, -12),
-		AnchorPoint = Vector2.new(0, 1),
+		Position = UDim2.new(0.5, 0, 1, -12),
+		AnchorPoint = Vector2.new(0.5, 1),
 		BackgroundColor3 = Components.Theme.Good,
 		Visible = false,
 		ZIndex = 20,

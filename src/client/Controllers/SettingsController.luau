@@ -34,6 +34,7 @@ type Draft = {
 	SfxVolume: number,
 	Language: string,
 	ReducedMotion: boolean,
+	ShowPets: boolean,
 }
 
 type Ui = {
@@ -48,6 +49,8 @@ type Ui = {
 	languageButton: TextButton,
 	motionLabel: TextLabel,
 	motionButton: TextButton,
+	petsLabel: TextLabel,
+	petsButton: TextButton,
 	close: TextButton,
 }
 
@@ -90,6 +93,7 @@ local function render()
 	u.sfxLabel.Text = L("Settings.Sfx")
 	u.languageLabel.Text = L("Settings.Language")
 	u.motionLabel.Text = L("Settings.ReducedMotion")
+	u.petsLabel.Text = L("Settings.ShowPets")
 	u.close.Text = L("UI.Close")
 	if d then
 		u.musicValue.Text = `{math.floor(d.MusicVolume * 100 + 0.5)}%`
@@ -97,6 +101,8 @@ local function render()
 		u.languageButton.Text = L(LANGUAGE_KEYS[d.Language] or LANGUAGE_KEYS.auto)
 		u.motionButton.Text = L(if d.ReducedMotion then "Settings.On" else "Settings.Off")
 		u.motionButton.BackgroundColor3 = if d.ReducedMotion then Theme.Good else Theme.Muted
+		u.petsButton.Text = L(if d.ShowPets then "Settings.On" else "Settings.Off")
+		u.petsButton.BackgroundColor3 = if d.ShowPets then Theme.Good else Theme.Muted
 	end
 end
 
@@ -143,9 +149,10 @@ local function onSnapshot(snapshot: { [string]: any })
 			SfxVolume = settings.SfxVolume,
 			Language = settings.Language,
 			ReducedMotion = settings.ReducedMotion,
+			ShowPets = settings.ShowPets ~= false,
 		}
 	else
-		for _, key in { "MusicVolume", "SfxVolume", "Language", "ReducedMotion" } do
+		for _, key in { "MusicVolume", "SfxVolume", "Language", "ReducedMotion", "ShowPets" } do
 			if not dirty[key] then
 				(draft :: any)[key] = settings[key]
 			end
@@ -167,7 +174,7 @@ end
 local function build(canvas: Frame): Ui
 	local frame = Components.panel({
 		Name = "SettingsMenu",
-		Size = UDim2.fromOffset(380, 320),
+		Size = UDim2.fromOffset(380, 362),
 		Position = UDim2.fromScale(0.5, 0.5),
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Visible = false,
@@ -256,6 +263,19 @@ local function build(canvas: Frame): Ui
 		end
 	end)
 
+	local petsLabel = label(14, 250, 128, 48, 20)
+	local petsButton = Components.button({
+		Size = UDim2.fromOffset(212, 48),
+		Position = UDim2.fromOffset(146, 250),
+		ZIndex = 33,
+		Parent = frame,
+	}, function()
+		local d = draft
+		if d then
+			change("ShowPets", not d.ShowPets)
+		end
+	end)
+
 	local close = Components.button({
 		Size = UDim2.fromOffset(150, 48),
 		Position = UDim2.new(0.5, 0, 1, -12),
@@ -270,7 +290,7 @@ local function build(canvas: Frame): Ui
 	local openButton = Components.button({
 		Name = "SettingsButton",
 		Size = UDim2.fromOffset(130, 48),
-		Position = UDim2.new(1, -12, 0.42, -124),
+		Position = UDim2.new(1, -12, 0.42, -64),
 		AnchorPoint = Vector2.new(1, 0.5),
 		BackgroundColor3 = Theme.Muted,
 		MaxTextSize = 18, -- a smaller cap keeps "Настройки" on one line instead of breaking mid-word
@@ -291,6 +311,8 @@ local function build(canvas: Frame): Ui
 		languageButton = languageButton,
 		motionLabel = motionLabel,
 		motionButton = motionButton,
+		petsLabel = petsLabel,
+		petsButton = petsButton,
 		close = close,
 	}
 end

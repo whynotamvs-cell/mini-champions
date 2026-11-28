@@ -1,5 +1,5 @@
 --!strict
--- Player data types. Schema v4, see docs/DATA_SCHEMA.md 4.
+-- Player data types. Schema v5, see docs/DATA_SCHEMA.md 4.
 
 export type Medal = "Bronze" | "Silver" | "Gold"
 export type Language = "auto" | "en" | "ru"
@@ -31,7 +31,7 @@ export type PetsData = {
 	Equipped: string, -- "" for none
 }
 
-export type PlayerDataV4 = {
+export type PlayerDataV5 = {
 	SchemaVersion: number,
 	Stars: number,
 	LifetimeStars: number,
@@ -55,6 +55,7 @@ export type PlayerDataV4 = {
 		SfxVolume: number,
 		Language: Language,
 		ReducedMotion: boolean,
+		ShowPets: boolean, -- show the pets of other players
 	},
 	Meta: {
 		FirstJoinUnix: number,
@@ -63,7 +64,7 @@ export type PlayerDataV4 = {
 	},
 }
 
-export type PlayerData = PlayerDataV4
+export type PlayerData = PlayerDataV5
 
 -- What the client receives (docs/ARCHITECTURE.md 6.3). Display only; the server never reads it back.
 export type ClientSnapshot = {
@@ -90,6 +91,7 @@ export type ClientSnapshot = {
 		SfxVolume: number,
 		Language: Language,
 		ReducedMotion: boolean,
+		ShowPets: boolean,
 	},
 }
 

@@ -178,7 +178,7 @@ local function build(canvas: Frame): Ui
 	local openButton = Components.button({
 		Name = "EmoteButton",
 		Size = UDim2.fromOffset(130, 48),
-		Position = UDim2.new(1, -12, 0.42, -62),
+		Position = UDim2.new(1, -12, 0.42, -2),
 		AnchorPoint = Vector2.new(1, 0.5),
 		MaxTextSize = 18, -- a smaller cap keeps "Эмоции" on one line instead of breaking mid-word
 		Parent = canvas,

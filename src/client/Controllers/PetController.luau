@@ -1,7 +1,7 @@
 --!strict
 -- Shows every player's equipped pet (the player attribute "Pet" set by PetService) following its
--- owner. Pets are built from simple parts per Config.Pets and live only on this client; nothing
--- here is trusted or replicated.
+-- owner, alive: it hops when the owner jumps, wags and flutters while running, and celebrates when the
+-- local player finishes a run. Pets live only on this client; nothing here is trusted or replicated.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -9,129 +9,97 @@ local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
 local Pets = require(ReplicatedStorage.Shared.Config.Pets)
+local Components = require(script.Parent.Parent.UI.Components)
 local Juice = require(script.Parent.Parent.UI.Juice)
+local PetModel = require(script.Parent.Parent.UI.PetModel)
+local DashController = require(script.Parent.DashController)
+local DataController = require(script.Parent.DataController)
+local LocalizationController = require(script.Parent.LocalizationController)
+
+local L = LocalizationController.L
 
 local PetController = {}
 
-type Follower = { model: Model, root: BasePart, petId: string, offset: Vector3, seed: number }
+type Follower = {
+	built: PetModel.Built,
+	root: BasePart,
+	humanoid: Humanoid?,
+	petId: string,
+	offset: Vector3,
+	seed: number,
+	nameLabel: TextLabel,
+	joyUntil: number,
+	hop: number,
+	lastPos: Vector3,
+}
 
 local followers: { [Player]: Follower } = {}
 local folder: Folder? = nil
 
-local function block(model: Model, name: string, size: Vector3, color: Color3, material: Enum.Material?): Part
-	local part = Instance.new("Part")
-	part.Name = name
-	part.Size = size
-	part.Color = color
-	part.Material = material or Enum.Material.SmoothPlastic
-	part.Anchored = true
-	part.CanCollide = false
-	part.CanQuery = false
-	part.CanTouch = false
-	part.CastShadow = false
-	part.TopSurface = Enum.SurfaceType.Smooth
-	part.BottomSurface = Enum.SurfaceType.Smooth
-	part.Parent = model
-	return part
-end
+local JOY_SECONDS = 3.2
 
-local function ball(model: Model, name: string, diameter: number, color: Color3, material: Enum.Material?): Part
-	local part = block(model, name, Vector3.new(diameter, diameter, diameter), color, material)
-	part.Shape = Enum.PartType.Ball
-	return part
+local function nameText(petId: string): string
+	return L(`Pets.Item.{petId}.Name`)
 end
-
--- Parts of a pet in its own space: each entry is (part, offset from the body centre). The body is the primary part.
-local function build(pet: Pets.Pet): (Model, { { part: Part, offset: CFrame } })
-	local model = Instance.new("Model")
-	model.Name = `Pet_{pet.Id}`
-	local c = Color3.fromRGB(pet.Color[1], pet.Color[2], pet.Color[3])
-	local dark = Color3.fromRGB(pet.Color[1] * 0.55, pet.Color[2] * 0.55, pet.Color[3] * 0.55)
-	local s = pet.Size
-	local body = ball(model, "Body", 2.2 * s, c)
-	model.PrimaryPart = body
-	local parts: { { part: Part, offset: CFrame } } = { { part = body, offset = CFrame.new() } }
-	local function add(part: Part, offset: CFrame)
-		table.insert(parts, { part = part, offset = offset })
-	end
-	-- Eyes and a little shine, facing forward (-Z).
-	for _, x in { -0.45, 0.45 } do
-		add(ball(model, "Eye", 0.55 * s, Color3.new(1, 1, 1)), CFrame.new(x * s, 0.25 * s, -0.95 * s))
-		add(ball(model, "Pupil", 0.28 * s, Color3.fromRGB(20, 20, 40)), CFrame.new(x * s, 0.25 * s, -1.2 * s))
-	end
-	local kind = pet.Kind
-	if kind == "bunny" then
-		for _, x in { -0.5, 0.5 } do
-			add(
-				block(model, "Ear", Vector3.new(0.5, 1.7, 0.4) * s, c),
-				CFrame.new(x * s, 1.7 * s, 0) * CFrame.Angles(0, 0, math.rad(-x * 14))
-			)
-		end
-	elseif kind == "pup" then
-		for _, x in { -1, 1 } do
-			add(
-				block(model, "Ear", Vector3.new(0.5, 1.1, 0.7) * s, dark),
-				CFrame.new(x * 1.05 * s, 0.7 * s, 0) * CFrame.Angles(0, 0, math.rad(x * 18))
-			)
-		end
-		add(ball(model, "Nose", 0.5 * s, Color3.fromRGB(30, 30, 40)), CFrame.new(0, -0.15 * s, -1.15 * s))
-	elseif kind == "cat" then
-		for _, x in { -0.6, 0.6 } do
-			add(
-				block(model, "Ear", Vector3.new(0.6, 0.8, 0.3) * s, c),
-				CFrame.new(x * s, 1.2 * s, 0) * CFrame.Angles(0, 0, math.rad(-x * 25))
-			)
-		end
-		add(
-			block(model, "Tail", Vector3.new(0.35, 1.5, 0.35) * s, dark),
-			CFrame.new(0, 0.3 * s, 1.3 * s) * CFrame.Angles(math.rad(-30), 0, 0)
-		)
-	elseif kind == "dino" then
-		for i = 1, 3 do
-			add(
-				block(model, "Spike", Vector3.new(0.35, 0.8, 0.5) * s, dark),
-				CFrame.new(0, (1.0 - (i - 1) * 0.1) * s + 0.2, (0.4 + (i - 1) * 0.45) * s)
-			)
-		end
-		add(block(model, "Tail", Vector3.new(0.7, 0.7, 1.4) * s, c), CFrame.new(0, -0.3 * s, 1.6 * s))
-	elseif kind == "bug" then
-		for _, x in { -0.4, 0.4 } do
-			add(
-				block(model, "Antenna", Vector3.new(0.12, 1.3, 0.12) * s, dark),
-				CFrame.new(x * s, 1.3 * s, -0.2 * s) * CFrame.Angles(0, 0, math.rad(-x * 40))
-			)
-		end
-	elseif kind == "dragon" then
-		for _, x in { -0.6, 0.6 } do
-			add(
-				block(model, "Horn", Vector3.new(0.35, 0.9, 0.35) * s, Color3.fromRGB(255, 220, 120)),
-				CFrame.new(x * s, 1.2 * s, -0.1 * s) * CFrame.Angles(0, 0, math.rad(-x * 22))
-			)
-			add(
-				block(model, "Wing", Vector3.new(1.5, 0.15, 1.1) * s, dark),
-				CFrame.new(x * 1.9 * s, 0.5 * s, 0.4 * s) * CFrame.Angles(0, math.rad(x * 25), math.rad(-x * 20))
-			)
-		end
-		add(block(model, "Tail", Vector3.new(0.5, 0.5, 1.5) * s, c), CFrame.new(0, -0.4 * s, 1.6 * s))
-	end
-	return model, parts
-end
-
-local layouts: { [Model]: { { part: Part, offset: CFrame } } } = {}
 
 local function clear(player: Player)
 	local follower = followers[player]
 	if follower then
-		layouts[follower.model] = nil
-		follower.model:Destroy()
+		follower.built.model:Destroy()
 		followers[player] = nil
 	end
+end
+
+local function makeNameTag(built: PetModel.Built, petId: string): TextLabel
+	local gui = Instance.new("BillboardGui")
+	gui.Size = UDim2.fromOffset(240, 34)
+	gui.StudsOffset = Vector3.new(0, built.height / 2 + 1.2, 0)
+	gui.AlwaysOnTop = false
+	gui.MaxDistance = 70
+	gui.Adornee = built.body
+	gui.Parent = built.body
+	local label = Instance.new("TextLabel")
+	label.Size = UDim2.fromScale(1, 1)
+	label.BackgroundTransparency = 1
+	label.Font = Components.Theme.Font
+	label.TextScaled = true
+	label.TextColor3 = Color3.new(1, 1, 1)
+	label.TextStrokeColor3 = Components.Theme.TextStroke
+	label.TextStrokeTransparency = 0.2
+	label.AutoLocalize = false
+	label.Text = nameText(petId)
+	label.Parent = gui
+	return label
+end
+
+local function sparkleBurst(body: Part)
+	if Juice.isReducedMotion() then
+		return
+	end
+	local emitter = Instance.new("ParticleEmitter")
+	emitter.Enabled = false
+	emitter.LightEmission = 0.8
+	emitter.Color = ColorSequence.new(Color3.fromRGB(255, 120, 190), Color3.fromRGB(255, 230, 120))
+	emitter.Lifetime = NumberRange.new(0.8, 1.4)
+	emitter.Speed = NumberRange.new(8, 16)
+	emitter.SpreadAngle = Vector2.new(180, 180)
+	emitter.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.9), NumberSequenceKeypoint.new(1, 0) })
+	emitter.Parent = body
+	emitter:Emit(24)
+	task.delay(2, function()
+		emitter:Destroy()
+	end)
 end
 
 local function sync(player: Player)
 	local petId = player:GetAttribute("Pet")
 	local current = followers[player]
 	local wanted = if type(petId) == "string" and Pets.ById[petId] then petId else nil
+	-- The player can hide the pets of everybody else (Settings, for clarity or weaker phones).
+	local snapshot = DataController:Get()
+	if player ~= Players.LocalPlayer and snapshot and snapshot.Settings.ShowPets == false then
+		wanted = nil
+	end
 	if current and current.petId == wanted then
 		return
 	end
@@ -144,45 +112,91 @@ local function sync(player: Player)
 	if root == nil or not root:IsA("BasePart") then
 		return
 	end
-	local model, parts = build(Pets.ById[wanted])
-	model.Parent = folder
-	layouts[model] = parts
+	local built = PetModel.build(Pets.ById[wanted], folder)
 	local side = if player.UserId % 2 == 0 then 1 else -1
-	followers[player] = {
-		model = model,
+	local follower: Follower = {
+		built = built,
 		root = root,
+		humanoid = character and character:FindFirstChildOfClass("Humanoid"),
 		petId = wanted,
-		offset = Vector3.new(2.6 * side, -0.6, 3.4),
+		offset = Vector3.new(2.8 * side, -2.0, 3.6),
 		seed = player.UserId % 7,
+		nameLabel = makeNameTag(built, wanted),
+		joyUntil = 0,
+		hop = 0,
+		lastPos = root.Position,
 	}
-	-- Start beside the owner.
-	local body = model.PrimaryPart :: BasePart
-	body.CFrame = root.CFrame * CFrame.new(followers[player].offset)
+	followers[player] = follower
+	built.body.CFrame = root.CFrame * CFrame.new(follower.offset)
+	PetModel.place(built, built.body.CFrame, 0, { moving = false, air = false, joy = false })
 end
 
 local function place(follower: Follower, dt: number, t: number)
-	local body = follower.model.PrimaryPart :: BasePart
+	local body = follower.built.body
 	local root = follower.root
 	if not root.Parent then
 		return
 	end
-	local bob = if Juice.isReducedMotion() then 0 else math.sin(t * 5 + follower.seed) * 0.35
-	local target = root.CFrame * CFrame.new(follower.offset + Vector3.new(0, 0.6 + bob, 0))
+	local velocity = (root.Position - follower.lastPos) / math.max(dt, 1e-3)
+	follower.lastPos = root.Position
+	local moving = Vector3.new(velocity.X, 0, velocity.Z).Magnitude > 2
+		and Vector3.new(velocity.X, 0, velocity.Z).Magnitude < 60
+	local humanoid = follower.humanoid
+	local air = humanoid ~= nil and (humanoid.FloorMaterial == Enum.Material.Air) and math.abs(velocity.Y) < 200
+	local joy = t < follower.joyUntil
+	local reduced = Juice.isReducedMotion()
+
+	-- Hop with the owner, a little bounce while running, a big dance when celebrating.
+	local targetHop = if air then 1.6 elseif joy then 0 else 0
+	follower.hop += (targetHop - follower.hop) * (1 - math.exp(-10 * dt))
+	local bob = 0.0
+	if not reduced then
+		if joy then
+			bob = math.abs(math.sin(t * 9)) * 2.2
+		elseif moving then
+			bob = math.abs(math.sin(t * 11 + follower.seed)) * 0.5
+		else
+			bob = math.sin(t * 2.5 + follower.seed) * 0.15
+		end
+	end
+	local target = root.CFrame * CFrame.new(follower.offset + Vector3.new(0, 0.9 + bob + follower.hop, 0))
 	local alpha = 1 - math.exp(-9 * dt)
 	local pos = body.Position:Lerp(target.Position, alpha)
 	if (pos - target.Position).Magnitude > 40 then
 		pos = target.Position -- the owner was teleported: do not fly across the map
 	end
-	local cf = CFrame.new(pos) * (root.CFrame - root.CFrame.Position) -- same heading as the owner
-	local parts = layouts[follower.model]
-	if parts then
-		for _, entry in parts do
-			entry.part.CFrame = cf * entry.offset
-		end
+	local heading = root.CFrame - root.CFrame.Position
+	local base = CFrame.new(pos) * heading
+	if joy and not reduced then
+		base *= CFrame.Angles(0, t * 8, 0)
+	end
+	PetModel.place(follower.built, base, t, { moving = moving, air = air, joy = joy })
+end
+
+local function refreshNames()
+	for _, follower in followers do
+		follower.nameLabel.Text = nameText(follower.petId)
 	end
 end
 
-function PetController:Init() end
+function PetController:Init()
+	LocalizationController.Changed:Connect(refreshNames)
+	DataController.Changed:Connect(function()
+		for _, player in Players:GetPlayers() do
+			sync(player)
+		end
+	end)
+	-- The local player's pet celebrates a counted finish.
+	DashController.Event:Connect(function(event)
+		if event.kind == "finish" and event.valid == true then
+			local follower = followers[Players.LocalPlayer]
+			if follower then
+				follower.joyUntil = os.clock() + JOY_SECONDS
+				sparkleBurst(follower.built.body)
+			end
+		end
+	end)
+end
 
 function PetController:Start()
 	local f = Instance.new("Folder")

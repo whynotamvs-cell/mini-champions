@@ -40,6 +40,8 @@ type Hazard = {
 	onSec: number,
 	phase: number,
 	speed: number,
+	hitHeight: number,
+	hitWidth: number,
 }
 
 -- The world objects of one track, found by name under Workspace.DeskWorld.
@@ -301,7 +303,20 @@ local function hazardHits(world: TrackWorld, position: Vector3): boolean
 			end
 		elseif hazard.kind == "Spinner" then
 			local angle = HazardLogic.spinnerAngle(t, hazard.speed, hazard.phase)
-			if HazardLogic.inBar(position.X, position.Y, position.Z, c.X, c.Y, c.Z, s.X, s.Y, s.Z, angle) then
+			if
+				HazardLogic.inBar(
+					position.X,
+					position.Y,
+					position.Z,
+					c.X,
+					c.Y,
+					c.Z,
+					s.X,
+					hazard.hitHeight,
+					hazard.hitWidth,
+					angle
+				)
+			then
 				return true
 			end
 		end
@@ -442,6 +457,8 @@ local function collectTrack(deskWorld: Instance, track: Tracks.Track): TrackWorl
 					onSec = tonumber(hazardPart:GetAttribute("OnSec")) or 0,
 					phase = tonumber(hazardPart:GetAttribute("Phase")) or 0,
 					speed = tonumber(hazardPart:GetAttribute("Speed")) or 0,
+					hitHeight = tonumber(hazardPart:GetAttribute("HitHeight")) or hazardPart.Size.Y,
+					hitWidth = tonumber(hazardPart:GetAttribute("HitWidth")) or hazardPart.Size.Z,
 				})
 			end
 		end

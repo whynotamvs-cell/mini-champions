@@ -190,7 +190,7 @@ for _, s in services do task.spawn(s.Start, s) end
 | `UseSkip` | C→S | — | без аргументов; сервер проверяет забег (Running) и токены | 1 / 2 с |
 | `SetSpring` | C→S | `on: boolean` | булево; включить может только владелец Game Pass | 2 / с |
 | `EquipCosmetic` | C→S | `id: string` | перечисление id следов/эффектов + `none_trail`/`none_finish`; надеть можно только купленное | 3 / 2 с |
-| `UpdateSettings` | C→S | `{ MusicVolume, SfxVolume, Language, ReducedMotion }` | типы, диапазоны, перечисление языков, лишние ключи отбрасываются | 2/с |
+| `UpdateSettings` | C→S | `{ MusicVolume, SfxVolume, Language, ReducedMotion, ShowPets }` | типы, диапазоны, перечисление языков, лишние ключи отбрасываются | 2/с |
 | `TutorialAck` | C→S | `step: number` | только шаг 3 «открыл меню клуба»; принимается, только если сохранённый шаг == 2 | 2/с |
 | `RequestBoard` | C→S | — | клиент просит текущую таблицу результатов (профиль Ready не нужен) | 1/с |
 | `RequestRestart` | C→S | — | игрок в активном забеге | 1/с |

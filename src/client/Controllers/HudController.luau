@@ -443,7 +443,7 @@ local function build(canvas: Frame): Ui
 	local clubButton = Components.button({
 		Name = "ClubButton",
 		Size = UDim2.fromOffset(96, 56),
-		Position = UDim2.new(1, -12, 0.42, 0),
+		Position = UDim2.new(1, -12, 0.42, 60),
 		AnchorPoint = Vector2.new(1, 0.5),
 		Parent = canvas,
 	}, function()
@@ -453,7 +453,7 @@ local function build(canvas: Frame): Ui
 	local restart = Components.button({
 		Name = "RestartButton",
 		Size = UDim2.fromOffset(96, 48),
-		Position = UDim2.new(1, -12, 0.42, 40),
+		Position = UDim2.new(1, -12, 0.42, 100),
 		AnchorPoint = Vector2.new(1, 0),
 		BackgroundColor3 = Theme.Muted,
 		Visible = false,
