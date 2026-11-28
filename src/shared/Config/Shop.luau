@@ -18,8 +18,23 @@ export type Item = {
 	Color: { number }?,
 }
 
+-- Ids of the TEST experience "Mini Champions [TEST]" (universe 10778182955). The release experience
+-- has its own products: create them there and replace these numbers (docs/PUBLISHING.md 6).
+local IDS: { [string]: number } = {
+	skip = 3737346186,
+	spring = 2099095830,
+	stars_small = 3737346277,
+	stars_medium = 3737346283,
+	stars_large = 3737346290,
+	trail_rainbow = 3737346305,
+	trail_stars = 3737346320,
+	trail_fire = 3737346330,
+	finish_gold = 3737346344,
+	finish_rainbow = 3737346353,
+}
+
 local function item(id: string, kind: Kind, extra: { [string]: any }?): Item
-	local result: any = { Id = id, Kind = kind, RobloxId = 0 }
+	local result: any = { Id = id, Kind = kind, RobloxId = IDS[id] or 0 }
 	if extra then
 		for key, value in extra do
 			result[key] = value
