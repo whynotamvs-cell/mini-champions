@@ -100,6 +100,10 @@ function LocalizationCheck.run()
 	for r = 2, #rows do
 		local row = rows[r]
 		local key = row[col.Key]
+		if key ~= nil and key ~= "" and #row ~= #header then
+			-- A stray comma outside quotes shifts every later column (Rojo then refuses the file).
+			table.insert(problems, `{key}: {#row} columns, expected {#header} (quote text with commas)`)
+		end
 		if key ~= nil and key ~= "" then
 			if keys[key] then
 				table.insert(problems, `UI.csv: duplicate key {key}`)
@@ -134,6 +138,23 @@ function LocalizationCheck.run()
 		local key = `Club.Upgrade.{id}.Name`
 		if not keys[key] then
 			table.insert(problems, `generated key {key} not in UI.csv`)
+		end
+	end
+	local shopSource = fs.readFile("src/shared/Config/Shop.luau")
+	for id in string.gmatch(shopSource, 'item%("([%w_]+)"') do
+		if not keys[`Shop.Item.{id}.Name`] then
+			table.insert(problems, `generated key Shop.Item.{id}.Name not in UI.csv`)
+		end
+	end
+	local petsSource = fs.readFile("src/shared/Config/Pets.luau")
+	for id in string.gmatch(petsSource, 'pet%("([%w_]+)"') do
+		if not keys[`Pets.Item.{id}.Name`] then
+			table.insert(problems, `generated key Pets.Item.{id}.Name not in UI.csv`)
+		end
+	end
+	for n = 1, 5 do
+		if not keys[`Loading.Tip.{n}`] then
+			table.insert(problems, `generated key Loading.Tip.{n} not in UI.csv`)
 		end
 	end
 	for _, medal in { "Gold", "Silver", "Bronze" } do
