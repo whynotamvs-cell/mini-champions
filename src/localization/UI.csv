@@ -106,3 +106,15 @@ Shop.Item.trail_fire.Name,Fire trail,Shop item: cosmetic trail,,Fire trail,Ог�
 Shop.Item.finish_gold.Name,Golden finish effect,Shop item: cosmetic finish effect,,Golden finish effect,Золотой эффект финиша
 Shop.Item.finish_rainbow.Name,Sparkle finish effect,Shop item: cosmetic finish effect,,Sparkle finish effect,Искристый эффект финиша
 Dash.Result.Assisted,"You used help, so this run doesn't count for medals or records.",Run finished with a skip or Spring Boots,,"You used help, so this run doesn't count for medals or records.","Ты использовал помощь, поэтому забег не идёт в медали и рекорды."
+Game.Title,MINI CHAMPIONS,Game name shown on the loading screen and banners,,MINI CHAMPIONS,MINI CHAMPIONS
+Loading.Tagline,Tiny heroes. Giant adventures!,Tagline under the logo,,Tiny heroes. Giant adventures!,Крошечные герои. Огромные приключения!
+Loading.Tip.1,Tip: jump over a laser while it blinks!,Loading tip,,Tip: jump over a laser while it blinks!,"Совет: прыгай через лазер, пока он мигает!"
+Loading.Tip.2,Tip: checkpoints save your progress.,Loading tip,,Tip: checkpoints save your progress.,Совет: чекпоинты сохраняют твой прогресс.
+Loading.Tip.3,Tip: spend Stars to build your club.,Loading tip,,Tip: spend Stars to build your club.,Совет: трать звёзды на свой клуб.
+Loading.Tip.4,Tip: earn a medal on every track!,Loading tip,,Tip: earn a medal on every track!,Совет: получи медаль на каждой трассе!
+Loading.Tip.5,Tip: pets bring you extra Stars.,Loading tip,,Tip: pets bring you extra Stars.,Совет: питомцы приносят дополнительные звёзды.
+Banner.Checkpoint,Checkpoint {index}/{total},Banner when a checkpoint is reached,,Checkpoint {index}/{total},Чекпоинт {index}/{total}
+Banner.Finish,FINISH!,Banner at the finish line,,FINISH!,ФИНИШ!
+Banner.NewRecord,NEW RECORD!,Banner for a new personal best,,NEW RECORD!,НОВЫЙ РЕКОРД!
+Banner.Zap,Ouch! Back to the checkpoint,Banner after a laser or spinner hit,,Ouch! Back to the checkpoint,Ой! Назад на чекпоинт
+Banner.Welcome,"Welcome, champion!",Banner when the game starts,,"Welcome, champion!","Добро пожаловать, чемпион!"

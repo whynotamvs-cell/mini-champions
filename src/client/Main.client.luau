@@ -18,6 +18,7 @@ local CONTROLLER_ORDER: { string } = {
 	"BoardController",
 	"TrackSignController",
 	"HazardController",
+	"BannerController",
 	"RecordsController",
 	"ShopController",
 	"SettingsController",

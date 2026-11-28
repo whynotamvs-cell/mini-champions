@@ -162,7 +162,7 @@ local function build(canvas: Frame): Banner
 		ZIndex = 10,
 		Parent = canvas,
 	})
-	frame.BackgroundColor3 = Color3.fromRGB(255, 247, 214)
+	frame.BackgroundColor3 = Color3.fromRGB(255, 150, 40) -- a bright quest banner
 	local step = Components.label({
 		Size = UDim2.new(1, -16, 0, 20),
 		Position = UDim2.fromOffset(8, 4),
