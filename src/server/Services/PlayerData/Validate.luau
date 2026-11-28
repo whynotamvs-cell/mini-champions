@@ -219,6 +219,7 @@ local function run(data: any, repair: boolean): { string }
 			end
 		end
 		boolean(ctx, settings, "ReducedMotion", false, "Settings.ReducedMotion")
+		boolean(ctx, settings, "ShowPets", true, "Settings.ShowPets")
 	end
 
 	local meta = ensureTable(ctx, data, "Meta", Template.Meta, "Meta")

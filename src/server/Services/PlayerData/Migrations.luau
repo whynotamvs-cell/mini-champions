@@ -5,7 +5,7 @@
 export type Migration = (data: any) -> any
 export type Status = "ok" | "newer" | "error"
 
-local CURRENT_VERSION = 4
+local CURRENT_VERSION = 5
 
 local MIGRATIONS: { [number]: Migration } = {
 	-- v1 -> v2 (second track): a record for Keyboard Dash. Existing data is never touched.
@@ -41,6 +41,13 @@ local MIGRATIONS: { [number]: Migration } = {
 	[3] = function(data: any): any
 		if data.Pets == nil then
 			data.Pets = { Owned = {}, Equipped = "" }
+		end
+		return data
+	end,
+	-- v4 -> v5 (settings): "show pets of other players", on by default; existing data is never touched.
+	[4] = function(data: any): any
+		if type(data.Settings) == "table" and data.Settings.ShowPets == nil then
+			data.Settings.ShowPets = true
 		end
 		return data
 	end,

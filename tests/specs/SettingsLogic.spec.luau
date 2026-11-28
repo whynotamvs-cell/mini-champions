@@ -21,6 +21,17 @@ describe("SettingsLogic.sanitize (TEST_PLAN X-06)", function()
 		expect(changes.ReducedMotion).toBe(true)
 	end)
 
+	it("accepts ShowPets only as a boolean and applies it", function()
+		expect(SettingsLogic.sanitize({ ShowPets = false }).ShowPets).toBe(false)
+		expect(SettingsLogic.sanitize({ ShowPets = true }).ShowPets).toBe(true)
+		expect(SettingsLogic.isEmpty(SettingsLogic.sanitize({ ShowPets = "no" } :: any))).toBe(true)
+		local data = TableUtil.deepCopy(Template)
+		expect(data.Settings.ShowPets).toBe(true) -- on by default
+		SettingsLogic.apply(data, SettingsLogic.sanitize({ ShowPets = false }))
+		expect(data.Settings.ShowPets).toBe(false)
+		expect(#Validate.issues(data)).toBe(0)
+	end)
+
 	it("clamps volumes to 0..1", function()
 		local changes = SettingsLogic.sanitize({ MusicVolume = 999, SfxVolume = -5 })
 		expect(changes.MusicVolume).toBe(1)

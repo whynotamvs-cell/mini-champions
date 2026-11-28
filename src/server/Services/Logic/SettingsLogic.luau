@@ -1,6 +1,6 @@
 --!strict
 -- Pure settings update logic (docs/ARCHITECTURE.md 6.1 UpdateSettings, TEST_PLAN X-06).
--- The client sends a table of changes; only the four known keys with valid values get through,
+-- The client sends a table of changes; only the five known keys with valid values get through,
 -- volumes are clamped to 0..1, everything else is dropped.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -11,6 +11,7 @@ export type Changes = {
 	SfxVolume: number?,
 	Language: PlayerDataTypes.Language?,
 	ReducedMotion: boolean?,
+	ShowPets: boolean?,
 }
 
 local LANGUAGES: { [string]: boolean } = { auto = true, en = true, ru = true }
@@ -51,6 +52,10 @@ function SettingsLogic.sanitize(input: any): Changes
 	if type(reduced) == "boolean" then
 		out.ReducedMotion = reduced
 	end
+	local showPets = rawget(input, "ShowPets")
+	if type(showPets) == "boolean" then
+		out.ShowPets = showPets
+	end
 	return out
 end
 
@@ -72,6 +77,9 @@ function SettingsLogic.apply(data: PlayerDataTypes.PlayerData, changes: Changes)
 	end
 	if changes.ReducedMotion ~= nil then
 		settings.ReducedMotion = changes.ReducedMotion
+	end
+	if changes.ShowPets ~= nil then
+		settings.ShowPets = changes.ShowPets
 	end
 end
 

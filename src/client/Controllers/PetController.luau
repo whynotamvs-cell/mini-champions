@@ -13,6 +13,7 @@ local Components = require(script.Parent.Parent.UI.Components)
 local Juice = require(script.Parent.Parent.UI.Juice)
 local PetModel = require(script.Parent.Parent.UI.PetModel)
 local DashController = require(script.Parent.DashController)
+local DataController = require(script.Parent.DataController)
 local LocalizationController = require(script.Parent.LocalizationController)
 
 local L = LocalizationController.L
@@ -94,6 +95,11 @@ local function sync(player: Player)
 	local petId = player:GetAttribute("Pet")
 	local current = followers[player]
 	local wanted = if type(petId) == "string" and Pets.ById[petId] then petId else nil
+	-- The player can hide the pets of everybody else (Settings, for clarity or weaker phones).
+	local snapshot = DataController:Get()
+	if player ~= Players.LocalPlayer and snapshot and snapshot.Settings.ShowPets == false then
+		wanted = nil
+	end
 	if current and current.petId == wanted then
 		return
 	end
@@ -175,6 +181,11 @@ end
 
 function PetController:Init()
 	LocalizationController.Changed:Connect(refreshNames)
+	DataController.Changed:Connect(function()
+		for _, player in Players:GetPlayers() do
+			sync(player)
+		end
+	end)
 	-- The local player's pet celebrates a counted finish.
 	DashController.Event:Connect(function(event)
 		if event.kind == "finish" and event.valid == true then
