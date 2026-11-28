@@ -113,7 +113,7 @@ local function sync(player: Player)
 		root = root,
 		humanoid = character and character:FindFirstChildOfClass("Humanoid"),
 		petId = wanted,
-		offset = Vector3.new(3.2 * side, -0.4, 4.0),
+		offset = Vector3.new(2.8 * side, -2.0, 3.6),
 		seed = player.UserId % 7,
 		nameLabel = makeNameTag(built, wanted),
 		joyUntil = 0,

@@ -122,7 +122,7 @@ local function buildRow(list: ScrollingFrame, pet: Pets.Pet, order: number)
 	local built = PetModel.build(pet, viewport)
 	local camera = Instance.new("Camera")
 	camera.FieldOfView = 45
-	camera.CFrame = CFrame.lookAt(Vector3.new(0, 1.1, -6.3 * pet.Size), Vector3.new(0, 0.5, 0))
+	camera.CFrame = CFrame.lookAt(Vector3.new(0, 0.9, -4.6), Vector3.new(0, 0.4, 0))
 	camera.Parent = viewport
 	viewport.CurrentCamera = camera
 	table.insert(previews, built)

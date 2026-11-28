@@ -58,7 +58,8 @@ function PetModel.build(pet: Pets.Pet, parent: Instance): Built
 		math.min(255, pet.Color[2] + 50),
 		math.min(255, pet.Color[3] + 50)
 	)
-	local s = pet.Size * 1.1
+	-- Sizes differ only a little (square root), and every pet stays smaller than its owner.
+	local s = math.sqrt(pet.Size) * 0.72
 	local body = ball(model, "Body", 2.4 * s, c)
 	model.PrimaryPart = body
 	local entries: { Entry } = { { part = body, offset = CFrame.new(), role = "Body" } }
