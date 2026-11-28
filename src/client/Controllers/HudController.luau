@@ -239,7 +239,7 @@ local function render()
 				else ""
 		else
 			u.resultTitle.Text = L("Dash.Result.Title")
-			u.resultLine1.Text = L("Dash.Result.Rejected")
+			u.resultLine1.Text = L(if r.assisted then "Dash.Result.Assisted" else "Dash.Result.Rejected")
 			u.resultLine2.Text = ""
 			u.resultLine3.Text = ""
 		end

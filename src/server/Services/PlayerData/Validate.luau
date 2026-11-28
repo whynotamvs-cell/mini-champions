@@ -5,6 +5,7 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Economy = require(ReplicatedStorage.Shared.Config.Economy)
+local Shop = require(ReplicatedStorage.Shared.Config.Shop)
 local Tracks = require(ReplicatedStorage.Shared.Config.Tracks)
 local TableUtil = require(ReplicatedStorage.Shared.Utilities.TableUtil)
 
@@ -92,6 +93,43 @@ local function run(data: any, repair: boolean): { string }
 	local club = ensureTable(ctx, data, "Club", Template.Club, "Club")
 	if type(club) == "table" then
 		integer(ctx, club, "UpgradesOwned", 0, MAX_UPGRADES, "Club.UpgradesOwned")
+	end
+
+	local shop = ensureTable(ctx, data, "Shop", Template.Shop, "Shop")
+	if type(shop) == "table" then
+		integer(ctx, shop, "SkipTokens", 0, Shop.MaxSkipTokens, "Shop.SkipTokens")
+		boolean(ctx, shop, "SpringBoots", false, "Shop.SpringBoots")
+		boolean(ctx, shop, "SpringOn", false, "Shop.SpringOn")
+		if shop.SpringOn == true and shop.SpringBoots ~= true then
+			table.insert(ctx.issues, "Shop.SpringOn: boots not owned")
+			if repair then
+				shop.SpringOn = false
+			end
+		end
+		local owned = ensureTable(ctx, shop, "Owned", Template.Shop.Owned, "Shop.Owned")
+		if type(owned) == "table" then
+			for key, value in owned do
+				local item = if type(key) == "string" then Shop.ById[key] else nil
+				if item == nil or (item.Kind ~= "Trail" and item.Kind ~= "Finish") or value ~= true then
+					table.insert(ctx.issues, `Shop.Owned[{tostring(key)}]: not a cosmetic owned flag`)
+					if repair then
+						owned[key] = nil
+					end
+				end
+			end
+			for slot, kind in { Trail = "Trail", Finish = "Finish" } do
+				local id = shop[slot]
+				if id ~= "" then
+					local item = if type(id) == "string" then Shop.ById[id] else nil
+					if item == nil or item.Kind ~= kind or owned[id] ~= true then
+						table.insert(ctx.issues, `Shop.{slot}: not an owned {kind}`)
+						if repair then
+							shop[slot] = ""
+						end
+					end
+				end
+			end
+		end
 	end
 
 	local minigames = ensureTable(ctx, data, "Minigames", Template.Minigames, "Minigames")

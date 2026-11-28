@@ -5,7 +5,7 @@
 export type Migration = (data: any) -> any
 export type Status = "ok" | "newer" | "error"
 
-local CURRENT_VERSION = 2
+local CURRENT_VERSION = 3
 
 local MIGRATIONS: { [number]: Migration } = {
 	-- v1 -> v2 (second track): a record for Keyboard Dash. Existing data is never touched.
@@ -19,6 +19,20 @@ local MIGRATIONS: { [number]: Migration } = {
 				Finishes = 0,
 				BestTimeMs = 0,
 				Medals = { Bronze = false, Silver = false, Gold = false },
+			}
+		end
+		return data
+	end,
+	-- v2 -> v3 (shop): paid items. Nothing is owned yet; existing data is never touched.
+	[2] = function(data: any): any
+		if data.Shop == nil then
+			data.Shop = {
+				SkipTokens = 0,
+				SpringBoots = false,
+				SpringOn = false,
+				Owned = {},
+				Trail = "",
+				Finish = "",
 			}
 		end
 		return data

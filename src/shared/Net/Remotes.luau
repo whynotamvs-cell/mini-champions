@@ -16,6 +16,9 @@ local Remotes = table.freeze({
 		RequestBoard = "Event" :: RemoteKind, -- (); client asks for the current results board
 		SendEmote = "Event" :: RemoteKind, -- (emoteId: string)
 		UpdateSettings = "Event" :: RemoteKind, -- (changes: { MusicVolume?, SfxVolume?, Language?, ReducedMotion? })
+		UseSkip = "Event" :: RemoteKind, -- (); spends a skip token during a run (the run then earns nothing)
+		SetSpring = "Event" :: RemoteKind, -- (on: boolean); Spring Boots owners only
+		EquipCosmetic = "Event" :: RemoteKind, -- (id: string); an owned trail/finish effect id, or none_trail / none_finish
 
 		-- Server -> Client
 		DataSnapshot = "Event" :: RemoteKind, -- (snapshot: ClientSnapshot)

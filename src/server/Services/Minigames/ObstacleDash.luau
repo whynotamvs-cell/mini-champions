@@ -254,6 +254,9 @@ local function onFinish(player: Player, trackId: string)
 		TelemetryService:Custom(player, "DashRejected", 1, { reason = run.rejectReason or "unknown", track = trackId })
 		warn(`[ObstacleDash] run rejected for {player.UserId} on {trackId}: {run.rejectReason}`)
 		send(player, trackId, { kind = "finish", valid = false })
+	elseif outcome == "assisted" then
+		TelemetryService:Progression(player, "Fail", "assisted", run.track.Progression)
+		send(player, trackId, { kind = "finish", valid = false, assisted = true, timeMs = run.timeMs })
 	elseif outcome == "valid" then
 		reward(player, run)
 	else
@@ -556,6 +559,46 @@ function ObstacleDash:Restart(player: Player)
 		endRun(player, "restart", true)
 		teleport(player, returnPoint)
 	end
+end
+
+-- A paid help was used (skip, spring boots): the run can still be finished but earns nothing.
+function ObstacleDash:MarkAssisted(player: Player)
+	local run = stateOf(player).run
+	if run then
+		DashRun.markAssisted(run)
+	end
+end
+
+-- Moves a running player to the next checkpoint (or onto the finish pad after the last one) and
+-- marks the run as assisted. Returns nil on success or a reason ("no_run", "not_running").
+function ObstacleDash:SkipStage(player: Player): string?
+	local run = stateOf(player).run
+	if run == nil then
+		return "no_run"
+	end
+	if run.state ~= "Running" then
+		return "not_running"
+	end
+	local world = worldOf(run)
+	DashRun.markAssisted(run)
+	local nextIndex = run.lastCheckpoint + 1
+	if nextIndex <= run.track.CheckpointCount then
+		if DashRun.reachCheckpoint(run, nextIndex, nowMs()) then
+			send(player, run.track.Id, { kind = "checkpoint", index = nextIndex, total = run.track.CheckpointCount })
+		end
+		teleport(player, world.spawns[nextIndex] or world.spawns[0])
+	else
+		-- Past the last checkpoint: stand on the finish pad; the normal finish detection takes over.
+		local zone = world.finishZone.part
+		local target = zone.CFrame * CFrame.new(0, -zone.Size.Y / 2 + 3, 0)
+		local character = player.Character
+		if character then
+			stateOf(player).teleportGraceUntil = os.clock() + TELEPORT_GRACE_SEC
+			stateOf(player).lastPos = nil
+			character:PivotTo(target)
+		end
+	end
+	return nil
 end
 
 function ObstacleDash:GetRun(player: Player): DashRun.Run?

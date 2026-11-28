@@ -10,8 +10,8 @@ local Migrations = require(PlayerData.Migrations)
 local Template = require(PlayerData.Template)
 
 describe("Migrations (current chain)", function()
-	it("current version is 2 and the template is already current", function()
-		expect(Migrations.CURRENT_VERSION).toBe(2)
+	it("current version is 3 and the template is already current", function()
+		expect(Migrations.CURRENT_VERSION).toBe(3)
 		local status, data = Migrations.migrate(TableUtil.deepCopy(Template))
 		expect(status).toBe("ok")
 		expect(data).toEqual(Template)
@@ -19,7 +19,7 @@ describe("Migrations (current chain)", function()
 
 	it("refuses data from a newer version and leaves it untouched", function()
 		local newer = TableUtil.deepCopy(Template) :: any
-		newer.SchemaVersion = 3
+		newer.SchemaVersion = 4
 		newer.Future = { x = 1 }
 		local before = TableUtil.deepCopy(newer)
 		local status, data = Migrations.migrate(newer)
@@ -55,7 +55,7 @@ describe("Migration 1 -> 2 (second track)", function()
 	it("adds an empty KeyDash record and bumps the version", function()
 		local status, data = Migrations.migrate(v1Profile())
 		expect(status).toBe("ok")
-		expect(data.SchemaVersion).toBe(2)
+		expect(data.SchemaVersion).toBe(3) -- the whole chain runs: v1 -> v2 -> v3
 		expect(data.Minigames.KeyDash).toEqual(Template.Minigames.KeyDash)
 	end)
 
@@ -83,6 +83,41 @@ describe("Migration 1 -> 2 (second track)", function()
 		d.Minigames = "broken"
 		local status = Migrations.migrate(d)
 		expect(status).toBe("error")
+	end)
+end)
+
+describe("Migration 2 -> 3 (shop)", function()
+	local function v2Profile(): any
+		local data = TableUtil.deepCopy(Template) :: any
+		data.SchemaVersion = 2
+		data.Shop = nil
+		data.Stars = 777
+		data.Club.UpgradesOwned = 3
+		return data
+	end
+
+	it("adds an empty Shop and bumps the version", function()
+		local status, data = Migrations.migrate(v2Profile())
+		expect(status).toBe("ok")
+		expect(data.SchemaVersion).toBe(3)
+		expect(data.Shop).toEqual(Template.Shop)
+	end)
+
+	it("keeps every existing value untouched", function()
+		local before = v2Profile()
+		local _, data = Migrations.migrate(TableUtil.deepCopy(before))
+		expect(data.Stars).toBe(777)
+		expect(data.Club).toEqual(before.Club)
+		expect(data.Minigames).toEqual(before.Minigames)
+		expect(data.Settings).toEqual(before.Settings)
+	end)
+
+	it("does not overwrite a Shop that already exists (idempotent)", function()
+		local d = v2Profile()
+		d.Shop = { SkipTokens = 5, SpringBoots = true, SpringOn = false, Owned = {}, Trail = "", Finish = "" }
+		local _, data = Migrations.migrate(d)
+		expect(data.Shop.SkipTokens).toBe(5)
+		expect(data.Shop.SpringBoots).toBe(true)
 	end)
 end)
 

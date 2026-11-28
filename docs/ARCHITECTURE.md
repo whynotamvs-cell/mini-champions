@@ -185,6 +185,9 @@ for _, s in services do task.spawn(s.Start, s) end
 |---|---|---|---|---|
 | `PurchaseUpgrade` | C→S (RemoteFunction) | `index: number` | целое, 1..8, `== UpgradesOwned + 1`, профиль Ready | 2/с |
 | `SendEmote` | C→S | `emoteId: string` | строка ≤ 32, есть в `Config.Emotes` | 1 / 2 с |
+| `UseSkip` | C→S | — | без аргументов; сервер проверяет забег (Running) и токены | 1 / 2 с |
+| `SetSpring` | C→S | `on: boolean` | булево; включить может только владелец Game Pass | 2 / с |
+| `EquipCosmetic` | C→S | `id: string` | перечисление id следов/эффектов + `none_trail`/`none_finish`; надеть можно только купленное | 3 / 2 с |
 | `UpdateSettings` | C→S | `{ MusicVolume, SfxVolume, Language, ReducedMotion }` | типы, диапазоны, перечисление языков, лишние ключи отбрасываются | 2/с |
 | `TutorialAck` | C→S | `step: number` | только шаг 3 «открыл меню клуба»; принимается, только если сохранённый шаг == 2 | 2/с |
 | `RequestBoard` | C→S | — | клиент просит текущую таблицу результатов (профиль Ready не нужен) | 1/с |
@@ -283,6 +286,12 @@ Finished ──валидация провалена──► Rejected  (без 
 Лежат в `<Трасса>/Hazards`; параметры — атрибуты детали: `HazardKind` = `Laser` (`Period`, `OnSec`, `Phase`) или `Spinner` (`Speed` рад/с, `Phase`). Состояние — чистая функция серверного времени (`Utilities/HazardLogic`), поэтому по сети ничего не передаётся каждый кадр. Сервер (`ObstacleDash.poll`) проверяет попадание только в состоянии `Running` и после окончания льготы телепорта; попадание возвращает на последний чекпоинт (таймер идёт) и шлёт клиенту `DashEvent{kind="hazard"}`. Клиент (`HazardController`) только рисует: мигание перед включением, поворот планок. Тест логики: `tests/specs/HazardLogic.spec.luau`.
 
 Клавиши Keyboard Dash (`Key`, `ZigKey`, `ArrowKey`, `EnterStep`) «продавливаются» под ногами локального игрока (твин `CFrame` на клиенте, 0,7 стад); сервер этого не видит и не использует.
+
+### 8.5. Платные помощи и чеки (`MonetizationService`)
+
+Покупки идут через `MarketplaceService`: клиент вызывает `PromptProductPurchase` / `PromptGamePassPurchase`, а сервер выдаёт товар только в `ProcessReceipt` (Developer Products) и по проверке `UserOwnsGamePassAsync` (пружинка). Чек идемпотентен: `grantId = "shop:<PurchaseId>"` в `RecentGrants`; повторный чек подтверждается без повторной выдачи; профиль сохраняется (`SaveNow`) до ответа `PurchaseGranted`. Пока `RobloxId` предмета равен 0 в `Config/Shop.luau`, предмет показан как «Скоро» и не продаётся.
+
+Помощь (`UseSkip`, пружинка) помечает забег `assisted` (`DashRun.markAssisted`): забег можно закончить, но результат — `Rejected("assisted")`: без медали, рекорда, наград и записи в таблицу. Пружинка применяется сервером (`Humanoid.JumpHeight`); следы — `Trail` на `HumanoidRootPart`, виден всем; эффект финиша рисует клиент по надетому предмету (только косметика).
 
 ### 8.3. Античит (без ложных наказаний)
 

@@ -9,6 +9,7 @@
 --   Running --timeout / leave / restart--> Abandoned
 --   Finished(valid) --markRewarded (once)--> Rewarded
 --   Finished(invalid) --> Rejected
+--   Finished with help (skip, spring boots) --> Rejected("assisted"): no medal, no record, no reward
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Dash = require(ReplicatedStorage.Shared.Config.Dash)
@@ -27,11 +28,12 @@ export type Run = {
 	segmentMs: { number },
 	timeMs: number?,
 	suspicious: boolean,
+	assisted: boolean,
 	rejectReason: string?,
 	abandonReason: string?,
 }
 
-export type FinishOutcome = "valid" | "rejected" | "missing_checkpoint" | "ignored"
+export type FinishOutcome = "valid" | "rejected" | "assisted" | "missing_checkpoint" | "ignored"
 
 local DashRun = {}
 
@@ -49,6 +51,7 @@ function DashRun.new(runId: string, nowMs: number, track: Tracks.Track?): Run
 		segmentMs = {},
 		timeMs = nil,
 		suspicious = false,
+		assisted = false,
 		rejectReason = nil,
 		abandonReason = nil,
 	}
@@ -99,6 +102,13 @@ function DashRun.markSuspicious(run: Run)
 	end
 end
 
+-- A paid help (skip, spring boots) was used: the run may still finish, but never counts.
+function DashRun.markAssisted(run: Run)
+	if DashRun.isActive(run) then
+		run.assisted = true
+	end
+end
+
 function DashRun.reachFinish(run: Run, nowMs: number): FinishOutcome
 	if run.state ~= "Running" or run.startMs == nil then
 		return "ignored"
@@ -109,6 +119,12 @@ function DashRun.reachFinish(run: Run, nowMs: number): FinishOutcome
 	table.insert(run.segmentMs, nowMs - run.lastSplitMs)
 	run.timeMs = nowMs - run.startMs
 	run.state = "Finished"
+
+	if run.assisted then
+		run.state = "Rejected"
+		run.rejectReason = "assisted"
+		return "assisted"
+	end
 
 	local reason: string? = nil
 	if run.suspicious then
