@@ -2959,177 +2959,61 @@
       }
     },
     {
-      "name": "Trophy",
-      "className": "Model",
-      "children": [
-        {
-          "name": "TrophyStarA",
-          "className": "Part",
-          "properties": {
-            "Anchored": true,
-            "Size": [
-              8,
-              8,
-              1.5
-            ],
-            "CFrame": {
-              "CFrame": {
-                "position": [
-                  -150,
-                  22,
-                  0
-                ],
-                "orientation": [
-                  [
-                    1,
-                    0,
-                    0
-                  ],
-                  [
-                    0,
-                    1,
-                    0
-                  ],
-                  [
-                    0,
-                    0,
-                    1
-                  ]
-                ]
-              }
-            },
-            "Color": [
+      "name": "TrophyAnchor",
+      "className": "Part",
+      "properties": {
+        "Anchored": true,
+        "Size": [
+          1,
+          1,
+          1
+        ],
+        "CFrame": {
+          "CFrame": {
+            "position": [
+              -172,
               1.0,
-              0.8,
-              0.2
+              0
             ],
-            "Material": "Neon",
-            "TopSurface": "Smooth",
-            "BottomSurface": "Smooth",
-            "CanCollide": false,
-            "CanTouch": false,
-            "CanQuery": false,
-            "Transparency": 0.0,
-            "Attributes": {
-              "Attributes": {
-                "Spin": {
-                  "Float64": 40.0
-                }
-              }
-            }
+            "orientation": [
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ]
           }
         },
-        {
-          "name": "TrophyStarB",
-          "className": "Part",
-          "properties": {
-            "Anchored": true,
-            "Size": [
-              8,
-              8,
-              1.5
-            ],
-            "CFrame": {
-              "CFrame": {
-                "position": [
-                  -150,
-                  22,
-                  0
-                ],
-                "orientation": [
-                  [
-                    1,
-                    0,
-                    0
-                  ],
-                  [
-                    0,
-                    1,
-                    0
-                  ],
-                  [
-                    0,
-                    0,
-                    1
-                  ]
-                ]
-              }
-            },
-            "Color": [
-              1.0,
-              0.8,
-              0.2
-            ],
-            "Material": "Neon",
-            "TopSurface": "Smooth",
-            "BottomSurface": "Smooth",
-            "CanCollide": false,
-            "CanTouch": false,
-            "CanQuery": false,
-            "Transparency": 0.0,
-            "Attributes": {
-              "Attributes": {
-                "Spin": {
-                  "Float64": 40.0
-                },
-                "SpinOffset": {
-                  "Float64": 45.0
-                }
-              }
+        "Color": [
+          1,
+          1,
+          1
+        ],
+        "Material": "SmoothPlastic",
+        "TopSurface": "Smooth",
+        "BottomSurface": "Smooth",
+        "CanCollide": false,
+        "CanTouch": false,
+        "CanQuery": false,
+        "Transparency": 1.0,
+        "Attributes": {
+          "Attributes": {
+            "FxKind": {
+              "String": "Trophy"
             }
-          }
-        },
-        {
-          "name": "Stand",
-          "className": "Part",
-          "properties": {
-            "Anchored": true,
-            "Size": [
-              4,
-              14,
-              4
-            ],
-            "CFrame": {
-              "CFrame": {
-                "position": [
-                  -150,
-                  8.0,
-                  0
-                ],
-                "orientation": [
-                  [
-                    1,
-                    0,
-                    0
-                  ],
-                  [
-                    0,
-                    1,
-                    0
-                  ],
-                  [
-                    0,
-                    0,
-                    1
-                  ]
-                ]
-              }
-            },
-            "Color": [
-              0.7,
-              0.72,
-              0.78
-            ],
-            "Material": "SmoothPlastic",
-            "TopSurface": "Smooth",
-            "BottomSurface": "Smooth",
-            "CanCollide": false,
-            "CanTouch": false,
-            "CanQuery": true,
-            "Transparency": 0.0
           }
         }
-      ]
+      }
     },
     {
       "name": "Plots",

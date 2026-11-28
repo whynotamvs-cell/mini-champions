@@ -789,9 +789,11 @@ def build_hub(desk, keys):
     for i, x in enumerate((-ROOM + 6,)):
         for sz in (-37, 37):
             children.append(prop_block(f"SignPost{sz}", (2.4, 31, 2.4), x, FLOOR_Y, sz, COLORS["post"], collide=False))
-    star_a = part("TrophyStarA", (8, 8, 1.5), (-150, 22, 0), COLORS["gold"], center=True, collide=False, query=False, material="Neon", attrs={"Spin": 40})
-    star_b = part("TrophyStarB", (8, 8, 1.5), (-150, 22, 0), COLORS["gold"], center=True, collide=False, query=False, material="Neon", attrs={"Spin": 40, "SpinOffset": 45})
-    children.append(model("Trophy", [star_a, star_b, prop_block("Stand", (4, 14, 4), -150, FLOOR_Y, 0, COLORS["steel"], collide=False)]))
+    # The golden trophy is built by the client (WorldFxController) around this invisible anchor: a plinth,
+    # a cup with handles and a star, slowly turning. It stands on the floor between the spawn and the sign.
+    children.append(
+        part("TrophyAnchor", (1, 1, 1), (-172, FLOOR_Y, 0), [1, 1, 1], center=True, collide=False, query=False, transparency=1.0, attrs={"FxKind": "Trophy"})
+    )
     plots = []
     for i, (px, pz) in enumerate(PLOT_POSITIONS, start=1):
         p = part(f"Plot{i}", (24, 1, 24), (px, PLOT_TOP, pz), COLORS["plot"], attrs={"PlotIndex": i})
