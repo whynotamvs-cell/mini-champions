@@ -18,19 +18,21 @@ export type Item = {
 	Color: { number }?,
 }
 
--- Ids of the TEST experience "Mini Champions [TEST]" (universe 10778182955). The release experience
--- has its own products: create them there and replace these numbers (docs/PUBLISHING.md 6).
+-- Ids of the RELEASE experience "MINI CHAMPIONS" (universe 10779624741, created through Open Cloud).
+-- The old test experience (universe 10778182955) has its own products; the ids there were:
+-- skip 3737346186, spring 2099095830 (pass), stars 3737346277/3737346283/3737346290, trails
+-- 3737346305/3737346320/3737346330, finish 3737346344/3737346353.
 local IDS: { [string]: number } = {
-	skip = 3737346186,
-	spring = 2099095830,
-	stars_small = 3737346277,
-	stars_medium = 3737346283,
-	stars_large = 3737346290,
-	trail_rainbow = 3737346305,
-	trail_stars = 3737346320,
-	trail_fire = 3737346330,
-	finish_gold = 3737346344,
-	finish_rainbow = 3737346353,
+	skip = 3737378452,
+	spring = 2102305090,
+	stars_small = 3737378508,
+	stars_medium = 3737378513,
+	stars_large = 3737378519,
+	trail_rainbow = 3737378531,
+	trail_stars = 3737378542,
+	trail_fire = 3737378552,
+	finish_gold = 3737378559,
+	finish_rainbow = 3737378572,
 }
 
 local function item(id: string, kind: Kind, extra: { [string]: any }?): Item
