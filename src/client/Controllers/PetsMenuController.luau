@@ -153,9 +153,9 @@ end
 local function build(canvas: Frame): Ui
 	local open = Components.button({
 		Name = "PetsButton",
-		Size = UDim2.fromOffset(120, 52),
-		Position = UDim2.new(0, 12, 1, -72),
-		AnchorPoint = Vector2.new(0, 1),
+		Size = UDim2.fromOffset(104, 48),
+		Position = UDim2.new(1, -124, 0, 8),
+		AnchorPoint = Vector2.new(1, 0),
 		BackgroundColor3 = Components.Theme.Blue,
 		ZIndex = 20,
 		Parent = canvas,

@@ -270,7 +270,7 @@ local function build(canvas: Frame): Ui
 	local openButton = Components.button({
 		Name = "SettingsButton",
 		Size = UDim2.fromOffset(130, 48),
-		Position = UDim2.new(1, -12, 0.42, -124),
+		Position = UDim2.new(1, -12, 0.42, -64),
 		AnchorPoint = Vector2.new(1, 0.5),
 		BackgroundColor3 = Theme.Muted,
 		MaxTextSize = 18, -- a smaller cap keeps "Настройки" on one line instead of breaking mid-word
