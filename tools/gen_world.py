@@ -387,6 +387,7 @@ class TrackBuilder:
         self.marks[0] = len(self.path) - 1
         self.pad_center = (cx, cz)
         self.pad_size = size
+        self.arch(cx, cz, top, "StartArch", color, half=size / 2 - 1, height=15, trim=COLORS["glow"])
         self.cx = cx + self.h[0] * size / 2
         self.cz = cz + self.h[1] * size / 2
 
@@ -415,6 +416,10 @@ class TrackBuilder:
         self.marks[index] = len(self.path) - 1
         self.pad_center = (cx, cz)
         self.pad_size = size
+        if kind == "Checkpoint":
+            self.arch(cx, cz, top, f"CheckpointArch{index}", color, half=size / 2 - 1, height=11, trim=COLORS["checkpoint"])
+        else:
+            self.arch(cx, cz, top, "FinishArch", COLORS["finish"], half=size / 2 - 1, height=17, trim=COLORS["glow"], checker=True)
 
     def turn(self, heading):
         self.h = HEADINGS[heading]
@@ -474,6 +479,40 @@ class TrackBuilder:
                 query=False,
                 attrs={"HazardKind": "Spinner", "Speed": speed, "Phase": phase},
             )
+        )
+
+    def arch(self, cx, cz, top, name, color, *, half=9.0, height=15.0, trim=None, checker=False, glow=True):
+        """A gateway over a pad: two pillars and a beam across the heading, neon trim underneath, and
+        (optionally) a checkered band. Decor only: nothing collides, so it never blocks a jump."""
+        hx, hz = self.h
+        trim = trim or COLORS["glow"]
+        along_z = hx != 0  # heading along x -> the arch spans z
+        width = 1.6
+
+        def block(label, size_across, size_up, size_along, ax, ay, col, material="SmoothPlastic"):
+            # ax: offset across the heading, ay: bottom y above the pad top
+            ox = hx * 0 if along_z else ax
+            oz = ax if along_z else 0
+            sx, sy, sz = (size_along, size_up, size_across) if along_z else (size_across, size_up, size_along)
+            self.geo.append(part(f"{name}_{label}", (sx, sy, sz), (cx + ox, top + ay + size_up / 2, cz + oz), col, center=True, collide=False, query=False, material=material))
+
+        for sign, side in ((-1, "L"), (1, "R")):
+            block(f"Pillar{side}", width, height, width, sign * (half + width / 2), 0, color)
+            block(f"Foot{side}", width * 2, 1.0, width * 2, sign * (half + width / 2), 0, shade(color, 0.7))
+        span = (half + width) * 2
+        block("Beam", span, 2.4, width, 0, height, color)
+        if glow:
+            block("Trim", span - 1.0, 0.5, width * 0.6, 0, height - 0.5, trim, material="Neon")
+        if checker:
+            cells = 12
+            cell = (span - 1.0) / cells
+            for i in range(cells):
+                col = [0.08, 0.08, 0.1] if i % 2 == 0 else [0.97, 0.97, 0.97]
+                block(f"Check{i + 1}", cell, 1.1, width * 1.05, -span / 2 + 0.5 + cell * (i + 0.5), height + 0.6, col)
+        # a small invisible anchor the client dresses with sparkles
+        ox, oz = (0, 0)
+        self.geo.append(
+            part(f"{name}_FxSparkle", (1, 1, 1), (cx + ox, top + height + 1.5, cz + oz), [1, 1, 1], center=True, collide=False, query=False, transparency=1.0, attrs={"FxKind": "Sparkle"})
         )
 
     def board(self, top, face):
@@ -738,6 +777,16 @@ def build_hub(desk, keys):
             },
         },
     ]
+    # The big welcome sign (the client paints the title on it) and a spinning golden star above the spawn.
+    sign = part("LogoSign", (70, 22, 2), (-ROOM + 6, 42, 0), COLORS["dark"], center=True, collide=False, query=False, attrs={"FxKind": "LogoSign"})
+    sign["properties"]["CFrame"]["CFrame"]["orientation"] = FACE_PLUS_X
+    children.append(sign)
+    for i, x in enumerate((-ROOM + 6,)):
+        for sz in (-37, 37):
+            children.append(prop_block(f"SignPost{sz}", (2.4, 31, 2.4), x, FLOOR_Y, sz, COLORS["post"], collide=False))
+    star_a = part("TrophyStarA", (8, 8, 1.5), (-150, 22, 0), COLORS["gold"], center=True, collide=False, query=False, material="Neon", attrs={"Spin": 40})
+    star_b = part("TrophyStarB", (8, 8, 1.5), (-150, 22, 0), COLORS["gold"], center=True, collide=False, query=False, material="Neon", attrs={"Spin": 40, "SpinOffset": 45})
+    children.append(model("Trophy", [star_a, star_b, prop_block("Stand", (4, 14, 4), -150, FLOOR_Y, 0, COLORS["steel"], collide=False)]))
     plots = []
     for i, (px, pz) in enumerate(PLOT_POSITIONS, start=1):
         p = part(f"Plot{i}", (24, 1, 24), (px, PLOT_TOP, pz), COLORS["plot"], attrs={"PlotIndex": i})
